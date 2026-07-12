@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio Admin Dashboard</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Poiret+One&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Poiret+One&display=swap"
+        rel="stylesheet">
+
     <!-- Icons (Phosphor Icons) -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    
+
     <link rel="stylesheet" href="styles.css">
     <style>
         /* Premium Admin UI Styles */
@@ -29,7 +32,7 @@
         body {
             display: flex;
             background: var(--admin-bg);
-            background-image: 
+            background-image:
                 radial-gradient(circle at top left, rgba(56, 189, 248, 0.1), transparent 40%),
                 radial-gradient(circle at bottom right, rgba(139, 92, 246, 0.1), transparent 40%);
             color: var(--admin-text);
@@ -39,10 +42,22 @@
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
 
         .admin-sidebar {
             width: 280px;
@@ -57,7 +72,7 @@
             height: 100vh;
             overflow-y: auto;
             box-sizing: border-box;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
             z-index: 50;
         }
 
@@ -89,7 +104,9 @@
             border: 1px solid transparent;
         }
 
-        .admin-nav-item i { font-size: 1.2rem; }
+        .admin-nav-item i {
+            font-size: 1.2rem;
+        }
 
         .admin-nav-item:hover {
             background: rgba(255, 255, 255, 0.03);
@@ -118,7 +135,7 @@
             align-items: center;
             margin-bottom: 3rem;
         }
-        
+
         .header-actions h2 {
             font-size: 2.5rem;
             font-weight: 600;
@@ -141,11 +158,11 @@
         }
 
         .view-site-btn:hover {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border-color: var(--admin-accent);
             color: var(--admin-accent);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         .admin-section {
@@ -155,7 +172,7 @@
             border: 1px solid var(--admin-border);
             border-radius: 24px;
             padding: 3rem;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
         .admin-section.active {
@@ -164,8 +181,15 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .admin-section h3 {
@@ -205,7 +229,7 @@
         .form-control:focus {
             outline: none;
             border-color: var(--admin-accent);
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
         }
 
@@ -256,12 +280,12 @@
             justify-content: space-between;
             align-items: center;
             background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 1.2rem;
             border-radius: 16px;
             transition: all 0.3s ease;
         }
-        
+
         .list-item:hover {
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.1);
@@ -271,7 +295,7 @@
         .list-item-content {
             flex: 1;
         }
-        
+
         .list-item-content strong {
             font-size: 1.1rem;
             display: flex;
@@ -301,7 +325,7 @@
 
         .btn-icon:hover {
             background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255,255,255,0.2);
+            border-color: rgba(255, 255, 255, 0.2);
             color: var(--admin-accent);
         }
 
@@ -341,7 +365,10 @@
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -357,8 +384,13 @@
         }
 
         @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .modal-content {
@@ -368,7 +400,7 @@
             width: 100%;
             max-width: 600px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
             box-sizing: border-box;
             transform: scale(0.95);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -384,7 +416,7 @@
             align-items: center;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .modal-header h2 {
@@ -394,7 +426,7 @@
         }
 
         .close-modal {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border: none;
             color: var(--admin-text-muted);
             cursor: pointer;
@@ -409,7 +441,7 @@
         }
 
         .close-modal:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
 
@@ -433,139 +465,300 @@
         }
 
         .btn-cancel:hover {
-            background: rgba(255,255,255,0.05);
-            border-color: rgba(255,255,255,0.4);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Login gate */
+        .login-screen {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 380px;
+            background: var(--admin-surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--admin-border);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-card h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .login-sub {
+            color: var(--admin-text-muted);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .login-error {
+            color: #f87171;
+            font-size: 0.9rem;
+            min-height: 1.2em;
+            margin: -0.5rem 0 1rem;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            background: transparent;
+            border: 1px solid var(--admin-border);
+            color: var(--admin-text-muted);
+            padding: 0.9rem 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            color: #f87171;
+            border-color: #f87171;
+        }
+
+        /* ── Toast Notification ─────────────────────────────── */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.6rem;
+            border-radius: 14px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            z-index: 10000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            pointer-events: none;
+            max-width: 360px;
+            backdrop-filter: blur(12px);
+        }
+        .toast--success {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: #6ee7b7;
+        }
+        .toast--error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+        }
+        .toast--visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Loading Overlay ────────────────────────────────── */
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(6px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.2rem;
+        }
+        #loading-overlay[hidden] { display: none !important; }
+        .admin-loader-ring {
+            width: 52px;
+            height: 52px;
+            border: 4px solid rgba(56, 189, 248, 0.15);
+            border-top-color: var(--admin-accent);
+            border-radius: 50%;
+            animation: adminSpin 0.8s linear infinite;
+        }
+        @keyframes adminSpin { to { transform: rotate(360deg); } }
+        #loading-message {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
         }
     </style>
 </head>
+
 <body>
 
-    <aside class="admin-sidebar">
-        <h1 class="font-poiret">Portfolio Admin</h1>
-        <nav class="admin-nav">
-            <div class="admin-nav-item active" data-target="theme"><i class="ph ph-palette"></i> Theme & Global</div>
-            <div class="admin-nav-item" data-target="hero"><i class="ph ph-user"></i> Hero Section</div>
-            <div class="admin-nav-item" data-target="about"><i class="ph ph-info"></i> About Section</div>
-            <div class="admin-nav-item" data-target="skills"><i class="ph ph-code"></i> Skills</div>
-            <div class="admin-nav-item" data-target="projects"><i class="ph ph-briefcase"></i> Projects</div>
-            <div class="admin-nav-item" data-target="contacts"><i class="ph ph-envelope"></i> Contacts</div>
-        </nav>
-    </aside>
-
-    <main class="admin-main">
-        <div class="header-actions">
-            <h2>Dashboard</h2>
-            <a href="index.html" class="view-site-btn" target="_blank"><i class="ph ph-arrow-square-out"></i> View Site</a>
-        </div>
-
-        <!-- Theme Section -->
-        <section id="theme-section" class="admin-section active">
-            <h3>Theme Settings</h3>
-            <div class="form-group">
-                <label>Accent Color</label>
-                <input type="color" id="theme-accent" class="form-control" style="height: 50px;">
-            </div>
-            <div class="form-group">
-                <label>Surface Color</label>
-                <input type="color" id="theme-surface" class="form-control" style="height: 50px;">
-            </div>
-            <button class="btn-save" onclick="adminApp.saveTheme()">Save Theme</button>
-        </section>
-
-        <!-- Hero Section -->
-        <section id="hero-section" class="admin-section">
-            <h3>Hero Settings</h3>
-            <div class="form-group">
-                <label>Eyebrow Text</label>
-                <input type="text" id="hero-eyebrow" class="form-control">
-            </div>
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" id="hero-title" class="form-control">
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="hero-description" class="form-control"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Profile Image URL</label>
-                <input type="text" id="hero-image" class="form-control">
-            </div>
-            <button class="btn-save" onclick="adminApp.saveHero()">Save Hero</button>
-            
-            <h4 style="margin-top: 2rem;">Social Links</h4>
-            <div id="socials-list" class="item-list"></div>
-            <button class="add-new-btn" onclick="adminApp.openModal('social')"><i class="ph ph-plus"></i> Add Social Link</button>
-        </section>
-
-        <!-- About Section -->
-        <section id="about-section" class="admin-section">
-            <h3>About Settings</h3>
-            <div class="form-group">
-                <label>Subtitle</label>
-                <input type="text" id="about-subtitle" class="form-control">
-            </div>
-            <div class="form-group">
-                <label>Bio</label>
-                <textarea id="about-bio" class="form-control"></textarea>
-            </div>
-            <button class="btn-save" onclick="adminApp.saveAbout()">Save About</button>
-
-            <h4 style="margin-top: 2rem;">Stats</h4>
-            <div id="stats-list" class="item-list"></div>
-            <button class="add-new-btn" onclick="adminApp.openModal('stat')"><i class="ph ph-plus"></i> Add Stat</button>
-        </section>
-
-        <!-- Skills Section -->
-        <section id="skills-section" class="admin-section">
-            <h3>Skills Categories</h3>
-            <div id="skills-list" class="item-list"></div>
-            <button class="add-new-btn" onclick="adminApp.openModal('skill')"><i class="ph ph-plus"></i> Add Skill Category</button>
-        </section>
-
-        <!-- Projects Section -->
-        <section id="projects-section" class="admin-section">
-            <h3>Featured Projects</h3>
-            <div id="projects-list" class="item-list"></div>
-            <button class="add-new-btn" onclick="adminApp.openModal('project')"><i class="ph ph-plus"></i> Add Project</button>
-        </section>
-
-        <!-- Contacts Section -->
-        <section id="contacts-section" class="admin-section">
-            <h3>Contact Section Title & Subtitle</h3>
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" id="contact-title" class="form-control">
-            </div>
-            <div class="form-group">
-                <label>Subtitle</label>
-                <textarea id="contact-subtitle" class="form-control"></textarea>
-            </div>
-            <button class="btn-save" onclick="adminApp.saveContactText()">Save Contact Info</button>
-
-            <h4 style="margin-top: 2rem;">Contact Methods</h4>
-            <div id="contacts-list" class="item-list"></div>
-            <button class="add-new-btn" onclick="adminApp.openModal('contact')"><i class="ph ph-plus"></i> Add Contact Method</button>
-        </section>
-    </main>
-
-    <!-- Generic Modal -->
-    <div class="modal" id="generic-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modal-title">Add/Edit Item</h2>
-                <button class="close-modal" onclick="adminApp.closeModal()">&times;</button>
-            </div>
-            <div id="modal-body">
-                <!-- Form fields injected here by JS -->
-            </div>
-            <div class="modal-actions">
-                <button class="btn-cancel" onclick="adminApp.closeModal()">Cancel</button>
-                <button class="btn-save" style="margin-top: 0;" onclick="adminApp.saveModal()">Save</button>
-            </div>
-        </div>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" hidden>
+        <div class="admin-loader-ring"></div>
+        <span id="loading-message">Loading…</span>
     </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <div class="login-screen" id="login-screen">
+        <form class="login-card" id="login-form">
+            <h1 class="font-poiret">Portfolio Admin</h1>
+            <p class="login-sub">Sign in to edit your live content.</p>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="login-email" class="form-control" autocomplete="username" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-password" class="form-control" autocomplete="current-password"
+                    required>
+            </div>
+            <p class="login-error" id="login-error"></p>
+            <button type="submit" class="btn-save" style="width:100%;">Sign In</button>
+        </form>
+    </div>
+
+    <div id="dashboard" hidden>
+        <aside class="admin-sidebar">
+            <h1 class="font-poiret">Portfolio Admin</h1>
+            <nav class="admin-nav">
+                <div class="admin-nav-item active" data-target="theme"><i class="ph ph-palette"></i> Theme & Global
+                </div>
+                <div class="admin-nav-item" data-target="hero"><i class="ph ph-user"></i> Hero Section</div>
+                <div class="admin-nav-item" data-target="about"><i class="ph ph-info"></i> About Section</div>
+                <div class="admin-nav-item" data-target="skills"><i class="ph ph-code"></i> Skills</div>
+                <div class="admin-nav-item" data-target="projects"><i class="ph ph-briefcase"></i> Projects</div>
+                <div class="admin-nav-item" data-target="contacts"><i class="ph ph-envelope"></i> Contacts</div>
+            </nav>
+            <button class="logout-btn" onclick="adminApp.logout()"><i class="ph ph-sign-out"></i> Sign Out</button>
+        </aside>
+
+        <main class="admin-main">
+            <div class="header-actions">
+                <h2>Dashboard</h2>
+                <a href="index.html" class="view-site-btn" target="_blank"><i class="ph ph-arrow-square-out"></i> View
+                    Site</a>
+            </div>
+
+            <!-- Theme Section -->
+            <section id="theme-section" class="admin-section active">
+                <h3>Theme Settings</h3>
+                <div class="form-group">
+                    <label>Accent Color</label>
+                    <input type="color" id="theme-accent" class="form-control" style="height: 50px;">
+                </div>
+                <div class="form-group">
+                    <label>Surface Color</label>
+                    <input type="color" id="theme-surface" class="form-control" style="height: 50px;">
+                </div>
+                <button class="btn-save" onclick="adminApp.saveTheme()">Save Theme</button>
+            </section>
+
+            <!-- Hero Section -->
+            <section id="hero-section" class="admin-section">
+                <h3>Hero Settings</h3>
+                <div class="form-group">
+                    <label>Eyebrow Text</label>
+                    <input type="text" id="hero-eyebrow" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="hero-title" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="hero-description" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Profile Image URL</label>
+                    <input type="text" id="hero-image" class="form-control">
+                </div>
+                <button class="btn-save" onclick="adminApp.saveHero()">Save Hero</button>
+
+                <h4 style="margin-top: 2rem;">Social Links</h4>
+                <div id="socials-list" class="item-list"></div>
+                <button class="add-new-btn" onclick="adminApp.openModal('social')"><i class="ph ph-plus"></i> Add Social
+                    Link</button>
+            </section>
+
+            <!-- About Section -->
+            <section id="about-section" class="admin-section">
+                <h3>About Settings</h3>
+                <div class="form-group">
+                    <label>Subtitle</label>
+                    <input type="text" id="about-subtitle" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Bio</label>
+                    <textarea id="about-bio" class="form-control"></textarea>
+                </div>
+                <button class="btn-save" onclick="adminApp.saveAbout()">Save About</button>
+
+                <h4 style="margin-top: 2rem;">Stats</h4>
+                <div id="stats-list" class="item-list"></div>
+                <button class="add-new-btn" onclick="adminApp.openModal('stat')"><i class="ph ph-plus"></i> Add
+                    Stat</button>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills-section" class="admin-section">
+                <h3>Skills Categories</h3>
+                <div id="skills-list" class="item-list"></div>
+                <button class="add-new-btn" onclick="adminApp.openModal('skill')"><i class="ph ph-plus"></i> Add Skill
+                    Category</button>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects-section" class="admin-section">
+                <h3>Featured Projects</h3>
+                <div id="projects-list" class="item-list"></div>
+                <button class="add-new-btn" onclick="adminApp.openModal('project')"><i class="ph ph-plus"></i> Add
+                    Project</button>
+            </section>
+
+            <!-- Contacts Section -->
+            <section id="contacts-section" class="admin-section">
+                <h3>Contact Section Title & Subtitle</h3>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="contact-title" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Subtitle</label>
+                    <textarea id="contact-subtitle" class="form-control"></textarea>
+                </div>
+                <button class="btn-save" onclick="adminApp.saveContactText()">Save Contact Info</button>
+
+                <h4 style="margin-top: 2rem;">Contact Methods</h4>
+                <div id="contacts-list" class="item-list"></div>
+                <button class="add-new-btn" onclick="adminApp.openModal('contact')"><i class="ph ph-plus"></i> Add
+                    Contact Method</button>
+            </section>
+        </main>
+
+        <!-- Generic Modal -->
+        <div class="modal" id="generic-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Add/Edit Item</h2>
+                    <button class="close-modal" onclick="adminApp.closeModal()">&times;</button>
+                </div>
+                <div id="modal-body">
+                    <!-- Form fields injected here by JS -->
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel" onclick="adminApp.closeModal()">Cancel</button>
+                    <button class="btn-save" style="margin-top: 0;" onclick="adminApp.saveModal()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- /#dashboard -->
 
     <script src="admin.js"></script>
 </body>
+
 </html>

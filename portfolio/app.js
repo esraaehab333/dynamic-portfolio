@@ -1,4 +1,7 @@
-// Initial Default Data
+// ─── API Config ─────────────────────────────────────────────────────────────
+const API_URL = 'https://portfolio-api.esraaehabb333.workers.dev';
+
+// ─── Default Data (used only when the API returns an empty object) ───────────
 const DEFAULT_DATA = {
     theme: {
         accent: '#3EB489',
@@ -72,32 +75,65 @@ const DEFAULT_DATA = {
     ]
 };
 
+// ─── Portfolio App ───────────────────────────────────────────────────────────
 class PortfolioApp {
     constructor() {
-        this.data = this.loadData();
+        this.data = null;
         this.init();
     }
 
-    loadData() {
-        const stored = localStorage.getItem('portfolio_data');
-        return stored ? JSON.parse(stored) : DEFAULT_DATA;
+    // ── Data Layer ────────────────────────────────────────────────────────────
+    async loadData() {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status} ${response.statusText}`);
+        }
+        const data = await response.json();
+        // Use DEFAULT_DATA only when the API returns an empty object
+        return Object.keys(data).length ? data : DEFAULT_DATA;
     }
 
-    init() {
+    // ── Initialisation ────────────────────────────────────────────────────────
+    async init() {
+        this.showLoadingOverlay(true);
+        try {
+            this.data = await this.loadData();
+        } catch (err) {
+            console.error('Failed to load portfolio data:', err);
+            // Graceful degradation: fall back to DEFAULT_DATA so the site still renders
+            this.data = DEFAULT_DATA;
+        } finally {
+            this.showLoadingOverlay(false);
+        }
+
         this.applyTheme();
         this.renderAll();
         this.setupEventListeners();
         this.setupAnimations();
-        
+
         // Set current year
-        document.getElementById('year').textContent = new Date().getFullYear();
+        const yearEl = document.getElementById('year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
     }
 
+    // ── Loading overlay ───────────────────────────────────────────────────────
+    showLoadingOverlay(visible) {
+        let overlay = document.getElementById('app-loading-overlay');
+        if (!overlay) return;
+        if (visible) {
+            overlay.removeAttribute('hidden');
+        } else {
+            overlay.setAttribute('hidden', '');
+        }
+    }
+
+    // ── Theme ─────────────────────────────────────────────────────────────────
     applyTheme() {
         document.documentElement.style.setProperty('--accent-color', this.data.theme.accent);
         document.documentElement.style.setProperty('--surface-color', this.data.theme.surface);
     }
 
+    // ── Render Helpers ────────────────────────────────────────────────────────
     renderAll() {
         this.renderTextContent();
         this.renderImage('hero.image', 'hero-image');
@@ -129,13 +165,13 @@ class PortfolioApp {
         }
         if (value) {
             const imgEl = document.getElementById(elId);
-            if(imgEl) imgEl.src = value;
+            if (imgEl) imgEl.src = value;
         }
     }
 
     renderSocials() {
         const container = document.getElementById('social-links-container');
-        if(!container) return;
+        if (!container) return;
         container.innerHTML = this.data.socials.map((social) => `
             <a href="${social.url}" target="_blank" class="social-link" title="${social.url}">
                 <i class="ph ${social.icon}"></i>
@@ -145,7 +181,7 @@ class PortfolioApp {
 
     renderStats() {
         const container = document.getElementById('stats-container');
-        if(!container) return;
+        if (!container) return;
         container.innerHTML = this.data.stats.map((stat) => `
             <div class="stat-card">
                 <div class="stat-number font-mono">${stat.number}</div>
@@ -156,7 +192,7 @@ class PortfolioApp {
 
     renderSkills() {
         const container = document.getElementById('skills-container');
-        if(!container) return;
+        if (!container) return;
         container.innerHTML = this.data.skills.map((cat) => `
             <div class="skill-category">
                 <h3 class="font-poiret"><i class="ph ${cat.icon}"></i> ${cat.title}</h3>
@@ -171,7 +207,7 @@ class PortfolioApp {
 
     renderProjects() {
         const container = document.getElementById('projects-container');
-        if(!container) return;
+        if (!container) return;
         container.innerHTML = this.data.projects.map((proj) => `
             <div class="project-card">
                 <div class="project-image">
@@ -196,7 +232,7 @@ class PortfolioApp {
 
     renderContacts() {
         const container = document.getElementById('contact-container');
-        if(!container) return;
+        if (!container) return;
         container.innerHTML = this.data.contacts.map((contact) => `
             <a href="${contact.url}" target="_blank" class="contact-card">
                 <i class="ph ${contact.icon} contact-icon"></i>
@@ -208,12 +244,13 @@ class PortfolioApp {
         `).join('');
     }
 
+    // ── Event Listeners ───────────────────────────────────────────────────────
     setupEventListeners() {
         // Mobile Menu Toggle
         const menuBtn = document.querySelector('.mobile-menu-btn');
         const mobileMenu = document.querySelector('.mobile-menu');
-        
-        if(menuBtn && mobileMenu) {
+
+        if (menuBtn && mobileMenu) {
             menuBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('open');
                 const icon = mobileMenu.classList.contains('open') ? 'ph-x' : 'ph-list';
@@ -250,6 +287,7 @@ class PortfolioApp {
         });
     }
 
+    // ── Animations ────────────────────────────────────────────────────────────
     setupAnimations() {
         const observerOptions = {
             threshold: 0.1,
@@ -268,5 +306,5 @@ class PortfolioApp {
     }
 }
 
-// Initialize App
+// ─── Initialize App ───────────────────────────────────────────────────────────
 const app = new PortfolioApp();
