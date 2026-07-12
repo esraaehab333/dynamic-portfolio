@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Admin Dashboard</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Poiret+One&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Phosphor Icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Premium Admin UI Styles */
+        :root {
+            --admin-bg: #030712;
+            --admin-surface: rgba(15, 23, 42, 0.6);
+            --admin-border: rgba(255, 255, 255, 0.08);
+            --admin-accent: #38bdf8;
+            --admin-accent-glow: rgba(56, 189, 248, 0.4);
+            --admin-text: #f8fafc;
+            --admin-text-muted: #94a3b8;
+        }
+
+        body {
+            display: flex;
+            background: var(--admin-bg);
+            background-image: 
+                radial-gradient(circle at top left, rgba(56, 189, 248, 0.1), transparent 40%),
+                radial-gradient(circle at bottom right, rgba(139, 92, 246, 0.1), transparent 40%);
+            color: var(--admin-text);
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        .admin-sidebar {
+            width: 280px;
+            background: var(--admin-surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--admin-border);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            z-index: 50;
+        }
+
+        .admin-sidebar h1 {
+            font-size: 1.8rem;
+            margin-bottom: 2.5rem;
+            background: linear-gradient(135deg, #fff, var(--admin-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .admin-nav-item {
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--admin-text-muted);
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+
+        .admin-nav-item i { font-size: 1.2rem; }
+
+        .admin-nav-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--admin-text);
+            transform: translateX(5px);
+        }
+
+        .admin-nav-item.active {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--admin-accent);
+            border-color: rgba(56, 189, 248, 0.2);
+            box-shadow: inset 4px 0 0 var(--admin-accent);
+        }
+
+        .admin-main {
+            margin-left: 280px;
+            padding: 4rem;
+            flex: 1;
+            box-sizing: border-box;
+            max-width: 1000px;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        
+        .header-actions h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+
+        .view-site-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--admin-text);
+            text-decoration: none;
+            background: var(--admin-surface);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--admin-border);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .view-site-btn:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--admin-accent);
+            color: var(--admin-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .admin-section {
+            display: none;
+            background: var(--admin-surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--admin-border);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        .admin-section.active {
+            display: block;
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .admin-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--admin-accent);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+            color: var(--admin-text-muted);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--admin-text);
+            padding: 1rem 1.2rem;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--admin-accent);
+            background: rgba(0,0,0,0.5);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+        }
+
+        input[type="color"].form-control {
+            padding: 0.5rem;
+            cursor: pointer;
+            height: 60px;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .btn-save {
+            background: var(--admin-accent);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 10px 20px var(--admin-accent-glow);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px var(--admin-accent-glow);
+            filter: brightness(1.1);
+        }
+
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 1.2rem;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .list-item-content {
+            flex: 1;
+        }
+        
+        .list-item-content strong {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .list-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid transparent;
+            color: var(--admin-text);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255,255,255,0.2);
+            color: var(--admin-accent);
+        }
+
+        .btn-icon.delete:hover {
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .add-new-btn {
+            background: transparent;
+            color: var(--admin-text-muted);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            box-sizing: border-box;
+        }
+
+        .add-new-btn:hover {
+            background: rgba(56, 189, 248, 0.05);
+            border-color: var(--admin-accent);
+            color: var(--admin-accent);
+        }
+
+        /* Modal Enhancements */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: #0f172a;
+            padding: 3rem;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            box-sizing: border-box;
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--admin-accent);
+        }
+
+        .close-modal {
+            background: rgba(255,255,255,0.05);
+            border: none;
+            color: var(--admin-text-muted);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 1rem;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            color: var(--admin-text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <h1 class="font-poiret">Portfolio Admin</h1>
+        <nav class="admin-nav">
+            <div class="admin-nav-item active" data-target="theme"><i class="ph ph-palette"></i> Theme & Global</div>
+            <div class="admin-nav-item" data-target="hero"><i class="ph ph-user"></i> Hero Section</div>
+            <div class="admin-nav-item" data-target="about"><i class="ph ph-info"></i> About Section</div>
+            <div class="admin-nav-item" data-target="skills"><i class="ph ph-code"></i> Skills</div>
+            <div class="admin-nav-item" data-target="projects"><i class="ph ph-briefcase"></i> Projects</div>
+            <div class="admin-nav-item" data-target="contacts"><i class="ph ph-envelope"></i> Contacts</div>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <div class="header-actions">
+            <h2>Dashboard</h2>
+            <a href="index.html" class="view-site-btn" target="_blank"><i class="ph ph-arrow-square-out"></i> View Site</a>
+        </div>
+
+        <!-- Theme Section -->
+        <section id="theme-section" class="admin-section active">
+            <h3>Theme Settings</h3>
+            <div class="form-group">
+                <label>Accent Color</label>
+                <input type="color" id="theme-accent" class="form-control" style="height: 50px;">
+            </div>
+            <div class="form-group">
+                <label>Surface Color</label>
+                <input type="color" id="theme-surface" class="form-control" style="height: 50px;">
+            </div>
+            <button class="btn-save" onclick="adminApp.saveTheme()">Save Theme</button>
+        </section>
+
+        <!-- Hero Section -->
+        <section id="hero-section" class="admin-section">
+            <h3>Hero Settings</h3>
+            <div class="form-group">
+                <label>Eyebrow Text</label>
+                <input type="text" id="hero-eyebrow" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="hero-title" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="hero-description" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Profile Image URL</label>
+                <input type="text" id="hero-image" class="form-control">
+            </div>
+            <button class="btn-save" onclick="adminApp.saveHero()">Save Hero</button>
+            
+            <h4 style="margin-top: 2rem;">Social Links</h4>
+            <div id="socials-list" class="item-list"></div>
+            <button class="add-new-btn" onclick="adminApp.openModal('social')"><i class="ph ph-plus"></i> Add Social Link</button>
+        </section>
+
+        <!-- About Section -->
+        <section id="about-section" class="admin-section">
+            <h3>About Settings</h3>
+            <div class="form-group">
+                <label>Subtitle</label>
+                <input type="text" id="about-subtitle" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea id="about-bio" class="form-control"></textarea>
+            </div>
+            <button class="btn-save" onclick="adminApp.saveAbout()">Save About</button>
+
+            <h4 style="margin-top: 2rem;">Stats</h4>
+            <div id="stats-list" class="item-list"></div>
+            <button class="add-new-btn" onclick="adminApp.openModal('stat')"><i class="ph ph-plus"></i> Add Stat</button>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills-section" class="admin-section">
+            <h3>Skills Categories</h3>
+            <div id="skills-list" class="item-list"></div>
+            <button class="add-new-btn" onclick="adminApp.openModal('skill')"><i class="ph ph-plus"></i> Add Skill Category</button>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects-section" class="admin-section">
+            <h3>Featured Projects</h3>
+            <div id="projects-list" class="item-list"></div>
+            <button class="add-new-btn" onclick="adminApp.openModal('project')"><i class="ph ph-plus"></i> Add Project</button>
+        </section>
+
+        <!-- Contacts Section -->
+        <section id="contacts-section" class="admin-section">
+            <h3>Contact Section Title & Subtitle</h3>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="contact-title" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Subtitle</label>
+                <textarea id="contact-subtitle" class="form-control"></textarea>
+            </div>
+            <button class="btn-save" onclick="adminApp.saveContactText()">Save Contact Info</button>
+
+            <h4 style="margin-top: 2rem;">Contact Methods</h4>
+            <div id="contacts-list" class="item-list"></div>
+            <button class="add-new-btn" onclick="adminApp.openModal('contact')"><i class="ph ph-plus"></i> Add Contact Method</button>
+        </section>
+    </main>
+
+    <!-- Generic Modal -->
+    <div class="modal" id="generic-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add/Edit Item</h2>
+                <button class="close-modal" onclick="adminApp.closeModal()">&times;</button>
+            </div>
+            <div id="modal-body">
+                <!-- Form fields injected here by JS -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="adminApp.closeModal()">Cancel</button>
+                <button class="btn-save" style="margin-top: 0;" onclick="adminApp.saveModal()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

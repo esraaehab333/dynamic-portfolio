@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esraa | Mobile App Developer</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Poiret+One&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Phosphor Icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-content">
+            <div class="logo font-poiret">Esraa</div>
+            
+            <div class="nav-links">
+                <a href="#hero" class="active">Home</a>
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </div>
+
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="ph ph-list"></i>
+            </button>
+        </div>
+        <div class="mobile-menu">
+            <a href="#hero">Home</a>
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="section-hero">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <p class="eyebrow font-mono" data-key="hero.eyebrow">HELLO, I'M ESRAA</p>
+                    <h1 class="font-poiret" data-key="hero.title">Mobile App Developer</h1>
+                    <p class="description" data-key="hero.description">Crafting elegant, high-performance mobile experiences with Kotlin Multiplatform and Compose.</p>
+                    
+                    <div class="social-links" id="social-links-container">
+                        <!-- Populated by JS -->
+                    </div>
+                    
+                </div>
+
+                <div class="hero-image-container">
+                    <div class="phone-bezel">
+                        <div class="notch"></div>
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Esraa" id="hero-image" class="profile-pic">
+                        <div class="home-indicator"></div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section-about reveal">
+            <h2 class="font-poiret section-title">About Me</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <h3 class="font-poiret" data-key="about.subtitle">Esraa — Kotlin Enthusiast</h3>
+                    <p data-key="about.bio">I am a passionate mobile app developer specializing in Android and Kotlin Multiplatform. I love building seamless cross-platform experiences that feel truly native, focusing on robust architectures and beautiful UIs.</p>
+                </div>
+                
+                <div class="stats-grid" id="stats-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section-skills reveal">
+            <h2 class="font-poiret section-title">Technical Skills</h2>
+            <div class="skills-grid" id="skills-container">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section-projects reveal">
+            <h2 class="font-poiret section-title">Featured Projects</h2>
+            <div class="projects-grid" id="projects-container">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section-contact reveal">
+            <h2 class="font-poiret section-title" data-key="contact.title">Get In Touch</h2>
+            <p class="contact-subtitle" data-key="contact.subtitle">Currently open for new opportunities. Let's build something amazing together.</p>
+            
+            <div class="contact-methods" id="contact-container">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p class="font-mono">© <span id="year"></span> Esraa. All rights reserved.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
