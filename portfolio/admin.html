@@ -219,6 +219,7 @@
                     </select>
                 </div>
                 <div class="form-group"><label>Accent Color</label><input type="color" id="site-accent" class="form-control" style="height: 50px; padding: 5px;"></div>
+                <div class="form-group"><label>Formspree ID (For Contact Form to work)</label><input type="text" id="site-form-id" class="form-control" placeholder="e.g. xvgzpyzo"></div>
                 <button class="btn-save" onclick="adminApp.saveSite()">Save Site Config</button>
             </section>
 
@@ -227,6 +228,7 @@
                 <div class="form-group"><label>Main Headline (HTML allowed, use &lt;span&gt; for highlight)</label><input type="text" id="hero-title" class="form-control"></div>
                 <div class="form-group"><label>Hero Subtext</label><textarea id="hero-description" class="form-control" rows="4"></textarea></div>
                 <div class="form-group"><label>Profile Image URL</label><input type="text" id="hero-image" class="form-control"></div>
+                <div class="form-group"><label>CV Download URL (Google Drive/Dropbox Link)</label><input type="text" id="hero-cv" class="form-control"></div>
                 <button class="btn-save" onclick="adminApp.saveHero()">Save Hero Changes</button>
             </section>
 
@@ -238,12 +240,12 @@
             <!-- Reusable Collection Sections -->
             <section id="projects-section" class="admin-section">
                 <div id="projects-list" class="item-list"></div>
-                <button class="add-new-btn" onclick="adminApp.openModal('project')">+ Add New Project</button>
+                <button class="add-new-btn" onclick="adminApp.openModal('projects')">+ Add New Project</button>
             </section>
 
             <section id="services-section" class="admin-section">
                 <div id="services-list" class="item-list"></div>
-                <button class="add-new-btn" onclick="adminApp.openModal('service')">+ Add New Service</button>
+                <button class="add-new-btn" onclick="adminApp.openModal('services')">+ Add New Service</button>
             </section>
 
             <section id="process-section" class="admin-section">
@@ -253,24 +255,24 @@
 
             <section id="skills-section" class="admin-section">
                 <div id="skills-list" class="item-list"></div>
-                <button class="add-new-btn" onclick="adminApp.openModal('skill')">+ Add New Skill</button>
+                <button class="add-new-btn" onclick="adminApp.openModal('skills')">+ Add New Skill</button>
             </section>
 
             <section id="partners-section" class="admin-section">
                 <div id="partners-list" class="item-list"></div>
-                <button class="add-new-btn" onclick="adminApp.openModal('partner')">+ Add New Partner Logo</button>
+                <button class="add-new-btn" onclick="adminApp.openModal('partners')">+ Add New Partner Logo</button>
             </section>
 
             <section id="testimonials-section" class="admin-section">
                 <div id="testimonials-list" class="item-list"></div>
-                <button class="add-new-btn" onclick="adminApp.openModal('testimonial')">+ Add New Testimonial</button>
+                <button class="add-new-btn" onclick="adminApp.openModal('testimonials')">+ Add New Testimonial</button>
             </section>
 
             <section id="contacts-section" class="admin-section">
                 <div class="form-group"><label>Contact Section Title</label><input type="text" id="contact-title" class="form-control"></div>
                 <div class="form-group"><label>Contact Section Subtitle</label><textarea id="contact-subtitle" class="form-control" rows="3"></textarea></div>
                 <div id="contacts-list" class="item-list"></div>
-                <button class="add-new-btn" onclick="adminApp.openModal('contact')">+ Add Contact Method</button>
+                <button class="add-new-btn" onclick="adminApp.openModal('contacts')">+ Add Contact Method</button>
             </section>
         </main>
     </div>

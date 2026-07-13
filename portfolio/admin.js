@@ -5,18 +5,14 @@ const ADMIN_PASSWORD = 'admin123';
 const DEFAULT_DATA = {
     site: { logo: "ESRAA EHAB", accent: "#0055FF", theme: "light" },
     hero: {
-        name: "HELLO, I'M ESRAA EHAB",
-        title: "I Design High-Performance <span>Mobile Apps</span>",
-        description: "Specializing in Android and iOS development using Kotlin Multiplatform and Compose to build seamless digital experiences.",
-        image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80"
+        name: "HELLO, I'M ESRAA EHAB LOTFY",
+        title: "Junior <span>Android Developer</span>",
+        description: "Mobile Application Developer specializing in high-performance, user-centric apps.",
+        image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80",
+        cv_url: "#"
     },
-    about: {
-        bio: "I am a dedicated Mobile App Developer with a passion for creating clean, efficient, and user-friendly applications. I focus on robust architectures and beautiful UIs."
-    },
-    contact: {
-        title: "Let's Create Something Amazing Together",
-        subtitle: "Currently open for new projects and opportunities. Reach out and let's talk about your idea!"
-    },
+    about: { bio: "" },
+    contact: { title: "", subtitle: "" },
     socials: [], partners: [], projects: [], services: [], skills: [], process: [], testimonials: [], contacts: []
 };
 
@@ -56,9 +52,13 @@ class AdminApp {
     async loadData() {
         try {
             const res = await fetch(API_URL + '?t=' + Date.now());
-            if (!res.ok) throw new Error("Fetch failed");
             const data = await res.json();
-            return { ...DEFAULT_DATA, ...data };
+            const cleaned = { ...DEFAULT_DATA, ...data };
+            if (data.project && !data.projects) cleaned.projects = data.project;
+            if (data.skill && !data.skills) cleaned.skills = data.skill;
+            if (data.service && !data.services) cleaned.services = data.service;
+            if (data.partner && !data.partners) cleaned.partners = data.partner;
+            return cleaned;
         } catch (e) { return DEFAULT_DATA; }
     }
 
@@ -89,12 +89,14 @@ class AdminApp {
         document.getElementById('site-logo').value = this.data.site?.logo || DEFAULT_DATA.site.logo;
         document.getElementById('site-accent').value = this.data.site?.accent || DEFAULT_DATA.site.accent;
         document.getElementById('site-theme').value = this.data.site?.theme || DEFAULT_DATA.site.theme;
-        document.getElementById('hero-name').value = this.data.hero.name || '';
-        document.getElementById('hero-title').value = this.data.hero.title || '';
-        document.getElementById('hero-description').value = this.data.hero.description || '';
-        document.getElementById('hero-image').value = this.data.hero.image || '';
-        document.getElementById('contact-title').value = this.data.contact.title || '';
-        document.getElementById('contact-subtitle').value = this.data.contact.subtitle || '';
+        document.getElementById('site-form-id').value = this.data.site?.form_id || '';
+        document.getElementById('hero-name').value = this.data.hero?.name || '';
+        document.getElementById('hero-title').value = this.data.hero?.title || '';
+        document.getElementById('hero-description').value = this.data.hero?.description || '';
+        document.getElementById('hero-image').value = this.data.hero?.image || '';
+        document.getElementById('hero-cv').value = this.data.hero?.cv_url || '';
+        document.getElementById('contact-title').value = this.data.contact?.title || '';
+        document.getElementById('contact-subtitle').value = this.data.contact?.subtitle || '';
         if (document.getElementById('about-bio')) {
             document.getElementById('about-bio').value = this.data.about?.bio || '';
         }
@@ -113,6 +115,7 @@ class AdminApp {
         this.data.hero.title = document.getElementById('hero-title').value;
         this.data.hero.description = document.getElementById('hero-description').value;
         this.data.hero.image = document.getElementById('hero-image').value;
+        this.data.hero.cv_url = document.getElementById('hero-cv').value;
         this.saveData();
     }
 
@@ -152,21 +155,30 @@ class AdminApp {
         this.editIndex = idx;
         const item = idx !== null ? this.data[mode][idx] : {};
         let html = '';
-        if (mode === 'project') {
-            html = `<div class="form-group"><label>Title</label><input id="m-title" class="form-control" value="${item.title||''}"></div><div class="form-group"><label>Tag</label><input id="m-tag" class="form-control" value="${item.tag||''}"></div><div class="form-group"><label>Image URL</label><input id="m-image" class="form-control" value="${item.image||''}"></div><div class="form-group"><label>Link</label><input id="m-demo" class="form-control" value="${item.demo||''}"></div>`;
-        } else if (mode === 'service') {
+        if (mode === 'projects') {
+            html = `
+                <div class="form-group"><label>Title</label><input id="m-title" class="form-control" value="${item.title||''}"></div>
+                <div class="form-group"><label>Subtitle / Description</label><input id="m-subtitle" class="form-control" value="${item.subtitle||''}"></div>
+                <div class="form-group"><label>Tag (e.g. Kotlin | Compose)</label><input id="m-tag" class="form-control" value="${item.tag||''}"></div>
+                <div class="form-group"><label>Image URL</label><input id="m-image" class="form-control" value="${item.image||''}"></div>
+                <div class="form-group"><label>Live Demo URL</label><input id="m-demo" class="form-control" value="${item.demo||''}"></div>
+                <div class="form-group"><label>GitHub URL</label><input id="m-github" class="form-control" value="${item.github||''}"></div>
+                <div class="form-group"><label>LinkedIn URL</label><input id="m-linkedin" class="form-control" value="${item.linkedin||''}"></div>
+                <div class="form-group"><label>Video URL</label><input id="m-video" class="form-control" value="${item.video||''}"></div>
+            `;
+        } else if (mode === 'services') {
             html = `<div class="form-group"><label>Icon (ph-*)</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Title</label><input id="m-title" class="form-control" value="${item.title||''}"></div><div class="form-group"><label>Description</label><textarea id="m-desc" class="form-control">${item.desc||''}</textarea></div>`;
         } else if (mode === 'process') {
             html = `<div class="form-group"><label>Number</label><input id="m-number" class="form-control" value="${item.number||''}"></div><div class="form-group"><label>Title</label><input id="m-title" class="form-control" value="${item.title||''}"></div><div class="form-group"><label>Description</label><textarea id="m-desc" class="form-control">${item.desc||''}</textarea></div>`;
-        } else if (mode === 'skill') {
+        } else if (mode === 'skills') {
             html = `<div class="form-group"><label>Icon (ph-*)</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Name</label><input id="m-name" class="form-control" value="${item.name||''}"></div>`;
-        } else if (mode === 'testimonial') {
+        } else if (mode === 'testimonials') {
             html = `<div class="form-group"><label>Text</label><textarea id="m-text" class="form-control">${item.text||''}</textarea></div><div class="form-group"><label>Author</label><input id="m-author" class="form-control" value="${item.author||''}"></div><div class="form-group"><label>Role</label><input id="m-title" class="form-control" value="${item.title||''}"></div><div class="form-group"><label>Image URL</label><input id="m-image" class="form-control" value="${item.image||''}"></div>`;
-        } else if (mode === 'contact') {
+        } else if (mode === 'contacts') {
             html = `<div class="form-group"><label>Icon</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Label</label><input id="m-label" class="form-control" value="${item.label||''}"></div><div class="form-group"><label>Value</label><input id="m-value" class="form-control" value="${item.value||''}"></div><div class="form-group"><label>Link</label><input id="m-url" class="form-control" value="${item.url||''}"></div>`;
-        } else if (mode === 'social') {
+        } else if (mode === 'socials') {
             html = `<div class="form-group"><label>Icon</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Link</label><input id="m-url" class="form-control" value="${item.url||''}"></div>`;
-        } else if (mode === 'partner') {
+        } else if (mode === 'partners') {
             html = `<div class="form-group"><label>Logo URL</label><input id="m-logo" class="form-control" value="${item.logo||''}"></div>`;
         }
         document.getElementById('modal-body').innerHTML = html;
@@ -178,21 +190,30 @@ class AdminApp {
     saveModal() {
         const mode = this.currentMode;
         let newItem = { id: Date.now() };
-        if (mode === 'project') {
-            newItem = { ...newItem, title: document.getElementById('m-title').value, tag: document.getElementById('m-tag').value, image: document.getElementById('m-image').value, demo: document.getElementById('m-demo').value };
-        } else if (mode === 'service') {
+        if (mode === 'projects') {
+            newItem = { ...newItem,
+                title: document.getElementById('m-title').value,
+                subtitle: document.getElementById('m-subtitle').value,
+                tag: document.getElementById('m-tag').value,
+                image: document.getElementById('m-image').value,
+                demo: document.getElementById('m-demo').value,
+                github: document.getElementById('m-github').value,
+                linkedin: document.getElementById('m-linkedin').value,
+                video: document.getElementById('m-video').value
+            };
+        } else if (mode === 'services') {
             newItem = { ...newItem, icon: document.getElementById('m-icon').value, title: document.getElementById('m-title').value, desc: document.getElementById('m-desc').value };
         } else if (mode === 'process') {
             newItem = { ...newItem, number: document.getElementById('m-number').value, title: document.getElementById('m-title').value, desc: document.getElementById('m-desc').value };
-        } else if (mode === 'skill') {
+        } else if (mode === 'skills') {
             newItem = { ...newItem, icon: document.getElementById('m-icon').value, name: document.getElementById('m-name').value };
-        } else if (mode === 'testimonial') {
+        } else if (mode === 'testimonials') {
             newItem = { ...newItem, text: document.getElementById('m-text').value, author: document.getElementById('m-author').value, title: document.getElementById('m-title').value, image: document.getElementById('m-image').value };
-        } else if (mode === 'contact') {
+        } else if (mode === 'contacts') {
             newItem = { ...newItem, icon: document.getElementById('m-icon').value, label: document.getElementById('m-label').value, value: document.getElementById('m-value').value, url: document.getElementById('m-url').value };
-        } else if (mode === 'social') {
+        } else if (mode === 'socials') {
             newItem = { ...newItem, icon: document.getElementById('m-icon').value, url: document.getElementById('m-url').value };
-        } else if (mode === 'partner') {
+        } else if (mode === 'partners') {
             newItem = { ...newItem, logo: document.getElementById('m-logo').value };
         }
         if (this.editIndex !== null) this.data[mode][this.editIndex] = newItem;
