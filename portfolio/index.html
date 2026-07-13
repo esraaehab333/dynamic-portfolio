@@ -3,153 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esraa | Mobile App Developer</title>
+    <title>ESRAA EHAB | Mobile App Developer</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Poiret+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Icons (Phosphor Icons) -->
+    <!-- Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     
     <link rel="stylesheet" href="styles.css">
-    <style>
-        #app-loading-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: #0b1512;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            transition: opacity 0.4s ease;
-        }
-        #app-loading-overlay[hidden] { display: none; }
-        .loader-ring {
-            width: 56px;
-            height: 56px;
-            border: 4px solid rgba(62,180,137,.2);
-            border-top-color: #3EB489;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loader-text {
-            font-family: 'Inter', sans-serif;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.9rem;
-            letter-spacing: 0.05em;
-        }
-    </style>
 </head>
 <body>
 
-    <!-- Loading Overlay (shown while fetching data from Cloudflare Worker) -->
-    <div id="app-loading-overlay">
-        <div class="loader-ring"></div>
-        <span class="loader-text">Loading portfolio…</span>
+    <!-- Loading -->
+    <div id="app-loading-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center;">
+        <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #0055FF; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
     </div>
 
-    <!-- Navigation -->
     <nav id="navbar">
-        <div class="nav-content">
-            <div class="logo font-poiret">Esraa</div>
+        <div class="container nav-content">
+            <div class="logo">
+                <div class="logo-icon" id="logo-icon-char"><i class="ph ph-device-mobile"></i></div>
+                <div id="logo-text">ESRAA EHAB</div>
+            </div>
             
             <div class="nav-links">
-                <a href="#hero" class="active">Home</a>
+                <a href="#home">Home</a>
                 <a href="#about">About</a>
-                <a href="#skills">Skills</a>
+                <a href="#services">Services</a>
                 <a href="#projects">Projects</a>
+                <a href="#process">Process</a>
                 <a href="#contact">Contact</a>
             </div>
 
-            <button class="mobile-menu-btn" aria-label="Toggle menu">
-                <i class="ph ph-list"></i>
-            </button>
-        </div>
-        <div class="mobile-menu">
-            <a href="#hero">Home</a>
-            <a href="#about">About</a>
-            <a href="#skills">Skills</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
+            <a href="#contact" class="btn btn-primary">Let's Talk <i class="ph ph-arrow-up-right"></i></a>
         </div>
     </nav>
 
-
     <main>
         <!-- Hero Section -->
-        <section id="hero" class="section-hero">
-            <div class="hero-content">
+        <section id="home" class="hero">
+            <div class="container hero-grid">
                 <div class="hero-text">
-                    <p class="eyebrow font-mono" data-key="hero.eyebrow">HELLO, I'M ESRAA</p>
-                    <h1 class="font-poiret" data-key="hero.title">Mobile App Developer</h1>
-                    <p class="description" data-key="hero.description">Crafting elegant, high-performance mobile experiences with Kotlin Multiplatform and Compose.</p>
-                    
-                    <div class="social-links" id="social-links-container">
-                        <!-- Populated by JS -->
+                    <div class="eyebrow" data-key="hero.name">HELLO, I'M ALEX VEGA</div>
+                    <h1 class="hero-title" id="hero-title-main">I Design Digital <span>Experiences</span></h1>
+                    <p class="hero-desc" data-key="hero.description">I craft elegant, user-centered websites and interfaces that help brands grow and people connect.</p>
+
+                    <div class="hero-btns">
+                        <a href="#projects" class="btn btn-primary">View My Work <i class="ph ph-arrow-right"></i></a>
+                        <a href="#contact" class="btn btn-outline">Let's Work Together</a>
                     </div>
-                    
+
+                    <div class="trusted-by">
+                        <p class="trusted-text">Trusted by startups and companies worldwide</p>
+                        <div class="partners-row" id="partners-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
                 </div>
 
-                <div class="hero-image-container">
-                    <div class="phone-bezel">
-                        <div class="notch"></div>
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Esraa" id="hero-image" class="profile-pic">
-                        <div class="home-indicator"></div>
+                <div class="hero-image-box">
+                    <div class="mobile-tech-bg"></div>
+                    <div class="tech-icon-float" style="top: 10%; left: 0;"><i class="ph ph-android-logo"></i></div>
+                    <div class="tech-icon-float" style="top: 20%; right: -10px;"><i class="ph ph-apple-logo"></i></div>
+                    <div class="tech-icon-float" style="bottom: 15%; left: -20px;"><i class="ph ph-code"></i></div>
+                    <div class="tech-icon-float" style="bottom: 5%; right: 20%;"><i class="ph ph-device-mobile"></i></div>
 
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80" alt="Profile" id="hero-image">
+
+                    <div class="availability-badge">
+                        <div class="dot"></div>
+                        Available for new projects
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- About Section -->
-        <section id="about" class="section-about reveal">
-            <h2 class="font-poiret section-title">About Me</h2>
-            <div class="about-grid">
-                <div class="about-text">
-                    <h3 class="font-poiret" data-key="about.subtitle">Esraa — Kotlin Enthusiast</h3>
-                    <p data-key="about.bio">I am a passionate mobile app developer specializing in Android and Kotlin Multiplatform. I love building seamless cross-platform experiences that feel truly native, focusing on robust architectures and beautiful UIs.</p>
+        <section id="about" class="section-padding" style="background: var(--bg-light);">
+            <div class="container" style="max-width: 800px; text-align: center;">
+                <div class="section-label" style="justify-content: center; margin-bottom: 24px;">About Me</div>
+                <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 24px;">Transforming Ideas Into Seamless Apps</h2>
+                <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.8;" data-key="about.bio">
+                    I am a passionate mobile developer specializing in high-performance Android and iOS applications.
+                </p>
+            </div>
+        </section>
+
+        <!-- Featured Projects -->
+        <section id="projects" class="section-padding">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">Featured Projects</div>
+                    <a href="#" class="view-all">View All Projects <i class="ph ph-arrow-right"></i></a>
                 </div>
                 
-                <div class="stats-grid" id="stats-container">
+                <div class="projects-grid" id="projects-container">
                     <!-- Populated by JS -->
                 </div>
             </div>
         </section>
 
-        <!-- Skills Section -->
-        <section id="skills" class="section-skills reveal">
-            <h2 class="font-poiret section-title">Technical Skills</h2>
-            <div class="skills-grid" id="skills-container">
-                <!-- Populated by JS -->
+        <!-- Services Section -->
+        <section id="services" class="section-padding" style="background: var(--bg-light);">
+            <div class="container">
+                <div class="section-label" style="margin-bottom: 40px;">Services & Capabilities</div>
+
+                <div class="services-grid" id="services-container">
+                    <!-- Populated by JS -->
+                </div>
             </div>
         </section>
 
-        <!-- Projects Section -->
-        <section id="projects" class="section-projects reveal">
-            <h2 class="font-poiret section-title">Featured Projects</h2>
-            <div class="projects-grid" id="projects-container">
-                <!-- Populated by JS -->
+        <!-- Tools Bar -->
+        <section class="tools-bar">
+            <div class="container tools-flex">
+                <div class="tools-label">Tools & Skills</div>
+                <div id="skills-container" style="display: flex; gap: 40px;">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section id="process" class="section-padding">
+            <div class="container">
+                <div class="section-label" style="margin-bottom: 20px;">My Process</div>
+
+                <div class="process-grid" id="process-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section id="testimonials" class="section-padding" style="background: var(--bg-light);">
+            <div class="container">
+                <div class="section-label" style="margin-bottom: 40px;">What Clients Say</div>
+
+                <div class="testimonials-grid" id="testimonials-container">
+                    <!-- Populated by JS -->
+                </div>
             </div>
         </section>
 
         <!-- Contact Section -->
-        <section id="contact" class="section-contact reveal">
-            <h2 class="font-poiret section-title" data-key="contact.title">Get In Touch</h2>
-            <p class="contact-subtitle" data-key="contact.subtitle">Currently open for new opportunities. Let's build something amazing together.</p>
-            
-            <div class="contact-methods" id="contact-container">
-                <!-- Populated by JS -->
+        <section id="contact" class="section-padding">
+            <div class="container">
+                <div class="section-label" style="margin-bottom: 24px;">Get In Touch</div>
+
+                <div class="contact-grid">
+                    <div class="contact-left">
+                        <h2 data-key="contact.title">Let's Create Something Amazing Together</h2>
+                        <p data-key="contact.subtitle">Have a project in mind or just want to say hello? I'd love to hear from you.</p>
+
+                        <div id="contact-methods-container">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <div class="contact-socials" id="social-links-container">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div class="contact-right">
+                        <form class="contact-form" id="main-contact-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Your Name</label>
+                                    <input type="text" placeholder="Alex" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>Your Email</label>
+                                    <input type="email" placeholder="hello@mail.com" class="form-input">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Project Type</label>
+                                <select class="form-input">
+                                    <option>Mobile App Design</option>
+                                    <option>Android Development</option>
+                                    <option>iOS Development</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Your Message</label>
+                                <textarea placeholder="Tell me about your project..." class="form-input" rows="4"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send Message</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
-    <footer>
-        <p class="font-mono">© <span id="year"></span> Esraa. All rights reserved.</p>
+    <footer style="padding: 60px 0; border-top: 1px solid var(--border); background: var(--bg-white);">
+        <div class="container footer-content">
+            <div class="logo">ESRAA EHAB</div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">© <span id="year"></span> ESRAA EHAB. All rights reserved.</p>
+        </div>
     </footer>
 
     <script src="app.js"></script>

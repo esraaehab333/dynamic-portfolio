@@ -1,310 +1,174 @@
-// ─── API Config ─────────────────────────────────────────────────────────────
 const API_URL = 'https://portfolio-api.esraaehabb333.workers.dev';
 
-// ─── Default Data (used only when the API returns an empty object) ───────────
 const DEFAULT_DATA = {
-    theme: {
-        accent: '#3EB489',
-        surface: '#162420'
-    },
+    site: { logo: "ESRAA EHAB", accent: "#0055FF", theme: "light" },
     hero: {
-        eyebrow: 'HELLO, I\'M ESRAA',
-        title: 'Mobile App Developer',
-        description: 'Crafting elegant, high-performance mobile experiences with Kotlin Multiplatform and Compose.',
-        image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+        name: "HELLO, I'M ESRAA EHAB",
+        title: "I Design High-Performance <span>Mobile Apps</span>",
+        description: "Specializing in Android and iOS development using Kotlin Multiplatform and Compose to build seamless digital experiences.",
+        image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80"
     },
     about: {
-        subtitle: 'Esraa — Kotlin Enthusiast',
-        bio: 'I am a passionate mobile app developer specializing in Android and Kotlin Multiplatform. I love building seamless cross-platform experiences that feel truly native, focusing on robust architectures and beautiful UIs.',
+        bio: "I am a dedicated Mobile App Developer with a passion for creating clean, efficient, and user-friendly applications. I focus on robust architectures and beautiful UIs."
     },
     contact: {
-        title: 'Get In Touch',
-        subtitle: 'Currently open for new opportunities. Let\'s build something amazing together.'
+        title: "Let's Create Something Amazing Together",
+        subtitle: "Currently open for new projects and opportunities. Reach out and let's talk about your idea!"
     },
-    socials: [
-        { id: 1, icon: 'ph-github-logo', url: 'https://github.com' },
-        { id: 2, icon: 'ph-linkedin-logo', url: 'https://linkedin.com' },
-        { id: 3, icon: 'ph-envelope-simple', url: 'mailto:hello@example.com' }
-    ],
-    stats: [
-        { id: 1, number: '5+', label: 'Years Experience' },
-        { id: 2, number: '20+', label: 'Apps Published' },
-        { id: 3, number: '100%', label: 'Kotlin Love' }
-    ],
-    skills: [
-        {
-            id: 1,
-            title: 'Native Android',
-            icon: 'ph-android-logo',
-            items: ['Kotlin', 'Jetpack Compose', 'Coroutines', 'Flow', 'Dagger/Hilt', 'Room']
-        },
-        {
-            id: 2,
-            title: 'Multiplatform',
-            icon: 'ph-devices',
-            items: ['Kotlin Multiplatform (KMP)', 'Compose Multiplatform (CMP)', 'Ktor', 'SQLDelight']
-        },
-        {
-            id: 3,
-            title: 'Architecture',
-            icon: 'ph-buildings',
-            items: ['MVVM', 'MVI', 'Clean Architecture', 'Modularization', 'TDD']
-        }
-    ],
-    projects: [
-        {
-            id: 1,
-            title: 'Troves KMP App',
-            desc: 'A cross-platform e-commerce application built entirely with Compose Multiplatform, sharing UI and logic across iOS and Android.',
-            tags: ['KMP', 'Compose', 'Ktor'],
-            demo: '#',
-            github: 'https://github.com'
-        },
-        {
-            id: 2,
-            title: 'Fitness Tracker',
-            desc: 'Native Android app tracking daily workouts with beautiful charts and local first architecture.',
-            tags: ['Android', 'Room', 'Coroutines'],
-            demo: '#',
-            github: 'https://github.com'
-        }
-    ],
-    contacts: [
-        { id: 1, icon: 'ph-envelope-simple', label: 'Email', value: 'hello@esraa.dev', url: 'mailto:hello@esraa.dev' },
-        { id: 2, icon: 'ph-phone', label: 'Phone', value: '+1 234 567 8900', url: 'tel:+12345678900' }
-    ]
+    socials: [], partners: [], projects: [], services: [], skills: [], process: [], testimonials: [], contacts: []
 };
 
-// ─── Portfolio App ───────────────────────────────────────────────────────────
 class PortfolioApp {
     constructor() {
         this.data = null;
         this.init();
     }
 
-    // ── Data Layer ────────────────────────────────────────────────────────────
-    async loadData() {
-        const response = await fetch(API_URL);
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status} ${response.statusText}`);
-        }
-        const data = await response.json();
-        // Use DEFAULT_DATA only when the API returns an empty object
-        return Object.keys(data).length ? data : DEFAULT_DATA;
-    }
-
-    // ── Initialisation ────────────────────────────────────────────────────────
     async init() {
-        this.showLoadingOverlay(true);
-        try {
-            this.data = await this.loadData();
-        } catch (err) {
-            console.error('Failed to load portfolio data:', err);
-            // Graceful degradation: fall back to DEFAULT_DATA so the site still renders
-            this.data = DEFAULT_DATA;
-        } finally {
-            this.showLoadingOverlay(false);
-        }
-
+        this.data = await this.loadData();
         this.applyTheme();
         this.renderAll();
-        this.setupEventListeners();
-        this.setupAnimations();
 
-        // Set current year
         const yearEl = document.getElementById('year');
         if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+        const loading = document.getElementById('app-loading-overlay');
+        if (loading) loading.style.display = 'none';
+
+        this.setupScrollEffect();
     }
 
-    // ── Loading overlay ───────────────────────────────────────────────────────
-    showLoadingOverlay(visible) {
-        let overlay = document.getElementById('app-loading-overlay');
-        if (!overlay) return;
-        if (visible) {
-            overlay.removeAttribute('hidden');
-        } else {
-            overlay.setAttribute('hidden', '');
+    async loadData() {
+        try {
+            const res = await fetch(API_URL + '?t=' + Date.now());
+            if (!res.ok) throw new Error("Fetch failed");
+            const data = await res.json();
+            return { ...DEFAULT_DATA, ...data };
+        } catch (e) {
+            console.warn("Using default data", e);
+            return DEFAULT_DATA;
         }
     }
 
-    // ── Theme ─────────────────────────────────────────────────────────────────
     applyTheme() {
-        document.documentElement.style.setProperty('--accent-color', this.data.theme.accent);
-        document.documentElement.style.setProperty('--surface-color', this.data.theme.surface);
+        const root = document.documentElement;
+        if (this.data.site?.accent) {
+            root.style.setProperty('--primary', this.data.site.accent);
+            root.style.setProperty('--primary-soft', this.data.site.accent + '1a');
+        }
+        if (this.data.site?.theme === 'dark') document.body.classList.add('dark-mode');
+        else document.body.classList.remove('dark-mode');
     }
 
-    // ── Render Helpers ────────────────────────────────────────────────────────
     renderAll() {
-        this.renderTextContent();
-        this.renderImage('hero.image', 'hero-image');
-        this.renderSocials();
-        this.renderStats();
-        this.renderSkills();
-        this.renderProjects();
-        this.renderContacts();
-    }
+        // Site branding
+        const logoText = document.getElementById('logo-text');
+        if (logoText) logoText.textContent = this.data.site?.logo || DEFAULT_DATA.site.logo;
 
-    renderTextContent() {
-        document.querySelectorAll('[data-key]').forEach(el => {
-            const keyPath = el.getAttribute('data-key').split('.');
-            let value = this.data;
-            for (let k of keyPath) {
-                if (value) value = value[k];
-            }
-            if (value !== undefined) {
-                el.textContent = value;
-            }
-        });
-    }
+        // Dynamic content
+        this.renderText();
 
-    renderImage(key, elId) {
-        const keyPath = key.split('.');
-        let value = this.data;
-        for (let k of keyPath) {
-            if (value) value = value[k];
-        }
-        if (value) {
-            const imgEl = document.getElementById(elId);
-            if (imgEl) imgEl.src = value;
-        }
-    }
+        const heroTitle = document.getElementById('hero-title-main');
+        if (heroTitle) heroTitle.innerHTML = this.data.hero.title || DEFAULT_DATA.hero.title;
 
-    renderSocials() {
-        const container = document.getElementById('social-links-container');
-        if (!container) return;
-        container.innerHTML = this.data.socials.map((social) => `
-            <a href="${social.url}" target="_blank" class="social-link" title="${social.url}">
-                <i class="ph ${social.icon}"></i>
-            </a>
-        `).join('');
-    }
+        const heroImg = document.getElementById('hero-image');
+        if (heroImg && this.data.hero.image) heroImg.src = this.data.hero.image;
 
-    renderStats() {
-        const container = document.getElementById('stats-container');
-        if (!container) return;
-        container.innerHTML = this.data.stats.map((stat) => `
-            <div class="stat-card">
-                <div class="stat-number font-mono">${stat.number}</div>
-                <div class="stat-label">${stat.label}</div>
-            </div>
-        `).join('');
-    }
+        // Collections (Ensure containers are cleared if empty)
+        this.renderCollection('partners', 'partners-container', p => `<img src="${p.logo}" alt="Partner">`);
 
-    renderSkills() {
-        const container = document.getElementById('skills-container');
-        if (!container) return;
-        container.innerHTML = this.data.skills.map((cat) => `
-            <div class="skill-category">
-                <h3 class="font-poiret"><i class="ph ${cat.icon}"></i> ${cat.title}</h3>
-                <ul class="skill-list">
-                    ${cat.items.map((item) => `
-                        <li class="skill-item">${item}</li>
-                    `).join('')}
-                </ul>
-            </div>
-        `).join('');
-    }
-
-    renderProjects() {
-        const container = document.getElementById('projects-container');
-        if (!container) return;
-        container.innerHTML = this.data.projects.map((proj) => `
-            <div class="project-card">
-                <div class="project-image">
-                    ${proj.image ? `<img src="${proj.image}" alt="${proj.title}">` : ''}
-                </div>
-                <div class="project-content">
-                    <h3 class="project-title font-poiret">${proj.title}</h3>
-                    <p class="project-desc">${proj.desc}</p>
-                    <div class="tech-tags font-mono">
-                        ${proj.tags.map(tag => `<span class="tech-tag">${tag}</span>`).join('')}
+        this.renderCollection('projects', 'projects-container', p => `
+            <div class="project-card reveal">
+                <img src="${p.image || 'https://via.placeholder.com/600x400'}" class="project-img">
+                <div class="project-meta">
+                    <div>
+                        <div class="project-tag">${p.tag || 'Mobile'}</div>
+                        <div class="project-name">${p.title}</div>
                     </div>
-                    <div class="project-links">
-                        <a href="${proj.demo}" class="btn btn-primary" target="_blank">Demo</a>
-                        <a href="${proj.github}" class="btn btn-outline" target="_blank">
-                            <i class="ph ph-github-logo"></i> Repo
-                        </a>
+                    <a href="${p.demo || '#'}" class="arrow-btn" target="_blank"><i class="ph ph-arrow-up-right"></i></a>
+                </div>
+            </div>
+        `);
+
+        this.renderCollection('services', 'services-container', s => `
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="ph ${s.icon || 'ph-device-mobile'}"></i></div>
+                <h3>${s.title}</h3>
+                <p>${s.desc}</p>
+            </div>
+        `);
+
+        this.renderCollection('skills', 'skills-container', s => `
+            <div class="tool-item">
+                <i class="ph ${s.icon || 'ph-code'}"></i> ${s.name}
+            </div>
+        `);
+
+        this.renderCollection('process', 'process-container', p => `
+            <div class="process-item reveal">
+                <div class="process-num">${p.number}</div>
+                <h4>${p.title}</h4>
+                <p>${p.desc}</p>
+            </div>
+        `);
+
+        this.renderCollection('testimonials', 'testimonials-container', t => `
+            <div class="testi-card reveal">
+                <i class="ph ph-quotes-fill quote-icon"></i>
+                <p class="testi-text">${t.text}</p>
+                <div class="testi-author">
+                    <img src="${t.image || 'https://via.placeholder.com/150'}" class="author-img">
+                    <div>
+                        <div class="author-name">${t.author}</div>
+                        <div class="author-role">${t.title}</div>
                     </div>
                 </div>
             </div>
-        `).join('');
-    }
+        `);
 
-    renderContacts() {
-        const container = document.getElementById('contact-container');
-        if (!container) return;
-        container.innerHTML = this.data.contacts.map((contact) => `
-            <a href="${contact.url}" target="_blank" class="contact-card">
-                <i class="ph ${contact.icon} contact-icon"></i>
+        this.renderCollection('contacts', 'contact-methods-container', c => `
+            <div class="contact-method">
+                <div class="method-icon"><i class="ph ${c.icon || 'ph-envelope'}"></i></div>
                 <div>
-                    <div class="contact-label font-mono">${contact.label}</div>
-                    <div class="contact-value">${contact.value}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">${c.label}</div>
+                    <a href="${c.url || '#'}" style="font-weight: 700;">${c.value}</a>
                 </div>
-            </a>
-        `).join('');
+            </div>
+        `);
+
+        this.renderCollection('socials', 'social-links-container', s => `
+            <a href="${s.url || '#'}" class="social-item" target="_blank"><i class="ph ${s.icon || 'ph-link'}"></i></a>
+        `);
     }
 
-    // ── Event Listeners ───────────────────────────────────────────────────────
-    setupEventListeners() {
-        // Mobile Menu Toggle
-        const menuBtn = document.querySelector('.mobile-menu-btn');
-        const mobileMenu = document.querySelector('.mobile-menu');
-
-        if (menuBtn && mobileMenu) {
-            menuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('open');
-                const icon = mobileMenu.classList.contains('open') ? 'ph-x' : 'ph-list';
-                menuBtn.innerHTML = `<i class="ph ${icon}"></i>`;
-            });
-
-            document.querySelectorAll('.mobile-menu a').forEach(a => {
-                a.addEventListener('click', () => {
-                    mobileMenu.classList.remove('open');
-                    menuBtn.innerHTML = `<i class="ph ph-list"></i>`;
-                });
-            });
-        }
-
-        // Active Nav State
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('.nav-links a');
-
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                if (window.scrollY >= sectionTop - 150) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navLinks.forEach(a => {
-                a.classList.remove('active');
-                if (a.getAttribute('href').includes(current)) {
-                    a.classList.add('active');
-                }
-            });
+    renderText() {
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const keys = el.dataset.key.split('.');
+            let val = this.data;
+            keys.forEach(k => val = val ? val[k] : null);
+            if (val !== null && val !== undefined) el.textContent = val;
         });
     }
 
-    // ── Animations ────────────────────────────────────────────────────────────
-    setupAnimations() {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+    renderCollection(key, id, template) {
+        const container = document.getElementById(id);
+        if (!container) return;
+        const items = this.data[key] || [];
+        if (items.length > 0) {
+            container.innerHTML = items.map(template).join('');
+        } else {
+            container.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem;">No ${key} added yet.</p>`;
+        }
+    }
 
-        const observer = new IntersectionObserver((entries) => {
+    setupScrollEffect() {
+        const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('active');
             });
-        }, observerOptions);
-
+        }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     }
 }
 
-// ─── Initialize App ───────────────────────────────────────────────────────────
-const app = new PortfolioApp();
+new PortfolioApp();
