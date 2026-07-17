@@ -193,12 +193,11 @@
                 <div class="admin-nav-item active" data-target="site"><i class="ph ph-gear"></i> Site Config</div>
                 <div class="admin-nav-item" data-target="hero"><i class="ph ph-user"></i> Hero Section</div>
                 <div class="admin-nav-item" data-target="about"><i class="ph ph-info"></i> About Me</div>
-                <div class="admin-nav-item" data-target="projects"><i class="ph ph-briefcase"></i> Projects</div>
-                <div class="admin-nav-item" data-target="services"><i class="ph ph-layout"></i> Services</div>
+                <div class="admin-nav-item" data-target="experience"><i class="ph ph-briefcase"></i> Experience</div>
+                <div class="admin-nav-item" data-target="skills"><i class="ph ph-code"></i> Tech Stack</div>
                 <div class="admin-nav-item" data-target="process"><i class="ph ph-arrows-merge"></i> Process</div>
-                <div class="admin-nav-item" data-target="skills"><i class="ph ph-code"></i> Skills</div>
-                <div class="admin-nav-item" data-target="partners"><i class="ph ph-handshake"></i> Partners</div>
-                <div class="admin-nav-item" data-target="testimonials"><i class="ph ph-quotes"></i> Testimonials</div>
+                <div class="admin-nav-item" data-target="education"><i class="ph ph-graduation-cap"></i> Education</div>
+                <div class="admin-nav-item" data-target="certifications"><i class="ph ph-certificate"></i> Certifications</div>
                 <div class="admin-nav-item" data-target="contacts"><i class="ph ph-envelope"></i> Contacts</div>
             </nav>
             <button onclick="adminApp.logout()" style="margin-top: auto; border: 1px solid rgba(255,255,255,0.1);" class="admin-nav-item"><i class="ph ph-sign-out"></i> Logout</button>
@@ -218,7 +217,16 @@
                         <option value="dark">Dark Mode (Premium & Tech)</option>
                     </select>
                 </div>
-                <div class="form-group"><label>Accent Color</label><input type="color" id="site-accent" class="form-control" style="height: 50px; padding: 5px;"></div>
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <label>Primary Accent Color</label>
+                        <input type="color" id="site-accent" class="form-control" style="height: 50px; padding: 5px;">
+                    </div>
+                    <div>
+                        <label>Secondary Accent Color</label>
+                        <input type="color" id="site-secondary" class="form-control" style="height: 50px; padding: 5px;">
+                    </div>
+                </div>
                 <div class="form-group"><label>Formspree ID (For Contact Form to work)</label><input type="text" id="site-form-id" class="form-control" placeholder="e.g. xvgzpyzo"></div>
                 <button class="btn-save" onclick="adminApp.saveSite()">Save Site Config</button>
             </section>
@@ -243,14 +251,9 @@
                 <button class="add-new-btn" onclick="adminApp.openModal('projects')">+ Add New Project</button>
             </section>
 
-            <section id="services-section" class="admin-section">
-                <div id="services-list" class="item-list"></div>
-                <button class="add-new-btn" onclick="adminApp.openModal('services')">+ Add New Service</button>
-            </section>
-
-            <section id="process-section" class="admin-section">
-                <div id="process-list" class="item-list"></div>
-                <button class="add-new-btn" onclick="adminApp.openModal('process')">+ Add New Step</button>
+            <section id="experience-section" class="admin-section">
+                <div id="experience-list" class="item-list"></div>
+                <button class="add-new-btn" onclick="adminApp.openModal('experience')">+ Add Experience</button>
             </section>
 
             <section id="skills-section" class="admin-section">
@@ -258,14 +261,19 @@
                 <button class="add-new-btn" onclick="adminApp.openModal('skills')">+ Add New Skill</button>
             </section>
 
-            <section id="partners-section" class="admin-section">
-                <div id="partners-list" class="item-list"></div>
-                <button class="add-new-btn" onclick="adminApp.openModal('partners')">+ Add New Partner Logo</button>
+            <section id="process-section" class="admin-section">
+                <div id="process-list" class="item-list"></div>
+                <button class="add-new-btn" onclick="adminApp.openModal('process')">+ Add New Step</button>
             </section>
 
-            <section id="testimonials-section" class="admin-section">
-                <div id="testimonials-list" class="item-list"></div>
-                <button class="add-new-btn" onclick="adminApp.openModal('testimonials')">+ Add New Testimonial</button>
+            <section id="education-section" class="admin-section">
+                <div id="education-list" class="item-list"></div>
+                <button class="add-new-btn" onclick="adminApp.openModal('education')">+ Add Education</button>
+            </section>
+
+            <section id="certifications-section" class="admin-section">
+                <div id="certifications-list" class="item-list"></div>
+                <button class="add-new-btn" onclick="adminApp.openModal('certifications')">+ Add Certification</button>
             </section>
 
             <section id="contacts-section" class="admin-section">

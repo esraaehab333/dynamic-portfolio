@@ -17,6 +17,11 @@
 </head>
 <body>
 
+    <!-- Background Decoration -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="mouse-glow" id="mouse-glow"></div>
+
     <!-- Loading -->
     <div id="app-loading-overlay" style="position: fixed; inset: 0; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center;">
         <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #0055FF; border-radius: 50%; animation: spin 1s linear infinite;"></div>
@@ -26,20 +31,27 @@
     <nav id="navbar">
         <div class="container nav-content">
             <a href="#home" class="logo">
-                <div class="logo-icon" id="logo-icon-char"><i class="ph ph-device-mobile"></i></div>
+                <div class="logo-icon" id="logo-icon-char">E</div>
                 <div id="logo-text">ESRAA EHAB</div>
             </a>
             
-            <div class="nav-links">
+            <div class="nav-links" id="nav-menu">
                 <a href="#home" class="active">Home</a>
                 <a href="#about">About</a>
-                <a href="#services">Services</a>
                 <a href="#projects">Projects</a>
+                <a href="#experience">Experience</a>
+                <a href="#skills">Skills</a>
                 <a href="#process">Process</a>
+                <a href="#education">Education</a>
                 <a href="#contact">Contact</a>
             </div>
 
-            <a href="#contact" class="btn btn-primary">Let's Talk <i class="ph ph-arrow-up-right"></i></a>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <a href="#contact" class="btn btn-primary nav-cta">Let's Talk <i class="ph ph-arrow-up-right"></i></a>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+                    <i class="ph ph-list"></i>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -55,13 +67,6 @@
                     <div class="hero-btns">
                         <a href="#" class="btn btn-primary" id="download-cv-btn" target="_blank">Download CV <i class="ph ph-download-simple"></i></a>
                         <a href="#contact" class="btn btn-outline">Let's Talk <i class="ph ph-chat-circle-text"></i></a>
-                    </div>
-
-                    <div class="trusted-by">
-                        <p class="trusted-text">Trusted by startups and companies worldwide</p>
-                        <div class="partners-row" id="partners-container">
-                            <!-- Populated by JS -->
-                        </div>
                     </div>
                 </div>
 
@@ -83,15 +88,16 @@
         </section>
 
         <!-- About Section -->
-        <section id="about" class="section-padding" style="background: var(--bg-light);">
-            <div class="container" style="max-width: 800px; text-align: center;">
-                <div class="section-label" style="justify-content: center; margin-bottom: 24px;">About Me</div>
-                <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 24px;">Transforming Ideas Into Seamless Apps</h2>
-                <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.8;" data-key="about.bio">
+        <section id="about" class="section-padding about-section">
+            <div class="container about-container">
+                <div class="section-label">About Me</div>
+                <h2 data-key="about.title">Transforming Ideas Into Seamless Apps</h2>
+                <p data-key="about.bio">
                     I am a dedicated Mobile App Developer specializing in high-performance Android and iOS applications.
                 </p>
             </div>
         </section>
+
 
         <!-- Featured Projects -->
         <section id="projects" class="section-padding">
@@ -107,29 +113,29 @@
             </div>
         </section>
 
-        <!-- Services Section -->
-        <section id="services" class="section-padding" style="background: var(--bg-light);">
+        <!-- Experience Section -->
+        <section id="experience" class="section-padding bg-alt">
             <div class="container">
-                <div class="section-label" style="margin-bottom: 40px;">Services & Capabilities</div>
-
-                <div class="services-grid" id="services-container">
+                <div class="section-label" style="margin-bottom: 40px;">Professional Experience</div>
+                <div class="timeline" id="experience-container">
                     <!-- Populated by JS -->
                 </div>
             </div>
         </section>
 
-        <!-- Tools Bar -->
-        <section class="tools-bar">
-            <div class="container tools-flex">
-                <div class="tools-label">Tools & Skills</div>
-                <div id="skills-container" style="display: flex; gap: 40px;">
-                    <!-- Populated by JS -->
+        <!-- Tech Stack Section -->
+        <section id="skills" class="section-padding">
+            <div class="container">
+                <div class="section-label" style="margin-bottom: 40px;">Technical Expertise</div>
+
+                <div class="skills-grid" id="dynamic-skills-container">
+                    <!-- Categories will be injected here by JS -->
                 </div>
             </div>
         </section>
 
         <!-- Process Section -->
-        <section id="process" class="section-padding">
+        <section id="process" class="section-padding bg-alt">
             <div class="container">
                 <div class="section-label" style="margin-bottom: 20px;">My Process</div>
 
@@ -139,12 +145,21 @@
             </div>
         </section>
 
-        <!-- Testimonials -->
-        <section id="testimonials" class="section-padding" style="background: var(--bg-light);">
+        <!-- Education Section -->
+        <section id="education" class="section-padding">
             <div class="container">
-                <div class="section-label" style="margin-bottom: 40px;">What Clients Say</div>
+                <div class="section-label" style="margin-bottom: 40px;">Education</div>
+                <div class="timeline" id="education-container">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
 
-                <div class="testimonials-grid" id="testimonials-container">
+        <!-- Certifications Section -->
+        <section id="certifications" class="section-padding bg-alt">
+            <div class="container">
+                <div class="section-label" style="margin-bottom: 40px;">Certifications</div>
+                <div class="certs-grid" id="certifications-container">
                     <!-- Populated by JS -->
                 </div>
             </div>
@@ -174,25 +189,16 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Your Name</label>
-                                    <input type="text" name="name" placeholder="Alex" class="form-input" required>
+                                    <input type="text" name="name" placeholder="Your Name" class="form-input" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Your Email</label>
-                                    <input type="email" name="email" placeholder="hello@mail.com" class="form-input" required>
+                                    <input type="email" name="email" placeholder="your@email.com" class="form-input" required>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Project Type</label>
-                                <select name="project_type" class="form-input">
-                                    <option>Mobile App Design</option>
-                                    <option>Android Development</option>
-                                    <option>iOS Development</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
                                 <label>Your Message</label>
-                                <textarea name="message" placeholder="Tell me about your project..." class="form-input" rows="4" required></textarea>
+                                <textarea name="message" placeholder="Tell me about your project..." class="form-input" rows="5" required></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send Message</button>
                         </form>
@@ -202,7 +208,7 @@
         </section>
     </main>
 
-    <footer style="padding: 60px 0; border-top: 1px solid var(--border); background: var(--bg-white);">
+    <footer style="padding: 60px 0; border-top: 1px solid var(--border); background: var(--bg-main);">
         <div class="container footer-content">
             <a href="#home" class="logo">ESRAA EHAB</a>
             <p style="color: var(--text-muted); font-size: 0.9rem;">© <span id="year"></span> ESRAA EHAB. All rights reserved.</p>

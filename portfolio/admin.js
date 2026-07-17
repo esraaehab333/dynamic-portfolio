@@ -88,6 +88,7 @@ class AdminApp {
     populateForms() {
         document.getElementById('site-logo').value = this.data.site?.logo || DEFAULT_DATA.site.logo;
         document.getElementById('site-accent').value = this.data.site?.accent || DEFAULT_DATA.site.accent;
+        document.getElementById('site-secondary').value = this.data.site?.secondary || '';
         document.getElementById('site-theme').value = this.data.site?.theme || DEFAULT_DATA.site.theme;
         document.getElementById('site-form-id').value = this.data.site?.form_id || '';
         document.getElementById('hero-name').value = this.data.hero?.name || '';
@@ -106,7 +107,9 @@ class AdminApp {
         if (!this.data.site) this.data.site = {};
         this.data.site.logo = document.getElementById('site-logo').value;
         this.data.site.accent = document.getElementById('site-accent').value;
+        this.data.site.secondary = document.getElementById('site-secondary').value;
         this.data.site.theme = document.getElementById('site-theme').value;
+        this.data.site.form_id = document.getElementById('site-form-id').value;
         this.saveData();
     }
 
@@ -126,13 +129,13 @@ class AdminApp {
     }
 
     renderLists() {
-        const collections = ['projects', 'services', 'process', 'skills', 'testimonials', 'contacts', 'socials', 'partners'];
+        const collections = ['projects', 'experience', 'process', 'skills', 'education', 'certifications', 'contacts', 'socials'];
         collections.forEach(col => {
             const container = document.getElementById(col + '-list');
             if (!container) return;
             container.innerHTML = (this.data[col] || []).map((item, idx) => `
                 <div class="list-item">
-                    <span style="font-weight: 700;">${item.title || item.name || item.author || item.label || 'Item ' + (idx+1)}</span>
+                    <span style="font-weight: 700;">${item.title || item.name || item.author || item.label || 'Item ' + (idx+1)} ${item.category ? `<small style="color:var(--admin-text-muted); font-weight:400; margin-left:8px;">(${item.category})</small>` : ''}</span>
                     <div>
                         <button class="btn-icon" onclick="adminApp.openModal('${col}', ${idx})" style="background:none; border:none; cursor:pointer; color:#0055FF; margin-right:1rem;"><i class="ph ph-pencil-simple" style="font-size:1.5rem;"></i></button>
                         <button class="btn-icon" onclick="adminApp.deleteItem('${col}', ${idx})" style="background:none; border:none; cursor:pointer; color:#ef4444;"><i class="ph ph-trash" style="font-size:1.5rem;"></i></button>
@@ -166,14 +169,31 @@ class AdminApp {
                 <div class="form-group"><label>LinkedIn URL</label><input id="m-linkedin" class="form-control" value="${item.linkedin||''}"></div>
                 <div class="form-group"><label>Video URL</label><input id="m-video" class="form-control" value="${item.video||''}"></div>
             `;
-        } else if (mode === 'services') {
-            html = `<div class="form-group"><label>Icon (ph-*)</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Title</label><input id="m-title" class="form-control" value="${item.title||''}"></div><div class="form-group"><label>Description</label><textarea id="m-desc" class="form-control">${item.desc||''}</textarea></div>`;
+        } else if (mode === 'experience') {
+            html = `
+                <div class="form-group"><label>Date Range (e.g. 2022 - Present)</label><input id="m-date" class="form-control" value="${item.date||''}"></div>
+                <div class="form-group"><label>Job Title</label><input id="m-title" class="form-control" value="${item.title||''}"></div>
+                <div class="form-group"><label>Company Name</label><input id="m-subtitle" class="form-control" value="${item.subtitle||''}"></div>
+                <div class="form-group"><label>Description</label><textarea id="m-desc" class="form-control">${item.desc||''}</textarea></div>
+            `;
         } else if (mode === 'process') {
-            html = `<div class="form-group"><label>Number</label><input id="m-number" class="form-control" value="${item.number||''}"></div><div class="form-group"><label>Title</label><input id="m-title" class="form-control" value="${item.title||''}"></div><div class="form-group"><label>Description</label><textarea id="m-desc" class="form-control">${item.desc||''}</textarea></div>`;
+            html = `<div class="form-group"><label>Number</label><input id="m-number" class="form-control" value="${item.number||''}"></div><div class="form-group"><label>Icon (ph-*)</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Title</label><input id="m-title" class="form-control" value="${item.title||''}"></div><div class="form-group"><label>Description</label><textarea id="m-desc" class="form-control">${item.desc||''}</textarea></div>`;
         } else if (mode === 'skills') {
-            html = `<div class="form-group"><label>Icon (ph-*)</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Name</label><input id="m-name" class="form-control" value="${item.name||''}"></div>`;
-        } else if (mode === 'testimonials') {
-            html = `<div class="form-group"><label>Text</label><textarea id="m-text" class="form-control">${item.text||''}</textarea></div><div class="form-group"><label>Author</label><input id="m-author" class="form-control" value="${item.author||''}"></div><div class="form-group"><label>Role</label><input id="m-title" class="form-control" value="${item.title||''}"></div><div class="form-group"><label>Image URL</label><input id="m-image" class="form-control" value="${item.image||''}"></div>`;
+            html = `<div class="form-group"><label>Category (e.g. Android, Architecture, Tools)</label><input id="m-category" class="form-control" value="${item.category||''}"></div><div class="form-group"><label>Icon (ph-*)</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Name</label><input id="m-name" class="form-control" value="${item.name||''}"></div>`;
+        } else if (mode === 'education') {
+            html = `
+                <div class="form-group"><label>Date Range</label><input id="m-date" class="form-control" value="${item.date||''}"></div>
+                <div class="form-group"><label>Degree/Major</label><input id="m-title" class="form-control" value="${item.title||''}"></div>
+                <div class="form-group"><label>School/University</label><input id="m-subtitle" class="form-control" value="${item.subtitle||''}"></div>
+                <div class="form-group"><label>Description</label><textarea id="m-desc" class="form-control">${item.desc||''}</textarea></div>
+            `;
+        } else if (mode === 'certifications') {
+            html = `
+                <div class="form-group"><label>Certification Name</label><input id="m-title" class="form-control" value="${item.title||''}"></div>
+                <div class="form-group"><label>Issuer</label><input id="m-subtitle" class="form-control" value="${item.subtitle||''}"></div>
+                <div class="form-group"><label>Date</label><input id="m-date" class="form-control" value="${item.date||''}"></div>
+                <div class="form-group"><label>Link</label><input id="m-url" class="form-control" value="${item.url||''}"></div>
+            `;
         } else if (mode === 'contacts') {
             html = `<div class="form-group"><label>Icon</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Label</label><input id="m-label" class="form-control" value="${item.label||''}"></div><div class="form-group"><label>Value</label><input id="m-value" class="form-control" value="${item.value||''}"></div><div class="form-group"><label>Link</label><input id="m-url" class="form-control" value="${item.url||''}"></div>`;
         } else if (mode === 'socials') {
@@ -201,14 +221,24 @@ class AdminApp {
                 linkedin: document.getElementById('m-linkedin').value,
                 video: document.getElementById('m-video').value
             };
-        } else if (mode === 'services') {
-            newItem = { ...newItem, icon: document.getElementById('m-icon').value, title: document.getElementById('m-title').value, desc: document.getElementById('m-desc').value };
+        } else if (mode === 'experience' || mode === 'education') {
+            newItem = { ...newItem,
+                date: document.getElementById('m-date').value,
+                title: document.getElementById('m-title').value,
+                subtitle: document.getElementById('m-subtitle').value,
+                desc: document.getElementById('m-desc').value
+            };
         } else if (mode === 'process') {
-            newItem = { ...newItem, number: document.getElementById('m-number').value, title: document.getElementById('m-title').value, desc: document.getElementById('m-desc').value };
+            newItem = { ...newItem, number: document.getElementById('m-number').value, icon: document.getElementById('m-icon').value, title: document.getElementById('m-title').value, desc: document.getElementById('m-desc').value };
         } else if (mode === 'skills') {
-            newItem = { ...newItem, icon: document.getElementById('m-icon').value, name: document.getElementById('m-name').value };
-        } else if (mode === 'testimonials') {
-            newItem = { ...newItem, text: document.getElementById('m-text').value, author: document.getElementById('m-author').value, title: document.getElementById('m-title').value, image: document.getElementById('m-image').value };
+            newItem = { ...newItem, category: document.getElementById('m-category').value, icon: document.getElementById('m-icon').value, name: document.getElementById('m-name').value };
+        } else if (mode === 'certifications') {
+            newItem = { ...newItem,
+                title: document.getElementById('m-title').value,
+                subtitle: document.getElementById('m-subtitle').value,
+                date: document.getElementById('m-date').value,
+                url: document.getElementById('m-url').value
+            };
         } else if (mode === 'contacts') {
             newItem = { ...newItem, icon: document.getElementById('m-icon').value, label: document.getElementById('m-label').value, value: document.getElementById('m-value').value, url: document.getElementById('m-url').value };
         } else if (mode === 'socials') {
