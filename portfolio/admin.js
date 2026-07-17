@@ -197,7 +197,7 @@ class AdminApp {
         } else if (mode === 'contacts') {
             html = `<div class="form-group"><label>Icon</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Label</label><input id="m-label" class="form-control" value="${item.label||''}"></div><div class="form-group"><label>Value</label><input id="m-value" class="form-control" value="${item.value||''}"></div><div class="form-group"><label>Link</label><input id="m-url" class="form-control" value="${item.url||''}"></div>`;
         } else if (mode === 'socials') {
-            html = `<div class="form-group"><label>Icon</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Link</label><input id="m-url" class="form-control" value="${item.url||''}"></div>`;
+            html = `<div class="form-group"><label>Name (e.g. GitHub)</label><input id="m-name" class="form-control" value="${item.name||''}"></div><div class="form-group"><label>Icon (ph-*)</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Link</label><input id="m-url" class="form-control" value="${item.url||''}"></div>`;
         } else if (mode === 'partners') {
             html = `<div class="form-group"><label>Logo URL</label><input id="m-logo" class="form-control" value="${item.logo||''}"></div>`;
         }
@@ -242,7 +242,7 @@ class AdminApp {
         } else if (mode === 'contacts') {
             newItem = { ...newItem, icon: document.getElementById('m-icon').value, label: document.getElementById('m-label').value, value: document.getElementById('m-value').value, url: document.getElementById('m-url').value };
         } else if (mode === 'socials') {
-            newItem = { ...newItem, icon: document.getElementById('m-icon').value, url: document.getElementById('m-url').value };
+            newItem = { ...newItem, name: document.getElementById('m-name').value, icon: document.getElementById('m-icon').value, url: document.getElementById('m-url').value };
         } else if (mode === 'partners') {
             newItem = { ...newItem, logo: document.getElementById('m-logo').value };
         }

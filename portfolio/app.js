@@ -35,6 +35,25 @@ class PortfolioApp {
     }
 
     setupInteractions() {
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            // Check for saved preference, otherwise use the admin's initial theme
+            const savedTheme = localStorage.getItem('theme_preference');
+            if (savedTheme) {
+                if (savedTheme === 'dark') document.body.classList.add('dark-mode');
+                else document.body.classList.remove('dark-mode');
+            }
+
+            themeToggle.onclick = () => {
+                const isDark = document.body.classList.toggle('dark-mode');
+                localStorage.setItem('theme_preference', isDark ? 'dark' : 'light');
+                this.updateThemeIcon();
+            };
+
+            this.updateThemeIcon();
+        }
+
         // Mobile Menu
         const menuToggle = document.getElementById('menu-toggle');
         const navMenu = document.getElementById('nav-menu');
@@ -52,23 +71,155 @@ class PortfolioApp {
             });
         }
 
-        // Mouse Glow
+        this.initVisualEffects();
+    }
+
+    updateThemeIcon() {
+        const themeToggle = document.getElementById('theme-toggle');
+        if (!themeToggle) return;
+        const icon = themeToggle.querySelector('i');
+        if (icon) {
+            icon.className = document.body.classList.contains('dark-mode') ? 'ph ph-moon' : 'ph ph-sun';
+        }
+    }
+
+    initVisualEffects() {
         const mouseGlow = document.getElementById('mouse-glow');
-        window.onmousemove = (e) => {
+        const cursorFollower = document.createElement('div');
+        cursorFollower.className = 'cursor-follower';
+        const cursorGlow = document.createElement('div');
+        cursorGlow.className = 'cursor-glow';
+        document.body.appendChild(cursorFollower);
+        document.body.appendChild(cursorGlow);
+
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+        let glowX = 0, glowY = 0;
+        let isMoving = false;
+        let moveTimeout;
+
+        // Background Particles
+        const particlesContainer = document.createElement('div');
+        particlesContainer.className = 'bg-particles';
+        document.body.appendChild(particlesContainer);
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = Math.random() * 100 + '%';
+            const size = Math.random() * 4 + 2 + 'px';
+            p.style.width = size;
+            p.style.height = size;
+            p.style.setProperty('--duration', Math.random() * 10 + 20 + 's');
+            p.style.setProperty('--move-x', (Math.random() - 0.5) * 300 + 'px');
+            particlesContainer.appendChild(p);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            isMoving = true;
+            clearTimeout(moveTimeout);
+            moveTimeout = setTimeout(() => isMoving = false, 100);
+
             if (mouseGlow) {
+                mouseGlow.style.opacity = '1';
                 mouseGlow.style.left = e.clientX + 'px';
                 mouseGlow.style.top = e.clientY + 'px';
             }
 
-            // Interaction for cards
-            document.querySelectorAll('.project-card, .skill-category, .glass-card').forEach(card => {
-                const rect = card.getBoundingClientRect();
+            // Interaction for cards and buttons
+            document.querySelectorAll('.project-card, .skill-category, .glass-card, .btn, .social-item, .method-icon, .nav-links a, .cert-card').forEach(el => {
+                const rect = el.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
+                el.style.setProperty('--mouse-x', `${x}px`);
+                el.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Smooth cursor interpolation
+        const tick = () => {
+            followerX += (mouseX - followerX) * 0.15;
+            followerY += (mouseY - followerY) * 0.15;
+            glowX += (mouseX - glowX) * 0.08;
+            glowY += (mouseY - glowY) * 0.08;
+
+            cursorFollower.style.left = followerX + 'px';
+            cursorFollower.style.top = followerY + 'px';
+            cursorGlow.style.left = glowX + 'px';
+            cursorGlow.style.top = glowY + 'px';
+
+            if (!isMoving && mouseGlow) {
+                mouseGlow.style.opacity = '0.4';
+            }
+
+            requestAnimationFrame(tick);
+        };
+        tick();
+
+        // Magnetic Effect & Advanced Hover states
+        const setupAdvancedInteractions = () => {
+            // Interactive elements (Buttons, Links)
+            document.querySelectorAll('.btn, .social-item, .nav-links a, .logo, .tech-icon-float, .method-icon').forEach(el => {
+                if (el.dataset.interactInit) return;
+                el.dataset.interactInit = 'true';
+
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const moveX = (e.clientX - centerX) * 0.35;
+                    const moveY = (e.clientY - centerY) * 0.35;
+                    el.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
+                    document.body.classList.add('cursor-active');
+                });
+
+                el.addEventListener('mouseleave', () => {
+                    el.style.transform = '';
+                    document.body.classList.remove('cursor-active');
+                });
+            });
+
+            // Text elements (for text cursor)
+            document.querySelectorAll('p, h1, h2, h3, .section-label, span').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-text'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-text'));
+            });
+
+            // View elements (Images, Cards)
+            document.querySelectorAll('.project-card, .cert-card, .hero-image-box img').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-view'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-view'));
             });
         };
+        setupAdvancedInteractions();
+
+        // Re-run magnetic setup when new elements are rendered
+        const observer = new MutationObserver(setupMagnetic);
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Click Ripple Effect
+        document.addEventListener('click', (e) => {
+            const ripple = document.createElement('div');
+            ripple.className = 'ripple-effect';
+            ripple.style.left = e.clientX + 'px';
+            ripple.style.top = e.clientY + 'px';
+            document.body.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
+
+        // Add stagger order to reveal elements
+        const addStagger = () => {
+            document.querySelectorAll('.projects-grid, .skills-grid, .process-grid, .certs-grid, .nav-links').forEach(container => {
+                container.querySelectorAll('.reveal').forEach((el, index) => {
+                    el.style.setProperty('--order', index);
+                });
+            });
+        };
+        addStagger();
+        const staggerObserver = new MutationObserver(addStagger);
+        staggerObserver.observe(document.body, { childList: true, subtree: true });
     }
 
     async loadData() {
@@ -225,15 +376,18 @@ class PortfolioApp {
             let url = c.url || '#';
             if (isEmail && url !== '#' && !url.startsWith('mailto:')) url = `mailto:${url}`;
             return `
-            <div class="contact-method">
+            <a href="${url}" class="contact-method reveal" target="_blank">
                 <div class="method-icon"><i class="ph ${c.icon}"></i></div>
-                <div><div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">${c.label}</div><a href="${url}" style="font-weight: 700;">${c.value}</a></div>
-            </div>
+                <div class="method-label">${c.label}</div>
+            </a>
             `;
         });
 
         this.renderCollection('socials', 'social-links-container', s => `
-            <a href="${s.url}" class="social-item" target="_blank"><i class="ph ${s.icon}"></i></a>
+            <a href="${s.url}" class="contact-method reveal" target="_blank">
+                <div class="method-icon"><i class="ph ${s.icon}"></i></div>
+                <div class="method-label">${s.name || ''}</div>
+            </a>
         `);
     }
 
@@ -312,15 +466,29 @@ class PortfolioApp {
         const nav = document.querySelector('nav');
         const blob1 = document.querySelector('.blob-1');
         const blob2 = document.querySelector('.blob-2');
+        let scrollTimeout;
 
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) nav.classList.add('scrolled');
             else nav.classList.remove('scrolled');
 
+            // Depth Illusion Logic
+            document.body.classList.add('is-scrolling');
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                document.body.classList.remove('is-scrolling');
+            }, 150);
+
             // Simple Parallax
             const scrolled = window.scrollY;
             if (blob1) blob1.style.transform = `translate(${scrolled * 0.1}px, ${scrolled * 0.05}px)`;
             if (blob2) blob2.style.transform = `translate(-${scrolled * 0.1}px, -${scrolled * 0.05}px)`;
+
+            // Parallax for sections
+            document.querySelectorAll('[data-parallax]').forEach(el => {
+                const speed = el.dataset.parallax || 0.1;
+                el.style.transform = `translateY(${scrolled * speed}px)`;
+            });
         });
     }
 

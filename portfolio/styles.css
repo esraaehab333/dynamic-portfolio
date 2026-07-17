@@ -1,8 +1,278 @@
-/*
-    PREMIUM DEVELOPER PORTFOLIO REDESIGN
-    Author: Senior Frontend Engineer
-    Target: Elite Mobile Developer (Kotlin, Compose, KMP)
-*/
+/* Premium Interactive Background Enhancements */
+.bg-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    background: var(--primary);
+    border-radius: 50%;
+    opacity: 0.1;
+    filter: blur(1px);
+    animation: floatParticle var(--duration, 20s) linear infinite;
+}
+
+@keyframes floatParticle {
+    from { transform: translateY(100vh) translateX(0); }
+    to { transform: translateY(-100px) translateX(var(--move-x, 100px)); }
+}
+
+/* Mouse Glow / Spotlight Enhancements */
+.mouse-glow {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: screen;
+    transition: opacity 0.5s ease;
+}
+
+/* Theme Toggle Button */
+.theme-btn {
+    width: 44px;
+    height: 44px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-head);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-base);
+    backdrop-filter: blur(var(--glass-blur));
+}
+
+.theme-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Light Mode specific tweaks */
+body:not(.dark-mode) .theme-btn i {
+    color: #f59e0b; /* Sun color */
+}
+
+body.dark-mode .theme-btn i {
+    color: #818cf8; /* Moon color */
+}
+.cursor-follower {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: var(--primary);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+}
+
+.cursor-glow {
+    position: fixed;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(var(--primary-rgb), 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    /* The secret to premium feel: Cubic-Bezier easing */
+    transition:
+        width 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+        height 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+        background 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+        border-color 0.5s ease,
+        border-radius 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* State: Hovering Interactive Elements (Buttons, Links) */
+.cursor-active .cursor-follower {
+    opacity: 0;
+}
+
+.cursor-active .cursor-glow {
+    width: 60px;
+    height: 60px;
+    background: rgba(var(--primary-rgb), 0.1);
+    border-color: var(--primary);
+    border-width: 1.5px;
+}
+
+/* State: Text Interaction (Focusing on Readability) */
+.cursor-text .cursor-glow {
+    width: 2px;
+    height: 24px;
+    border-radius: 2px;
+    background: var(--primary);
+    border-color: transparent;
+}
+
+/* State: Image/Card Hover (Exploring) */
+.cursor-view .cursor-glow {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+/* Hide default cursor on desktop */
+@media (min-width: 769px) {
+    body {
+        cursor: none;
+    }
+    a, button, .clickable, .social-item, .nav-links a {
+        cursor: none;
+    }
+}
+
+/* Hero Light Effect */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 80%;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    animation: pulseGlow 8s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+    from { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+    to { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+}
+
+/* Interactive Buttons */
+.btn {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary {
+    border: 1px solid rgba(var(--primary-rgb), 0.3);
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(var(--primary-rgb), 0.4), 0 0 20px rgba(var(--primary-rgb), 0.2);
+}
+
+/* Interactive Border for Buttons & Cards */
+.btn-outline, .glass-card, .project-card, .skill-category {
+    position: relative;
+}
+
+.btn-outline::after, .glass-card::after, .project-card::after, .skill-category::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--primary-rgb), 0.5) 0%, transparent 50%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.btn-outline:hover::after, .glass-card:hover::after, .project-card:hover::after, .skill-category:hover::after {
+    opacity: 1;
+}
+
+/* Magnetic Interaction Helper */
+.magnetic {
+    display: inline-block;
+    transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Interactive Icons */
+.tech-icon-float, .method-icon, .social-item {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tech-icon-float:hover {
+    transform: scale(1.2) rotate(10deg);
+    box-shadow: 0 0 30px rgba(var(--primary-rgb), 0.3);
+}
+
+/* Scroll Experience Enhancements */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(10px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+/* Staggered Children Reveal */
+.reveal[style*="--order"] {
+    transition-delay: calc(var(--order, 0) * 0.1s);
+}
+
+/* Parallax Elements */
+[data-parallax] {
+    transition: transform 0.1s linear;
+}
+
+/* Ripple Effect */
+.ripple-effect {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: rgba(var(--primary-rgb), 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10001;
+    transform: translate(-50%, -50%);
+    animation: rippleAnim 0.6s ease-out forwards;
+}
+
+@keyframes rippleAnim {
+    from { width: 0; height: 0; opacity: 0.5; }
+    to { width: 200px; height: 200px; opacity: 0; }
+}
+
+/* Depth Illusion while scrolling */
+.scrolling-depth {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.is-scrolling .scrolling-depth {
+    transform: scale(0.98) translateY(10px);
+    filter: blur(2px);
+}
+
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -850,46 +1120,59 @@ nav.scrolled {
     margin-bottom: 24px;
 }
 
-#contact-methods-container {
+#contact-methods-container, #social-links-container {
     display: flex;
-    flex-direction: column;
-    gap: 32px;
-    margin: 40px 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 24px 0;
 }
 
 .contact-method {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 24px;
+    gap: 10px;
+    padding: 16px;
     background: var(--glass);
     border: 1px solid var(--border);
-    border-radius: var(--radius-md);
+    border-radius: 20px;
     transition: var(--transition-base);
+    text-decoration: none;
+    color: inherit;
+    min-width: 100px;
+    flex: 1;
 }
 
 .contact-method:hover {
     background: var(--glass-heavy);
     border-color: var(--primary);
-    transform: translateX(10px);
+    transform: translateY(-5px);
 }
 
 .method-icon {
-    width: 56px;
-    height: 56px;
+    width: 44px;
+    height: 44px;
     background: rgba(var(--primary-rgb), 0.1);
     color: var(--primary);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+}
+
+.method-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-align: center;
 }
 
 .contact-socials {
     display: flex;
     gap: 16px;
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 .social-item {
@@ -979,13 +1262,12 @@ nav.scrolled {
     z-index: -1;
 }
 
-/* Map existing classes to new styles */
 .project-card, .skill-category, .process-item, .cert-card, .timeline-content {
     background: var(--glass);
     backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    transition: var(--transition-slow);
+    transition: var(--transition-slow), transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     overflow: hidden;
 }
