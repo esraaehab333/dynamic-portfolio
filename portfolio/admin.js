@@ -91,7 +91,6 @@ class AdminApp {
         document.getElementById('site-accent').value = this.data.site?.accent || DEFAULT_DATA.site.accent;
         document.getElementById('site-secondary').value = this.data.site?.secondary || '';
         document.getElementById('site-theme').value = this.data.site?.theme || DEFAULT_DATA.site.theme;
-        document.getElementById('site-form-id').value = this.data.site?.form_id || '';
         document.getElementById('hero-name').value = this.data.hero?.name || '';
         document.getElementById('hero-title').value = this.data.hero?.title || '';
         document.getElementById('hero-description').value = this.data.hero?.description || '';
@@ -110,7 +109,6 @@ class AdminApp {
         this.data.site.accent = document.getElementById('site-accent').value;
         this.data.site.secondary = document.getElementById('site-secondary').value;
         this.data.site.theme = document.getElementById('site-theme').value;
-        this.data.site.form_id = document.getElementById('site-form-id').value;
         this.saveData();
         this.updateFavicon();
     }

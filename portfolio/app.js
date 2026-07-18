@@ -642,27 +642,28 @@ class PortfolioApp {
                 const btn = form.querySelector('button');
                 const originalText = btn.innerHTML;
 
-                // Use Formspree ID from site config or default to the provided one
-                const formId = this.data.site?.form_id || 'xvgzpyzo';
-                const actionUrl = `https://formspree.io/f/${formId}`;
-
                 btn.disabled = true;
                 btn.innerHTML = '<i class="ph ph-spinner-gap"></i> Sending...';
 
                 const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
 
                 try {
-                    const response = await fetch(actionUrl, {
+                    const response = await fetch(API_URL, {
                         method: 'POST',
-                        body: formData,
-                        headers: { 'Accept': 'application/json' }
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(data)
                     });
 
                     if (response.ok) {
-                        alert('Thank you! Your message has been sent successfully to Gmail.');
+                        alert('Thank you! Your message has been sent successfully.');
                         form.reset();
                     } else {
-                        alert('Oops! There was a problem sending your message.');
+                        const errorData = await response.json();
+                        alert(errorData.message || 'Oops! There was a problem sending your message.');
                     }
                 } catch (error) {
                     alert('Error connecting to the server. Please try again.');

@@ -230,7 +230,11 @@
                         <input type="color" id="site-secondary" class="form-control" style="height: 50px; padding: 5px;">
                     </div>
                 </div>
-                <div class="form-group"><label>Formspree ID (For Contact Form to work)</label><input type="text" id="site-form-id" class="form-control" placeholder="e.g. xvgzpyzo"></div>
+                <div class="form-group">
+                    <p style="font-size: 0.85rem; color: var(--admin-text-muted); padding: 1rem; background: #f0f7ff; border-radius: 12px; border: 1px solid #d0e3ff;">
+                        <i class="ph ph-info" style="color: var(--admin-primary);"></i> The contact form is now handled directly by your Cloudflare Worker using Resend. No Formspree ID required.
+                    </p>
+                </div>
                 <button class="btn-save" onclick="adminApp.saveSite()">Save Site Config</button>
             </section>
 
