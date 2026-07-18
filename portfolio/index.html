@@ -269,6 +269,52 @@
         </div>
     </footer>
 
+    <!-- Submission Status Modal -->
+    <div id="submission-modal" class="status-modal" aria-hidden="true" role="dialog">
+        <div class="status-modal-overlay"></div>
+        <div class="status-modal-content">
+            <div id="modal-state-sending" class="modal-state">
+                <div class="modal-icon-wrapper">
+                    <div class="floating-airplane">
+                        <i class="ph-fill ph-paper-plane-tilt"></i>
+                    </div>
+                    <div class="glow-pulse"></div>
+                </div>
+                <h3>Sending your message...</h3>
+                <div class="modal-progress-container">
+                    <div class="modal-progress-bar"></div>
+                </div>
+                <div class="modal-particles"></div>
+            </div>
+
+            <div id="modal-state-success" class="modal-state" style="display: none;">
+                <div class="modal-icon-wrapper success">
+                    <div class="checkmark-circle">
+                        <i class="ph ph-check"></i>
+                    </div>
+                    <div class="confetti-container"></div>
+                </div>
+                <h3>Message Sent Successfully</h3>
+                <p>Your message has been delivered.<br>I'll get back to you as soon as possible.</p>
+                <button class="btn btn-outline modal-close-btn">Continue Exploring</button>
+            </div>
+
+            <div id="modal-state-error" class="modal-state" style="display: none;">
+                <div class="modal-icon-wrapper error">
+                    <div class="error-circle">
+                        <i class="ph ph-warning-circle"></i>
+                    </div>
+                </div>
+                <h3>Something went wrong</h3>
+                <p>Please try again in a few moments.</p>
+                <div class="modal-btns">
+                    <button class="btn btn-primary modal-retry-btn">Try Again</button>
+                    <button class="btn btn-outline modal-close-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
