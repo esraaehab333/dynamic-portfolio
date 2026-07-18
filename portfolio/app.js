@@ -680,13 +680,18 @@ class PortfolioApp {
             const data = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch(API_URL, {
+                const response = await fetch(`${API_URL}/contact`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        subject,
+                        message,
+                        honeypot: ''
+                    })
                 });
 
                 if (response.ok) {
