@@ -26,7 +26,8 @@ class PortfolioApp {
         this.updateFavicon();
         this.renderAll();
 
-        document.getElementById('year').textContent = new Date().getFullYear();
+        const yearEl = document.getElementById('year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
 
         // Initial setup for reveal
         document.body.classList.add('is-loading');
@@ -50,19 +51,21 @@ class PortfolioApp {
         if (!overlay) return;
 
         // Initialize Loader Particles
-        for (let i = 0; i < 8; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.top = '-5%';
-            p.style.opacity = '0.15';
-            p.style.background = 'var(--primary)';
-            const size = Math.random() * 2 + 1 + 'px';
-            p.style.width = size;
-            p.style.height = size;
-            p.style.setProperty('--duration', Math.random() * 10 + 15 + 's');
-            p.style.setProperty('--move-x', (Math.random() - 0.5) * 100 + 'px');
-            particlesContainer.appendChild(p);
+        if (particlesContainer) {
+            for (let i = 0; i < 8; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = '-5%';
+                p.style.opacity = '0.15';
+                p.style.background = 'var(--primary)';
+                const size = Math.random() * 2 + 1 + 'px';
+                p.style.width = size;
+                p.style.height = size;
+                p.style.setProperty('--duration', Math.random() * 10 + 15 + 's');
+                p.style.setProperty('--move-x', (Math.random() - 0.5) * 100 + 'px');
+                particlesContainer.appendChild(p);
+            }
         }
 
         const techStack = [
@@ -133,20 +136,13 @@ class PortfolioApp {
         // Theme Toggle
         const themeToggle = document.getElementById('theme-toggle');
         if (themeToggle) {
-            // The initial state is handled by the script in <head> for zero-flash
-            // but we ensure synchronization here.
-            const savedTheme = localStorage.getItem('theme_preference');
-
             themeToggle.onclick = () => {
                 const isDark = document.documentElement.classList.toggle('dark-mode');
-                // Also toggle on body for legacy CSS support
                 document.body.classList.toggle('dark-mode', isDark);
-
                 localStorage.setItem('theme_preference', isDark ? 'dark' : 'light');
                 this.updateThemeIcon();
                 this.updateFavicon();
             };
-
             this.updateThemeIcon();
         }
 
@@ -157,8 +153,10 @@ class PortfolioApp {
             menuToggle.onclick = () => {
                 navMenu.classList.toggle('active');
                 const icon = menuToggle.querySelector('i');
-                icon.classList.toggle('ph-list');
-                icon.classList.toggle('ph-x');
+                if (icon) {
+                    icon.classList.toggle('ph-list');
+                    icon.classList.toggle('ph-x');
+                }
             };
 
             // Close menu on link click
@@ -182,7 +180,6 @@ class PortfolioApp {
 
     updateFavicon() {
         const root = document.documentElement;
-        // Get primary and secondary colors from computed styles to ensure we get the actual values
         const primary = getComputedStyle(root).getPropertyValue('--primary').trim() || '#3D5AFE';
         const secondary = getComputedStyle(root).getPropertyValue('--secondary').trim() || '#B125EA';
 
@@ -202,7 +199,6 @@ class PortfolioApp {
 
         const dataUrl = `data:image/svg+xml;base64,${btoa(svg)}`;
 
-        // Update standard favicon
         let link = document.querySelector("link[rel~='icon']");
         if (!link) {
             link = document.createElement('link');
@@ -212,7 +208,6 @@ class PortfolioApp {
         }
         link.href = dataUrl;
 
-        // Update Apple Touch Icon
         let appleLink = document.querySelector("link[rel='apple-touch-icon']");
         if (!appleLink) {
             appleLink = document.createElement('link');
@@ -220,6 +215,45 @@ class PortfolioApp {
             document.head.appendChild(appleLink);
         }
         appleLink.href = dataUrl;
+    }
+
+    setupMagnetic() {
+        // Interactive elements (Buttons, Links)
+        document.querySelectorAll('.btn, .social-item, .nav-links a, .logo, .tech-icon-float, .method-icon').forEach(el => {
+            if (el.dataset.interactInit) return;
+            el.dataset.interactInit = 'true';
+
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const moveX = (e.clientX - centerX) * 0.35;
+                const moveY = (e.clientY - centerY) * 0.35;
+                el.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
+                document.body.classList.add('cursor-active');
+            });
+
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+                document.body.classList.remove('cursor-active');
+            });
+        });
+
+        // Text elements (for text cursor)
+        document.querySelectorAll('p, h1, h2, h3, .section-label, span').forEach(el => {
+            if (el.dataset.cursorInit) return;
+            el.dataset.cursorInit = 'true';
+            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-text'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-text'));
+        });
+
+        // View elements (Images, Cards)
+        document.querySelectorAll('.project-card, .cert-card, .hero-image-box img').forEach(el => {
+            if (el.dataset.viewInit) return;
+            el.dataset.viewInit = 'true';
+            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-view'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-view'));
+        });
     }
 
     initVisualEffects() {
@@ -297,45 +331,10 @@ class PortfolioApp {
         };
         tick();
 
-        // Magnetic Effect & Advanced Hover states
-        const setupAdvancedInteractions = () => {
-            // Interactive elements (Buttons, Links)
-            document.querySelectorAll('.btn, .social-item, .nav-links a, .logo, .tech-icon-float, .method-icon').forEach(el => {
-                if (el.dataset.interactInit) return;
-                el.dataset.interactInit = 'true';
-
-                el.addEventListener('mousemove', (e) => {
-                    const rect = el.getBoundingClientRect();
-                    const centerX = rect.left + rect.width / 2;
-                    const centerY = rect.top + rect.height / 2;
-                    const moveX = (e.clientX - centerX) * 0.35;
-                    const moveY = (e.clientY - centerY) * 0.35;
-                    el.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
-                    document.body.classList.add('cursor-active');
-                });
-
-                el.addEventListener('mouseleave', () => {
-                    el.style.transform = '';
-                    document.body.classList.remove('cursor-active');
-                });
-            });
-
-            // Text elements (for text cursor)
-            document.querySelectorAll('p, h1, h2, h3, .section-label, span').forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-text'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-text'));
-            });
-
-            // View elements (Images, Cards)
-            document.querySelectorAll('.project-card, .cert-card, .hero-image-box img').forEach(el => {
-                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-view'));
-                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-view'));
-            });
-        };
-        setupAdvancedInteractions();
+        this.setupMagnetic();
 
         // Re-run magnetic setup when new elements are rendered
-        const observer = new MutationObserver(setupMagnetic);
+        const observer = new MutationObserver(() => this.setupMagnetic());
         observer.observe(document.body, { childList: true, subtree: true });
 
         // Click Ripple Effect
@@ -365,7 +364,16 @@ class PortfolioApp {
         try {
             const res = await fetch(API_URL + '?t=' + Date.now());
             const data = await res.json();
-            const merged = { ...DEFAULT_DATA, ...data };
+
+            // Deep merge essential sections to preserve defaults if partially missing in API
+            const merged = {
+                ...DEFAULT_DATA,
+                ...data,
+                site: { ...DEFAULT_DATA.site, ...(data.site || {}) },
+                hero: { ...DEFAULT_DATA.hero, ...(data.hero || {}) },
+                about: { ...DEFAULT_DATA.about, ...(data.about || {}) },
+                contact: { ...DEFAULT_DATA.contact, ...(data.contact || {}) }
+            };
 
             // Migration logic for singular/plural keys
             if (data.project && !data.projects) merged.projects = data.project;
@@ -407,7 +415,6 @@ class PortfolioApp {
             }
         }
 
-        // Only apply API theme if user hasn't set a preference yet
         if (!localStorage.getItem('theme_preference')) {
             if (this.data.site?.theme === 'dark') {
                 document.documentElement.classList.add('dark-mode');
@@ -434,6 +441,7 @@ class PortfolioApp {
         const heroTitle = document.getElementById('hero-title-main');
         if (heroTitle) heroTitle.innerHTML = this.data.hero.title || DEFAULT_DATA.hero.title;
 
+        // Render generic data-key elements (Bio, Name, Description etc)
         this.renderText();
 
         const heroImg = document.getElementById('hero-image');
@@ -572,7 +580,7 @@ class PortfolioApp {
             </div>
         `).join('');
 
-        this.setupScrollEffect(); // Re-run to observe new elements
+        this.setupScrollEffect();
     }
 
     renderCollection(key, id, template) {
@@ -587,7 +595,6 @@ class PortfolioApp {
             if (sectionToHide) sectionToHide.style.display = 'block';
             container.style.display = '';
         } else {
-            // Never hide the contact section, as the form should always be visible
             if (sectionToHide && sectionToHide.id !== 'contact') {
                 sectionToHide.style.display = 'none';
             }
@@ -611,22 +618,21 @@ class PortfolioApp {
         let scrollTimeout;
 
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) nav.classList.add('scrolled');
-            else nav.classList.remove('scrolled');
+            if (nav) {
+                if (window.scrollY > 50) nav.classList.add('scrolled');
+                else nav.classList.remove('scrolled');
+            }
 
-            // Depth Illusion Logic
             document.body.classList.add('is-scrolling');
             clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(() => {
                 document.body.classList.remove('is-scrolling');
             }, 150);
 
-            // Simple Parallax
             const scrolled = window.scrollY;
             if (blob1) blob1.style.transform = `translate(${scrolled * 0.1}px, ${scrolled * 0.05}px)`;
             if (blob2) blob2.style.transform = `translate(-${scrolled * 0.1}px, -${scrolled * 0.05}px)`;
 
-            // Parallax for sections
             document.querySelectorAll('[data-parallax]').forEach(el => {
                 const speed = el.dataset.parallax || 0.1;
                 el.style.transform = `translateY(${scrolled * speed}px)`;
@@ -677,7 +683,8 @@ class PortfolioApp {
             showState('sending');
 
             const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
+            const formValues = Object.fromEntries(formData.entries());
+            const { name, email, subject, message } = formValues;
 
             try {
                 const response = await fetch(`${API_URL}/contact`, {
@@ -690,7 +697,7 @@ class PortfolioApp {
                         email,
                         subject,
                         message,
-                        honeypot: ''
+                        honeypot: formValues.honeypot || ''
                     })
                 });
 
@@ -768,7 +775,6 @@ class PortfolioApp {
         if (!container) return;
         container.innerHTML = '';
 
-        // Add success ripple
         const ripple = document.createElement('div');
         ripple.className = 'success-ripple';
         container.appendChild(ripple);
