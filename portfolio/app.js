@@ -23,10 +23,16 @@ class PortfolioApp {
     async init() {
         this.data = await this.loadData();
         this.applyTheme();
+        this.updateFavicon();
         this.renderAll();
 
         document.getElementById('year').textContent = new Date().getFullYear();
-        document.getElementById('app-loading-overlay').style.display = 'none';
+
+        // Initial setup for reveal
+        document.body.classList.add('is-loading');
+
+        // Premium Loader Sequence with Cinematic Reveal
+        await this.runPremiumLoader();
 
         this.setupScrollEffect();
         this.setupContactForm();
@@ -34,21 +40,111 @@ class PortfolioApp {
         this.setupInteractions();
     }
 
+    async runPremiumLoader() {
+        const overlay = document.getElementById('app-loading-overlay');
+        const progressFill = document.getElementById('loader-progress-fill');
+        const percentageText = document.getElementById('loader-percentage');
+        const techText = document.getElementById('loader-tech-text');
+        const particlesContainer = document.getElementById('loader-particles');
+
+        if (!overlay) return;
+
+        // Initialize Loader Particles
+        for (let i = 0; i < 8; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.top = '-5%';
+            p.style.opacity = '0.15';
+            p.style.background = 'var(--primary)';
+            const size = Math.random() * 2 + 1 + 'px';
+            p.style.width = size;
+            p.style.height = size;
+            p.style.setProperty('--duration', Math.random() * 10 + 15 + 's');
+            p.style.setProperty('--move-x', (Math.random() - 0.5) * 100 + 'px');
+            particlesContainer.appendChild(p);
+        }
+
+        const techStack = [
+            "Android",
+            "Kotlin",
+            "Jetpack Compose",
+            "Kotlin Multiplatform",
+            "Clean Architecture",
+            "CI/CD",
+            "Open Source"
+        ];
+
+        let progress = 0;
+        let techIndex = 0;
+
+        const updateTech = () => {
+            if (techText) {
+                techText.style.animation = 'techSlideOut 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+                setTimeout(() => {
+                    techIndex = (techIndex + 1) % techStack.length;
+                    techText.textContent = techStack[techIndex];
+                    techText.style.animation = 'techSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+                }, 500);
+            }
+        };
+
+        const techInterval = setInterval(updateTech, 1500);
+
+        return new Promise(resolve => {
+            const interval = setInterval(() => {
+                progress += Math.random() * 12;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    clearInterval(techInterval);
+
+                    // Final delay to admire the 100% state
+                    setTimeout(() => {
+                        this.startCinematicReveal(overlay, resolve);
+                    }, 500);
+                }
+
+                if (progressFill) progressFill.style.width = progress + '%';
+                if (percentageText) percentageText.textContent = Math.floor(progress) + '%';
+            }, 200);
+        });
+    }
+
+    startCinematicReveal(overlay, callback) {
+        // Phase 1: Expansion of spotlight
+        overlay.classList.add('reveal-active');
+        document.body.classList.remove('is-loading');
+        document.body.classList.add('reveal-init');
+
+        setTimeout(() => {
+            // Phase 2: Fade out overlay and start staggering in content
+            overlay.classList.add('fade-out');
+            document.body.classList.add('reveal-complete');
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                callback();
+            }, 1500);
+        }, 800);
+    }
+
     setupInteractions() {
         // Theme Toggle
         const themeToggle = document.getElementById('theme-toggle');
         if (themeToggle) {
-            // Check for saved preference, otherwise use the admin's initial theme
+            // The initial state is handled by the script in <head> for zero-flash
+            // but we ensure synchronization here.
             const savedTheme = localStorage.getItem('theme_preference');
-            if (savedTheme) {
-                if (savedTheme === 'dark') document.body.classList.add('dark-mode');
-                else document.body.classList.remove('dark-mode');
-            }
 
             themeToggle.onclick = () => {
-                const isDark = document.body.classList.toggle('dark-mode');
+                const isDark = document.documentElement.classList.toggle('dark-mode');
+                // Also toggle on body for legacy CSS support
+                document.body.classList.toggle('dark-mode', isDark);
+
                 localStorage.setItem('theme_preference', isDark ? 'dark' : 'light');
                 this.updateThemeIcon();
+                this.updateFavicon();
             };
 
             this.updateThemeIcon();
@@ -79,8 +175,51 @@ class PortfolioApp {
         if (!themeToggle) return;
         const icon = themeToggle.querySelector('i');
         if (icon) {
-            icon.className = document.body.classList.contains('dark-mode') ? 'ph ph-moon' : 'ph ph-sun';
+            const isDark = document.documentElement.classList.contains('dark-mode');
+            icon.className = isDark ? 'ph ph-moon' : 'ph ph-sun';
         }
+    }
+
+    updateFavicon() {
+        const root = document.documentElement;
+        // Get primary and secondary colors from computed styles to ensure we get the actual values
+        const primary = getComputedStyle(root).getPropertyValue('--primary').trim() || '#3D5AFE';
+        const secondary = getComputedStyle(root).getPropertyValue('--secondary').trim() || '#B125EA';
+
+        const svg = `
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#faviconGradient)"/>
+                <path d="M42 18H22V46H42V40H28V34H39V30H28V24H42V18Z" fill="white"/>
+                <defs>
+                    <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="${primary}"/>
+                        <stop offset="50%" stop-color="${secondary}"/>
+                        <stop offset="100%" stop-color="${primary}"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        `.trim();
+
+        const dataUrl = `data:image/svg+xml;base64,${btoa(svg)}`;
+
+        // Update standard favicon
+        let link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            link.type = 'image/svg+xml';
+            document.head.appendChild(link);
+        }
+        link.href = dataUrl;
+
+        // Update Apple Touch Icon
+        let appleLink = document.querySelector("link[rel='apple-touch-icon']");
+        if (!appleLink) {
+            appleLink = document.createElement('link');
+            appleLink.rel = 'apple-touch-icon';
+            document.head.appendChild(appleLink);
+        }
+        appleLink.href = dataUrl;
     }
 
     initVisualEffects() {
@@ -252,8 +391,6 @@ class PortfolioApp {
             const b = parseInt(hex.slice(5, 7), 16);
             root.style.setProperty('--primary-rgb', `${r}, ${g}, ${b}`);
 
-            // 1. Always check for a secondary color from the admin
-            // 2. If it's not there, generate one to ensure the gradient stays "alive"
             if (this.data.site.secondary && this.data.site.secondary !== '#000000' && this.data.site.secondary !== '') {
                 const sHex = this.data.site.secondary;
                 root.style.setProperty('--secondary', sHex);
@@ -262,7 +399,6 @@ class PortfolioApp {
                 const sb = parseInt(sHex.slice(5, 7), 16);
                 root.style.setProperty('--secondary-rgb', `${sr}, ${sg}, ${sb}`);
             } else {
-                // Generate a companion color (slightly shifted hue/brightness)
                 const sr = Math.min(255, r + 40);
                 const sg = Math.max(0, g - 20);
                 const sb = Math.min(255, b + 60);
@@ -271,11 +407,17 @@ class PortfolioApp {
             }
         }
 
-        if (this.data.site?.theme === 'dark') {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
+        // Only apply API theme if user hasn't set a preference yet
+        if (!localStorage.getItem('theme_preference')) {
+            if (this.data.site?.theme === 'dark') {
+                document.documentElement.classList.add('dark-mode');
+                document.body.classList.add('dark-mode');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+                document.body.classList.remove('dark-mode');
+            }
         }
+        this.updateThemeIcon();
     }
 
     renderAll() {

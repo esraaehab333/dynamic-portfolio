@@ -47,6 +47,7 @@ class AdminApp {
         this.setupNav();
         this.populateForms();
         this.renderLists();
+        this.updateFavicon();
     }
 
     async loadData() {
@@ -111,6 +112,7 @@ class AdminApp {
         this.data.site.theme = document.getElementById('site-theme').value;
         this.data.site.form_id = document.getElementById('site-form-id').value;
         this.saveData();
+        this.updateFavicon();
     }
 
     saveHero() {
@@ -257,6 +259,46 @@ class AdminApp {
         const t = document.getElementById('toast');
         t.style.display = 'block';
         setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    updateFavicon() {
+        const primary = this.data.site?.accent || '#0055FF';
+        let secondary = this.data.site?.secondary || '';
+
+        if (!secondary || secondary === '#000000') {
+            // Generate a secondary color if not provided (same logic as app.js)
+            const r = parseInt(primary.slice(1, 3), 16);
+            const g = parseInt(primary.slice(3, 5), 16);
+            const b = parseInt(primary.slice(5, 7), 16);
+            const sr = Math.min(255, r + 40);
+            const sg = Math.max(0, g - 20);
+            const sb = Math.min(255, b + 60);
+            secondary = `rgb(${sr}, ${sg}, ${sb})`;
+        }
+
+        const svg = `
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#faviconGradient)"/>
+                <path d="M42 18H22V46H42V40H28V34H39V30H28V24H42V18Z" fill="white"/>
+                <defs>
+                    <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="${primary}"/>
+                        <stop offset="50%" stop-color="${secondary}"/>
+                        <stop offset="100%" stop-color="${primary}"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        `.trim();
+
+        const dataUrl = `data:image/svg+xml;base64,${btoa(svg)}`;
+        let link = document.querySelector("link[rel~='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            link.type = 'image/svg+xml';
+            document.head.appendChild(link);
+        }
+        link.href = dataUrl;
     }
 }
 const adminApp = new AdminApp();
