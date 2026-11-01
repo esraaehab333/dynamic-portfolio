@@ -1,5 +1,8 @@
 import { esc } from '../core/utils.js';
 
+const INITIAL_PROJECTS = 6;
+const PROJECTS_PER_BATCH = 3;
+
 export const id = 'projects';
 
 export function render(data) {
@@ -9,26 +12,20 @@ export function render(data) {
     const items = data.projects || [];
     const isVisible = items.length > 0;
     const itemsHtml = items.map((project, index) => `
-        <article class="project-card reveal" data-project-id="${esc(project.id ?? index)}" role="link" tabindex="0" aria-label="View details for ${project.title || 'project'}">
+        <article class="project-card reveal" data-project-id="${esc(project.id ?? index)}" role="link" tabindex="0" aria-label="View details for ${esc(project.title || 'project')}" ${index >= INITIAL_PROJECTS ? 'hidden' : ''}>
             <div class="project-thumb">
                 <img src="${project.image || 'https://via.placeholder.com/800x600'}" class="project-img" alt="${project.title || 'Project'} preview" loading="lazy">
-                <span class="project-tag">${project.tag || 'Project'}</span>
             </div>
             <div class="project-meta">
                 <div class="project-header">
                     <div class="project-heading">
                         <h3 class="project-name">${project.title || 'Untitled Project'}</h3>
                         ${project.subtitle ? `<p class="project-subtitle">${project.subtitle}</p>` : ''}
+                        ${project.tag ? `<p class="project-tech">${project.tag}</p>` : ''}
                     </div>
-                    <span class="arrow-btn" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span>
                 </div>
                 <div class="project-card-footer">
-                    <span class="project-details-link">View project details <i class="ph ph-arrow-right"></i></span>
-                    <div class="project-links">
-                        ${project.github ? `<a href="${project.github}" class="project-link-icon" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub"><i class="ph ph-github-logo"></i></a>` : ''}
-                        ${project.linkedin ? `<a href="${project.linkedin}" class="project-link-icon" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>` : ''}
-                        ${project.video ? `<a href="${project.video}" class="project-link-icon" target="_blank" rel="noopener noreferrer" aria-label="Video" title="Video"><i class="ph ph-play-circle"></i></a>` : ''}
-                    </div>
+                    <span class="project-details-link">View more details <i class="ph ph-arrow-right"></i></span>
                 </div>
             </div>
         </article>
@@ -37,11 +34,15 @@ export function render(data) {
     mount.innerHTML = `
     <section id="projects" class="section-padding" style="${isVisible ? '' : 'display: none;'}">
         <div class="container">
-            <div class="section-header">
-                <div class="section-label">Featured Projects</div>
-                <a href="#projects" class="view-all">Explore Projects <i class="ph ph-arrow-right"></i></a>
+            <div class="projects-section-header">
+                <div>
+                    <div class="section-label">Featured Projects</div>
+                    <p class="projects-section-subtitle">A few highlights from my work. Open any project to explore the details.</p>
+                </div>
+                <span class="view-all"><strong>${items.length}</strong><span>${items.length === 1 ? 'project' : 'projects'}</span></span>
             </div>
             <div class="projects-grid" id="projects-container">${itemsHtml}</div>
+            ${items.length > INITIAL_PROJECTS ? `<div class="projects-more-wrap"><button class="projects-more" type="button" aria-controls="projects-container">Show more projects <span>(${items.length - INITIAL_PROJECTS} remaining)</span> <i class="ph ph-caret-down" aria-hidden="true"></i></button></div>` : ''}
         </div>
     </section>
     `;
@@ -61,4 +62,18 @@ export function render(data) {
             }
         });
     });
+
+    const moreButton = mount.querySelector('.projects-more');
+    if (moreButton) {
+        moreButton.addEventListener('click', () => {
+            const hiddenCards = [...mount.querySelectorAll('.project-card[hidden]')];
+            hiddenCards.slice(0, PROJECTS_PER_BATCH).forEach(card => card.hidden = false);
+            const remaining = hiddenCards.length - Math.min(hiddenCards.length, PROJECTS_PER_BATCH);
+            if (remaining <= 0) {
+                moreButton.remove();
+            } else {
+                moreButton.querySelector('span').textContent = `(${remaining} remaining)`;
+            }
+        });
+    }
 }
