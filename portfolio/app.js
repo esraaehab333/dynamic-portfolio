@@ -38,6 +38,7 @@ class PortfolioApp {
         this.setupScrollEffect();
         this.setupContactForm();
         this.setupNavbarScroll();
+        this.setupNavbarActiveState();
         this.setupInteractions();
     }
 
@@ -638,6 +639,41 @@ class PortfolioApp {
                 el.style.transform = `translateY(${scrolled * speed}px)`;
             });
         });
+    }
+
+    setupNavbarActiveState() {
+        const links = Array.from(document.querySelectorAll('#nav-menu a[href^="#"]'));
+        const sections = links
+            .map(link => document.querySelector(link.getAttribute('href')))
+            .filter(section => section && section.tagName === 'SECTION');
+        if (!links.length || !sections.length) return;
+
+        const updateActiveLink = () => {
+            const marker = window.innerHeight * 0.35;
+            let currentSection = sections[0];
+
+            for (const section of sections) {
+                if (section.getBoundingClientRect().top <= marker) currentSection = section;
+                else break;
+            }
+
+            // Keep the final section selected when the page reaches its bottom.
+            if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+                currentSection = sections[sections.length - 1];
+            }
+
+            links.forEach(link => {
+                const isActive = link.getAttribute('href') === `#${currentSection.id}`;
+                link.classList.toggle('active', isActive);
+                if (isActive) link.setAttribute('aria-current', 'location');
+                else link.removeAttribute('aria-current');
+            });
+        };
+
+        window.addEventListener('scroll', updateActiveLink, { passive: true });
+        window.addEventListener('resize', updateActiveLink);
+        window.addEventListener('hashchange', updateActiveLink);
+        updateActiveLink();
     }
 
     setupContactForm() {
