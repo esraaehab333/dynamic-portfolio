@@ -17,7 +17,31 @@
     <!-- Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     
-    <link rel="stylesheet" href="styles.css">
+    <!-- CSS Modules (in exact relative cascade order) -->
+    <link rel="stylesheet" href="css/base/variables.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <link rel="stylesheet" href="css/base/typography.css">
+    <link rel="stylesheet" href="css/base/layout.css">
+    <link rel="stylesheet" href="css/components/buttons.css">
+    <link rel="stylesheet" href="css/components/cards.css">
+    <link rel="stylesheet" href="css/components/timeline.css">
+    <link rel="stylesheet" href="css/components/forms.css">
+    <link rel="stylesheet" href="css/components/modals.css">
+    <link rel="stylesheet" href="css/effects/loader.css">
+    <link rel="stylesheet" href="css/effects/cursor.css">
+    <link rel="stylesheet" href="css/effects/particles.css">
+    <link rel="stylesheet" href="css/effects/reveal.css">
+    <link rel="stylesheet" href="css/sections/navbar.css">
+    <link rel="stylesheet" href="css/sections/hero.css">
+    <link rel="stylesheet" href="css/sections/about.css">
+    <link rel="stylesheet" href="css/sections/projects.css">
+    <link rel="stylesheet" href="css/sections/experience.css">
+    <link rel="stylesheet" href="css/sections/skills.css">
+    <link rel="stylesheet" href="css/sections/process.css">
+    <link rel="stylesheet" href="css/sections/education.css">
+    <link rel="stylesheet" href="css/sections/certifications.css">
+    <link rel="stylesheet" href="css/sections/contact.css">
+    <link rel="stylesheet" href="css/sections/footer.css">
 
     <script>
         (function() {
@@ -37,7 +61,7 @@
     <div class="bg-blob blob-2"></div>
     <div class="mouse-glow" id="mouse-glow"></div>
 
-    <!-- Loading -->
+    <!-- Loading Overlay -->
     <div id="app-loading-overlay" class="premium-loader-overlay">
         <div class="loader-bg-glow"></div>
         <div class="loader-particles" id="loader-particles"></div>
@@ -71,203 +95,22 @@
         </div>
     </div>
 
-    <nav id="navbar">
-        <div class="container nav-content">
-            <a href="#home" class="logo">
-                <div class="logo-icon" id="logo-icon-char">E</div>
-                <div id="logo-text">ESRAA EHAB</div>
-            </a>
-            
-            <div class="nav-links" id="nav-menu">
-                <a href="#home" class="active">Home</a>
-                <a href="#about">About</a>
-                <a href="#projects">Projects</a>
-                <a href="#experience">Experience</a>
-                <a href="#skills">Skills</a>
-                <a href="#process">Process</a>
-                <a href="#education">Education</a>
-                <a href="#contact">Contact</a>
-            </div>
-
-            <div style="display: flex; gap: 12px; align-items: center;">
-                <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
-                    <i class="ph ph-moon"></i>
-                </button>
-                <a href="#contact" class="btn btn-primary nav-cta">Let's Talk <i class="ph ph-arrow-up-right"></i></a>
-                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
-                    <i class="ph ph-list"></i>
-                </button>
-            </div>
-        </div>
-    </nav>
+    <!-- Section Mount Points -->
+    <div id="navbar-mount"></div>
 
     <main>
-        <!-- Hero Section -->
-        <section id="home" class="hero">
-            <div class="container hero-grid">
-                <div class="hero-text">
-                    <div class="eyebrow" data-key="hero.name">HELLO, I'M ESRAA EHAB LOTFY</div>
-                    <h1 class="hero-title" id="hero-title-main">I Design High-Performance <span>Mobile Apps</span></h1>
-                    <p class="hero-desc" data-key="hero.description">Mobile Application Developer specializing in high-performance, user-centric apps.</p>
-
-                    <div class="hero-btns">
-                        <a href="#" class="btn btn-primary" id="download-cv-btn" target="_blank">Download CV <i class="ph ph-download-simple"></i></a>
-                        <a href="#contact" class="btn btn-outline">Let's Talk <i class="ph ph-chat-circle-text"></i></a>
-                    </div>
-                </div>
-
-                <div class="hero-image-box">
-                    <div class="mobile-tech-bg"></div>
-                    <div class="tech-icon-float" style="top: 10%; left: 0;"><i class="ph ph-android-logo"></i></div>
-                    <div class="tech-icon-float" style="top: 20%; right: -10px;"><i class="ph ph-apple-logo"></i></div>
-                    <div class="tech-icon-float" style="bottom: 15%; left: -20px;"><i class="ph ph-code"></i></div>
-                    <div class="tech-icon-float" style="bottom: 5%; right: 20%;"><i class="ph ph-device-mobile"></i></div>
-
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80" alt="Profile" id="hero-image">
-
-                    <div class="availability-badge">
-                        <div class="dot"></div>
-                        Available for new projects
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="section-padding about-section">
-            <div class="container about-container">
-                <div class="section-label">About Me</div>
-                <h2 data-key="about.title">Transforming Ideas Into Seamless Apps</h2>
-                <p data-key="about.bio">
-                    I am a dedicated Mobile App Developer specializing in high-performance Android and iOS applications.
-                </p>
-            </div>
-        </section>
-
-
-        <!-- Featured Projects -->
-        <section id="projects" class="section-padding">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-label">Featured Projects</div>
-                    <a href="#" class="view-all">View All Projects <i class="ph ph-arrow-right"></i></a>
-                </div>
-                
-                <div class="projects-grid" id="projects-container">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Experience Section -->
-        <section id="experience" class="section-padding bg-alt">
-            <div class="container">
-                <div class="section-label" style="margin-bottom: 40px;">Professional Experience</div>
-                <div class="timeline" id="experience-container">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Tech Stack Section -->
-        <section id="skills" class="section-padding">
-            <div class="container">
-                <div class="section-label" style="margin-bottom: 40px;">Technical Expertise</div>
-
-                <div class="skills-grid" id="dynamic-skills-container">
-                    <!-- Categories will be injected here by JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Process Section -->
-        <section id="process" class="section-padding bg-alt">
-            <div class="container">
-                <div class="section-label" style="margin-bottom: 20px;">My Process</div>
-
-                <div class="process-grid" id="process-container">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Education Section -->
-        <section id="education" class="section-padding">
-            <div class="container">
-                <div class="section-label" style="margin-bottom: 40px;">Education</div>
-                <div class="timeline" id="education-container">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Certifications Section -->
-        <section id="certifications" class="section-padding bg-alt">
-            <div class="container">
-                <div class="section-label" style="margin-bottom: 40px;">Certifications</div>
-                <div class="certs-grid" id="certifications-container">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="section-padding">
-            <div class="container">
-                <div class="section-label" style="margin-bottom: 24px;">Get In Touch</div>
-
-                <div class="contact-grid">
-                    <div class="contact-left">
-                        <h2 data-key="contact.title">Let's Create Something Amazing Together</h2>
-                        <p data-key="contact.subtitle">Have a project in mind or just want to say hello? I'd love to hear from you.</p>
-
-                        <div id="contact-methods-container">
-                            <!-- Populated by JS -->
-                        </div>
-
-                        <div class="contact-socials" id="social-links-container">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-
-                    <div class="contact-right">
-                        <form class="contact-form" id="main-contact-form" action="https://formspree.io/f/YOUR_ID_HERE" method="POST">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Your Name</label>
-                                    <input type="text" name="name" placeholder="Your Name" class="form-input" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Your Email</label>
-                                    <input type="email" name="email" placeholder="your@email.com" class="form-input" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Subject</label>
-                                <input type="text" name="subject" placeholder="What is this about?" class="form-input" required>
-                            </div>
-                            <!-- Honeypot for spam prevention -->
-                            <div style="display:none;">
-                                <input type="text" name="honeypot" tabindex="-1" autocomplete="off">
-                            </div>
-                            <div class="form-group">
-                                <label>Your Message</label>
-                                <textarea name="message" placeholder="Tell me about your project..." class="form-input" rows="5" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send Message</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div id="hero-mount"></div>
+        <div id="about-mount"></div>
+        <div id="projects-mount"></div>
+        <div id="experience-mount"></div>
+        <div id="skills-mount"></div>
+        <div id="process-mount"></div>
+        <div id="education-mount"></div>
+        <div id="certifications-mount"></div>
+        <div id="contact-mount"></div>
     </main>
 
-    <footer style="padding: 60px 0; border-top: 1px solid var(--border); background: var(--bg-main);">
-        <div class="container footer-content">
-            <a href="#home" class="logo">ESRAA EHAB</a>
-            <p style="color: var(--text-muted); font-size: 0.9rem;">© <span id="year"></span> ESRAA EHAB. All rights reserved.</p>
-        </div>
-    </footer>
+    <div id="footer-mount"></div>
 
     <!-- Submission Status Modal -->
     <div id="submission-modal" class="status-modal" aria-hidden="true" role="dialog">
@@ -315,6 +158,6 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

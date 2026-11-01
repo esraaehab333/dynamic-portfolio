@@ -1,0 +1,29 @@
+/* About Section Specifics */
+.about-section {
+    background: var(--bg-secondary);
+}
+
+.about-container {
+    max-width: 900px !important;
+    text-align: center;
+}
+
+.about-container .section-label {
+    justify-content: center;
+}
+
+.about-container h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-top: 32px;
+    margin-bottom: 24px;
+}
+
+.about-container p {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    color: var(--text-body);
+    line-height: 1.8;
+}
+
+.bg-alt {
+    background: var(--bg-secondary);
+}

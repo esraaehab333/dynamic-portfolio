@@ -1,0 +1,27 @@
+/*
+  Main CSS Load Order (loaded via <link> tags in index.html):
+  1. css/base/variables.css
+  2. css/base/reset.css
+  3. css/base/typography.css
+  4. css/base/layout.css
+  5. css/components/buttons.css
+  6. css/components/cards.css
+  7. css/components/timeline.css
+  8. css/components/forms.css
+  9. css/components/modals.css
+  10. css/effects/loader.css
+  11. css/effects/cursor.css
+  12. css/effects/particles.css
+  13. css/effects/reveal.css
+  14. css/sections/navbar.css
+  15. css/sections/hero.css
+  16. css/sections/about.css
+  17. css/sections/projects.css
+  18. css/sections/experience.css
+  19. css/sections/skills.css
+  20. css/sections/process.css
+  21. css/sections/education.css
+  22. css/sections/certifications.css
+  23. css/sections/contact.css
+  24. css/sections/footer.css
+*/

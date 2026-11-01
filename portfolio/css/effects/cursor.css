@@ -1,0 +1,83 @@
+/* Mouse Glow / Spotlight Enhancements */
+.mouse-glow {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: screen;
+    transition: opacity 0.5s ease;
+}
+
+.cursor-follower {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: var(--primary);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+}
+
+.cursor-glow {
+    position: fixed;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(var(--primary-rgb), 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition:
+        width 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+        height 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+        background 0.5s cubic-bezier(0.19, 1, 0.22, 1),
+        border-color 0.5s ease,
+        border-radius 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* State: Hovering Interactive Elements (Buttons, Links) */
+.cursor-active .cursor-follower {
+    opacity: 0;
+}
+
+.cursor-active .cursor-glow {
+    width: 60px;
+    height: 60px;
+    background: rgba(var(--primary-rgb), 0.1);
+    border-color: var(--primary);
+    border-width: 1.5px;
+}
+
+/* State: Text Interaction (Focusing on Readability) */
+.cursor-text .cursor-glow {
+    width: 2px;
+    height: 24px;
+    border-radius: 2px;
+    background: var(--primary);
+    border-color: transparent;
+}
+
+/* State: Image/Card Hover (Exploring) */
+.cursor-view .cursor-glow {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+/* Hide default cursor on desktop */
+@media (min-width: 769px) {
+    body {
+        cursor: none;
+    }
+    a, button, .clickable, .social-item, .nav-links a {
+        cursor: none;
+    }
+}

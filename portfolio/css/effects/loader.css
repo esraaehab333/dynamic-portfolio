@@ -1,0 +1,239 @@
+/* --- Premium Cinematic Loading Screen --- */
+.premium-loader-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-main);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.2s;
+}
+
+.premium-loader-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Expansion Effect */
+.premium-loader-overlay.reveal-active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, var(--bg-main) 100%);
+    animation: spotlightExpand 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    z-index: 5;
+}
+
+@keyframes spotlightExpand {
+    0% { transform: scale(0); opacity: 1; }
+    40% { opacity: 1; }
+    100% { transform: scale(5); opacity: 0; }
+}
+
+.loader-bg-glow {
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle at center, rgba(var(--primary-rgb), 0.15) 0%, transparent 60%);
+    animation: loaderAmbientLight 10s ease-in-out infinite alternate;
+    z-index: 0;
+}
+
+@keyframes loaderPulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.2); opacity: 0.6; }
+}
+
+@keyframes loaderAmbientLight {
+    0% { transform: scale(1) translate(-5%, -5%); opacity: 0.5; }
+    100% { transform: scale(1.2) translate(5%, 5%); opacity: 0.8; }
+}
+
+.loader-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+.loader-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Logo Animation */
+.loader-logo-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: loaderLogoEntry 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    filter: drop-shadow(0 0 15px rgba(var(--primary-rgb), 0.4));
+}
+
+.loader-logo-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 20px rgba(var(--primary-rgb), 0.3));
+    animation: loaderLogoBreath 4s ease-in-out infinite alternate;
+}
+
+.loader-logo-glow {
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 0.2) 0%, transparent 70%);
+    filter: blur(15px);
+    border-radius: 50%;
+    animation: loaderGlowPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes loaderLogoEntry {
+    from { opacity: 0; transform: scale(0.8) translateY(20px); filter: blur(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+}
+
+@keyframes loaderLogoBreath {
+    from { transform: scale(1) translateY(0); }
+    to { transform: scale(1.05) translateY(-5px); }
+}
+
+@keyframes loaderGlowPulse {
+    from { transform: scale(0.8); opacity: 0.3; }
+    to { transform: scale(1.2); opacity: 0.7; }
+}
+
+/* Tech Stack Rotation */
+.loader-tech-stack {
+    height: 30px;
+    overflow: hidden;
+    position: relative;
+    font-family: var(--font-mono);
+    color: var(--text-head);
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+#loader-tech-text {
+    display: block;
+    animation: techSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes techSlideIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.9); filter: blur(8px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes techSlideOut {
+    from { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    to { opacity: 0; transform: translateY(-20px) scale(1.1); filter: blur(8px); }
+}
+
+/* Progress Bar */
+.loader-progress-container {
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.loader-progress-bar {
+    width: 100%;
+    height: 2px;
+    background: rgba(var(--text-body-rgb, 255, 255, 255), 0.05);
+    border-radius: 100px;
+    overflow: hidden;
+    position: relative;
+}
+
+.loader-progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.loader-percentage {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Outro Transition */
+.premium-loader-overlay.fade-out .loader-logo-wrapper {
+    animation: loaderLogoExpand 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes loaderLogoExpand {
+    0% { transform: scale(1); opacity: 1; filter: blur(0); }
+    100% { transform: scale(15); opacity: 0; filter: blur(30px); }
+}
+
+/* Cleanup extra reveal styles */
+body.is-loading {
+    overflow: hidden;
+    background-color: var(--bg-main) !important;
+}
+
+main, nav, footer {
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-init main, .reveal-init nav, .reveal-init footer {
+    opacity: 0;
+    transform: scale(1.02) translateY(10px);
+    filter: blur(8px);
+}
+
+.reveal-complete main, .reveal-complete nav, .reveal-complete footer {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+}
+
+/* Spotlight Burst Effect */
+.premium-loader-overlay.reveal-active::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, var(--primary) 0%, transparent 70%);
+    opacity: 0;
+    z-index: 4;
+    animation: lightBurst 0.8s ease-out forwards;
+}
+
+@keyframes lightBurst {
+    0% { transform: scale(0); opacity: 0; }
+    50% { opacity: 0.3; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loader-logo-svg, .loader-logo-glow, .loader-bg-glow, .premium-loader-overlay::after {
+        animation: none;
+        transition: none;
+    }
+}
