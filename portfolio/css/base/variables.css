@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    /* Color Palette - Premium Dark (Default) */
+    --bg-main: #030303;
+    --bg-secondary: #0a0a0a;
+    --bg-accent: #111111;
+
+    --primary: #3D5AFE;
+    --primary-rgb: 61, 90, 254;
+    --secondary: #B125EA;
+    --secondary-rgb: 177, 37, 234;
+
+    --text-white: #ffffff;
+    --text-head: #fafafa;
+    --text-body: #a1a1aa;
+    --text-muted: #71717a;
+
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.15);
+
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-heavy: rgba(255, 255, 255, 0.05);
+    --glass-blur: 16px;
+
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 12px 24px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.7);
+    --glow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+
+    --radius-full: 100px;
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+
+    --font-main: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+
+    --container-max: 1300px;
+}
+
+/* Light Mode Override (if requested) */
+html:not(.dark-mode) {
+    --bg-main: #ffffff;
+    --bg-secondary: #f8fafc;
+    --bg-accent: #f1f5f9;
+    --text-white: #0f172a;
+    --text-head: #0f172a;
+    --text-body: #334155;
+    --text-muted: #64748b;
+    --border: rgba(0, 0, 0, 0.06);
+    --border-hover: rgba(0, 0, 0, 0.1);
+    --glass: rgba(255, 255, 255, 0.7);
+    --glass-heavy: rgba(255, 255, 255, 0.9);
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 12px 24px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.08);
+}
+
+html:not(.dark-mode) .mouse-glow {
+    mix-blend-mode: multiply;
+    opacity: 0.3;
+}
+
+html:not(.dark-mode) .loader-progress-bar {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+html:not(.dark-mode) .premium-loader-overlay::after {
+    background: radial-gradient(circle at center, transparent 0%, #ffffff 100%);
+}

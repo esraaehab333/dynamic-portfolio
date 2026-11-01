@@ -1,0 +1,63 @@
+/* Scroll Experience Enhancements */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(10px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+/* Staggered Children Reveal */
+.reveal[style*="--order"] {
+    transition-delay: calc(var(--order, 0) * 0.1s);
+}
+
+/* Parallax Elements */
+[data-parallax] {
+    transition: transform 0.1s linear;
+}
+
+/* Ripple Effect */
+.ripple-effect {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: rgba(var(--primary-rgb), 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10001;
+    transform: translate(-50%, -50%);
+    animation: rippleAnim 0.6s ease-out forwards;
+}
+
+@keyframes rippleAnim {
+    from { width: 0; height: 0; opacity: 0.5; }
+    to { width: 200px; height: 200px; opacity: 0; }
+}
+
+/* Depth Illusion while scrolling */
+.scrolling-depth {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.is-scrolling .scrolling-depth {
+    transform: scale(0.98) translateY(10px);
+    filter: blur(2px);
+}
+
+/* Scroll Fade In */
+[data-scroll] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 0.6s ease-out;
+}
+
+[data-scroll="in"] {
+    opacity: 1;
+    transform: translateY(0);
+}

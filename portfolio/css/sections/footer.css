@@ -1,0 +1,20 @@
+/* Footer Section */
+footer {
+    padding: 60px 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg-main);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+}

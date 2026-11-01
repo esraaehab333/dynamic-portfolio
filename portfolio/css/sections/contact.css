@@ -1,0 +1,85 @@
+/* Contact Section Styles */
+.contact-left h2 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    margin-bottom: 24px;
+}
+
+#contact-methods-container, #social-links-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.contact-method {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    transition: var(--transition-base);
+    text-decoration: none;
+    color: inherit;
+    min-width: 100px;
+    flex: 1;
+}
+
+.contact-method:hover {
+    background: var(--glass-heavy);
+    border-color: var(--primary);
+    transform: translateY(-5px);
+}
+
+.method-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.method-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-align: center;
+}
+
+.contact-socials {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.social-item {
+    width: 52px;
+    height: 52px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.social-item:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-5px);
+}
+
+@media (max-width: 768px) {
+    .contact-grid { grid-template-columns: 1fr; }
+}

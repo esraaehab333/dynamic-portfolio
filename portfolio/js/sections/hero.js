@@ -1,0 +1,40 @@
+export const id = 'hero';
+
+export function render(data) {
+    const mount = document.getElementById('hero-mount');
+    if (!mount) return;
+
+    const hero = data.hero || {};
+
+    mount.innerHTML = `
+    <section id="home" class="hero">
+        <div class="container hero-grid">
+            <div class="hero-text">
+                <div class="eyebrow" data-key="hero.name">${hero.name || "HELLO, I'M ESRAA EHAB LOTFY"}</div>
+                <h1 class="hero-title" id="hero-title-main">${hero.title || "I Design High-Performance <span>Mobile Apps</span>"}</h1>
+                <p class="hero-desc" data-key="hero.description">${hero.description || "Mobile Application Developer specializing in high-performance, user-centric apps."}</p>
+
+                <div class="hero-btns">
+                    <a href="${hero.cv_url || '#'}" class="btn btn-primary" id="download-cv-btn" target="_blank">Download CV <i class="ph ph-download-simple"></i></a>
+                    <a href="#contact" class="btn btn-outline">Let's Talk <i class="ph ph-chat-circle-text"></i></a>
+                </div>
+            </div>
+
+            <div class="hero-image-box">
+                <div class="mobile-tech-bg"></div>
+                <div class="tech-icon-float" style="top: 10%; left: 0;"><i class="ph ph-android-logo"></i></div>
+                <div class="tech-icon-float" style="top: 20%; right: -10px;"><i class="ph ph-apple-logo"></i></div>
+                <div class="tech-icon-float" style="bottom: 15%; left: -20px;"><i class="ph ph-code"></i></div>
+                <div class="tech-icon-float" style="bottom: 5%; right: 20%;"><i class="ph ph-device-mobile"></i></div>
+
+                <img src="${hero.image || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80'}" alt="Profile" id="hero-image">
+
+                <div class="availability-badge">
+                    <div class="dot"></div>
+                    Available for new projects
+                </div>
+            </div>
+        </div>
+    </section>
+    `;
+}

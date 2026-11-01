@@ -1,0 +1,47 @@
+/* Premium Interactive Background Enhancements */
+.bg-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    background: var(--primary);
+    border-radius: 50%;
+    opacity: 0.05;
+    filter: blur(2px);
+    animation: floatParticle var(--duration, 20s) linear infinite;
+}
+
+@keyframes floatParticle {
+    from { transform: translateY(-10vh) translateX(0); }
+    to { transform: translateY(110vh) translateX(var(--move-x, 50px)); }
+}
+
+/* Background Blobs */
+.bg-blob {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+    animation: blobFloat 20s infinite alternate;
+}
+
+.blob-1 { top: -200px; right: -200px; background: radial-gradient(circle, rgba(var(--primary-rgb), 0.2) 0%, transparent 70%); }
+.blob-2 { bottom: -200px; left: -200px; background: radial-gradient(circle, rgba(var(--secondary-rgb), 0.15) 0%, transparent 70%); animation-delay: -10s; }
+
+@keyframes blobFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(100px, 50px) scale(1.1); }
+    66% { transform: translate(-50px, 100px) scale(0.9); }
+    100% { transform: translate(0, 0) scale(1); }
+}
