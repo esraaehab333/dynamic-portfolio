@@ -11,10 +11,13 @@ export function render(data) {
         <div class="timeline-item reveal">
             <div class="timeline-dot"></div>
             <span class="timeline-date">${e.date}</span>
-            <div class="timeline-content">
-                <h3>${e.title}</h3>
-                <h4>${e.subtitle}</h4>
-                <p>${e.desc}</p>
+            <div class="timeline-content${e.image ? ' has-image' : ''}">
+                <div class="timeline-copy">
+                    <h3>${e.title}</h3>
+                    <h4>${e.subtitle}</h4>
+                    <p>${e.desc}</p>
+                </div>
+                ${e.image ? `<div class="timeline-image"><img src="${e.image}" alt="${e.title}" loading="lazy"></div>` : ''}
             </div>
         </div>
     `).join('');

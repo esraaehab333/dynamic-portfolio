@@ -24,23 +24,52 @@ const sectionModules = {
     }
 };
 
+let activeProjectEditor = null;
+
+function openProjectEditor(app, item, idx) {
+    document.querySelectorAll('.project-inline-editor').forEach(editor => {
+        editor.hidden = true;
+        editor.replaceChildren();
+    });
+    const editor = idx === null
+        ? document.getElementById('project-new-editor')
+        : document.getElementById(`project-inline-${idx}`);
+    if (!editor) return;
+    const form = sectionModules.projects.getModalForm(item);
+    editor.innerHTML = `<div class="project-inline-heading"><h3>${idx === null ? 'Add project' : 'Edit project'}</h3><p>Expand the project details below, then save when you are done.</p></div>${form}<div class="project-inline-actions"><button type="button" class="btn-save" onclick="adminApp.saveModal()">Save Project</button><button type="button" class="project-inline-cancel" onclick="adminApp.closeModal()">Cancel</button></div>`;
+    editor.hidden = false;
+    activeProjectEditor = editor;
+    editor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 export function openModal(app, mode, idx = null) {
+    if (mode !== 'projects' && activeProjectEditor) closeModal();
     app.currentMode = mode;
     app.editIndex = idx;
     const item = idx !== null ? app.data[mode][idx] : {};
     const mod = sectionModules[mode];
+    if (mode === 'projects') {
+        openProjectEditor(app, item, idx);
+        return;
+    }
     const html = mod ? mod.getModalForm(item) : '';
     document.getElementById('modal-body').innerHTML = html;
     document.getElementById('generic-modal').classList.add('active');
 }
 
 export function closeModal() {
+    if (activeProjectEditor) {
+        activeProjectEditor.hidden = true;
+        activeProjectEditor.replaceChildren();
+        activeProjectEditor = null;
+    }
     document.getElementById('generic-modal').classList.remove('active');
 }
 
 export function saveModal(app, renderLists) {
     const mode = app.currentMode;
-    const base = { id: (app.editIndex !== null && app.data[mode][app.editIndex]) ? app.data[mode][app.editIndex].id : Date.now() };
+    const existingItem = app.editIndex !== null && app.data[mode][app.editIndex] ? app.data[mode][app.editIndex] : null;
+    const base = { id: existingItem ? (existingItem.id ?? (mode === 'projects' ? app.editIndex : Date.now())) : Date.now() };
     const mod = sectionModules[mode];
     const newItem = mod ? mod.buildItem(base) : base;
 

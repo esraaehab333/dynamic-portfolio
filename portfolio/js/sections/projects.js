@@ -1,3 +1,8 @@
+import { esc } from '../core/utils.js';
+
+const INITIAL_PROJECTS = 6;
+const PROJECTS_PER_BATCH = 3;
+
 export const id = 'projects';
 
 export function render(data) {
@@ -6,40 +11,69 @@ export function render(data) {
 
     const items = data.projects || [];
     const isVisible = items.length > 0;
-
-    const itemsHtml = items.map(p => `
-        <div class="project-card reveal">
-            <img src="${p.image || 'https://via.placeholder.com/600x400'}" class="project-img">
+    const itemsHtml = items.map((project, index) => `
+        <article class="project-card reveal" data-project-id="${esc(project.id ?? index)}" role="link" tabindex="0" aria-label="View details for ${esc(project.title || 'project')}" ${index >= INITIAL_PROJECTS ? 'hidden' : ''}>
+            <div class="project-thumb">
+                <img src="${project.image || 'https://via.placeholder.com/800x600'}" class="project-img" alt="${project.title || 'Project'} preview" loading="lazy">
+            </div>
             <div class="project-meta">
                 <div class="project-header">
-                    <div>
-                        <div class="project-tag">${p.tag || 'Project'}</div>
-                        <div class="project-name">${p.title}</div>
+                    <div class="project-heading">
+                        <h3 class="project-name">${project.title || 'Untitled Project'}</h3>
+                        ${project.subtitle ? `<p class="project-subtitle">${project.subtitle}</p>` : ''}
+                        ${project.tag ? `<p class="project-tech">${project.tag}</p>` : ''}
                     </div>
-                    <a href="${p.demo || '#'}" class="arrow-btn" target="_blank"><i class="ph ph-arrow-up-right"></i></a>
                 </div>
-                ${p.subtitle ? `<div class="project-subtitle">${p.subtitle}</div>` : ''}
-                <div class="project-links">
-                    ${p.github ? `<a href="${p.github}" class="project-link-icon" target="_blank" title="GitHub"><i class="ph ph-github-logo"></i></a>` : ''}
-                    ${p.linkedin ? `<a href="${p.linkedin}" class="project-link-icon" target="_blank" title="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>` : ''}
-                    ${p.video ? `<a href="${p.video}" class="project-link-icon" target="_blank" title="Watch Video"><i class="ph ph-play-circle"></i></a>` : ''}
+                <div class="project-card-footer">
+                    <span class="project-details-link">View more details <i class="ph ph-arrow-right"></i></span>
                 </div>
             </div>
-        </div>
+        </article>
     `).join('');
 
     mount.innerHTML = `
     <section id="projects" class="section-padding" style="${isVisible ? '' : 'display: none;'}">
         <div class="container">
-            <div class="section-header">
-                <div class="section-label">Featured Projects</div>
-                <a href="#" class="view-all">View All Projects <i class="ph ph-arrow-right"></i></a>
+            <div class="projects-section-header">
+                <div>
+                    <div class="section-label">Featured Projects</div>
+                    <p class="projects-section-subtitle">A few highlights from my work. Open any project to explore the details.</p>
+                </div>
+                <span class="view-all"><strong>${items.length}</strong><span>${items.length === 1 ? 'project' : 'projects'}</span></span>
             </div>
-
-            <div class="projects-grid" id="projects-container">
-                ${itemsHtml}
-            </div>
+            <div class="projects-grid" id="projects-container">${itemsHtml}</div>
+            ${items.length > INITIAL_PROJECTS ? `<div class="projects-more-wrap"><button class="projects-more" type="button" aria-controls="projects-container">Show more projects <span>(${items.length - INITIAL_PROJECTS} remaining)</span> <i class="ph ph-caret-down" aria-hidden="true"></i></button></div>` : ''}
         </div>
     </section>
     `;
+
+    mount.querySelectorAll('.project-card').forEach(card => {
+        const openDetails = () => {
+            window.location.hash = `/project/${encodeURIComponent(card.dataset.projectId)}`;
+        };
+        card.addEventListener('click', event => {
+            if (event.target.closest('a')) return;
+            openDetails();
+        });
+        card.addEventListener('keydown', event => {
+            if ((event.key === 'Enter' || event.key === ' ') && !event.target.closest('a')) {
+                event.preventDefault();
+                openDetails();
+            }
+        });
+    });
+
+    const moreButton = mount.querySelector('.projects-more');
+    if (moreButton) {
+        moreButton.addEventListener('click', () => {
+            const hiddenCards = [...mount.querySelectorAll('.project-card[hidden]')];
+            hiddenCards.slice(0, PROJECTS_PER_BATCH).forEach(card => card.hidden = false);
+            const remaining = hiddenCards.length - Math.min(hiddenCards.length, PROJECTS_PER_BATCH);
+            if (remaining <= 0) {
+                moreButton.remove();
+            } else {
+                moreButton.querySelector('span').textContent = `(${remaining} remaining)`;
+            }
+        });
+    }
 }

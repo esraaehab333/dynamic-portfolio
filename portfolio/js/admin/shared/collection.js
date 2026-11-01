@@ -4,12 +4,15 @@ export function renderLists(data) {
         const container = document.getElementById(col + '-list');
         if (!container) return;
         container.innerHTML = (data[col] || []).map((item, idx) => `
-            <div class="list-item">
-                <span style="font-weight: 700;">${item.title || item.name || item.author || item.label || 'Item ' + (idx+1)} ${item.category ? `<small style="color:var(--admin-text-muted); font-weight:400; margin-left:8px;">(${item.category})</small>` : ''}</span>
-                <div>
-                    <button class="btn-icon" onclick="adminApp.openModal('${col}', ${idx})" style="background:none; border:none; cursor:pointer; color:#0055FF; margin-right:1rem;"><i class="ph ph-pencil-simple" style="font-size:1.5rem;"></i></button>
-                    <button class="btn-icon" onclick="adminApp.deleteItem('${col}', ${idx})" style="background:none; border:none; cursor:pointer; color:#ef4444;"><i class="ph ph-trash" style="font-size:1.5rem;"></i></button>
+            <div class="${col === 'projects' ? 'project-admin-item' : ''}">
+                <div class="list-item">
+                    <span style="font-weight: 700;">${item.title || item.name || item.author || item.label || 'Item ' + (idx+1)} ${item.category ? `<small style="color:var(--admin-text-muted); font-weight:400; margin-left:8px;">(${item.category})</small>` : ''}</span>
+                    <div>
+                        <button class="btn-icon" onclick="adminApp.openModal('${col}', ${idx})" style="background:none; border:none; cursor:pointer; color:#0055FF; margin-right:1rem;"><i class="ph ph-pencil-simple" style="font-size:1.5rem;"></i></button>
+                        <button class="btn-icon" onclick="adminApp.deleteItem('${col}', ${idx})" style="background:none; border:none; cursor:pointer; color:#ef4444;"><i class="ph ph-trash" style="font-size:1.5rem;"></i></button>
+                    </div>
                 </div>
+                ${col === 'projects' ? `<div class="project-inline-editor" id="project-inline-${idx}" hidden></div>` : ''}
             </div>
         `).join('');
     });
