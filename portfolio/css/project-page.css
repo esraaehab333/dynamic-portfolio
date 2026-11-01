@@ -698,3 +698,17 @@ a.pp-member:hover { background: rgba(var(--pp-accent-rgb), 0.08); }
 }
 /* Match the site's plain background; retain the hero orbs, rings, and glow. */
 .pp-dots { display: none; }
+
+/* Match the reference: jump chips first, then overview/features beside the stack card. */
+.pp-content > .pp-jump { position: static; display: flex; width: 100%; margin: 20px 0 0; }
+.pp-content > .pp-body { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(320px, 1fr); align-items: start; width: 100%; margin-top: 64px; }
+.pp-content > .pp-body.is-single { grid-template-columns: minmax(0, 1fr); }
+.pp-body > .pp-main { grid-column: 1; grid-row: 1; align-self: start; }
+.pp-body > .pp-side { grid-column: 2; grid-row: 1; align-self: start; }
+.pp-main > #pp-s-overview,
+.pp-main > #pp-s-features { position: static; float: none; width: 100%; min-width: 0; }
+@media (max-width: 960px) {
+    .pp-content > .pp-body { grid-template-columns: minmax(0, 1fr); }
+    .pp-body > .pp-main,
+    .pp-body > .pp-side { grid-column: 1; grid-row: auto; }
+}
