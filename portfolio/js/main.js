@@ -4,6 +4,7 @@ import { sections } from './sections/index.js';
 import { runPremiumLoader } from './effects/loader.js';
 import { initVisualEffects } from './effects/cursor.js';
 import { setupNavbarScroll, setupNavbarActiveState, setupScrollEffect } from './effects/reveal.js';
+import { initProjectPage } from './project-page.js';
 
 async function bootstrap() {
     // 1. Data load
@@ -18,12 +19,17 @@ async function bootstrap() {
         if (section.render) section.render(data);
         if (section.init) section.init({ data });
     });
+    initProjectPage(data);
 
     // Initial setup for reveal
     document.body.classList.add('is-loading');
 
     // 4. Loader sequence
-    await runPremiumLoader();
+    if (/^#\/project\//.test(window.location.hash)) {
+        document.body.classList.remove('is-loading');
+    } else {
+        await runPremiumLoader();
+    }
 
     // 5. Interactions & effects
     initThemeToggle();

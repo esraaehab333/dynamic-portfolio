@@ -135,6 +135,21 @@
         .btn-save:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 85, 255, 0.2); }
 
         .item-list { margin-top: 2rem; }
+        .project-admin-item { margin-bottom: 1rem; }
+        .project-admin-item .list-item { margin-bottom: 0; }
+        .project-inline-editor { margin-top: 1rem; padding: clamp(1.25rem, 3vw, 2.5rem); border: 1px solid var(--admin-border); border-radius: 20px; background: white; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06); scroll-margin-top: 24px; }
+        .project-inline-editor[hidden] { display: none; }
+        .project-inline-heading { margin-bottom: 1.5rem; }
+        .project-inline-heading h3 { margin: 0 0 .35rem; font-size: 1.4rem; }
+        .project-inline-heading p { margin: 0; color: var(--admin-text-muted); }
+        .project-inline-editor fieldset { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1.25rem; margin: 0; padding: 1.25rem; border: 1px solid var(--admin-border); border-radius: 14px; }
+        .project-inline-editor fieldset legend { padding: 0 .5rem; font-weight: 800; color: var(--admin-primary); }
+        .project-inline-editor fieldset > .form-group { min-width: 0; }
+        .project-inline-editor #mp-screens, .project-inline-editor fieldset > .form-group:has(#mp-screens), .project-inline-editor fieldset > .form-group:has(#m-structure), .project-inline-editor fieldset > .form-group:has(#m-setup), .project-inline-editor fieldset > .form-group:has(#m-features), .project-inline-editor fieldset > .form-group:has(#m-archIntro), .project-inline-editor fieldset > .form-group:has(#m-archLayers), .project-inline-editor fieldset > .form-group:has(#m-challenges), .project-inline-editor fieldset > .form-group:has(#m-learned), .project-inline-editor fieldset > .form-group:has(#m-team) { grid-column: 1 / -1; }
+        .project-inline-editor .mp-sec { margin: 1rem 0; padding: 1rem; border: 1px solid var(--admin-border); border-radius: 12px; background: #f8fafc; }
+        .project-inline-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+        .project-inline-cancel { padding: .9rem 1.25rem; border: 1px solid var(--admin-border); border-radius: 12px; background: white; color: var(--admin-text); font: inherit; font-weight: 700; cursor: pointer; }
+        @media (max-width: 700px) { .project-inline-editor fieldset { grid-template-columns: minmax(0, 1fr); padding: 1rem; } }
         .list-item {
             display: flex;
             justify-content: space-between;
@@ -268,6 +283,7 @@
             <!-- Reusable Collection Sections -->
             <section id="projects-section" class="admin-section">
                 <div id="projects-list" class="item-list"></div>
+                <div id="project-new-editor" class="project-inline-editor" hidden></div>
                 <button class="add-new-btn" onclick="adminApp.openModal('projects')">+ Add New Project</button>
             </section>
 

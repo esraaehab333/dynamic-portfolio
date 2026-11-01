@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opening project… | Esraa Ehab</title>
+</head>
+<body>
+    <p>Opening project details…</p>
+    <script type="module">
+        import { loadData } from './js/core/api.js';
+        const data = await loadData();
+        const raw = new URLSearchParams(location.search).get('id') || '';
+        const index = Number(raw);
+        const project = Number.isInteger(index) && index >= 0 ? data.projects?.[index] : data.projects?.find(item => String(item.id) === raw);
+        const id = project ? String(project.id ?? index) : raw;
+        location.replace(`index.html#/project/${encodeURIComponent(id)}`);
+    </script>
+</body>
+</html>
