@@ -11,7 +11,7 @@ export function render(data) {
         <div class="container hero-grid">
             <div class="hero-text">
                 <div class="eyebrow" data-key="hero.name">${hero.name || "HELLO, I'M ESRAA EHAB LOTFY"}</div>
-                <h1 class="hero-title" id="hero-title-main">${hero.title || "I Design High-Performance <span>Mobile Apps</span>"}</h1>
+                <h1 class="hero-title" id="hero-title-main">${hero.title || "Junior <span>Android Developer</span>"}</h1>
                 <p class="hero-desc" data-key="hero.description">${hero.description || "Mobile Application Developer specializing in high-performance, user-centric apps."}</p>
 
                 <div class="hero-btns">

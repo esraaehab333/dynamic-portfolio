@@ -63,16 +63,21 @@
 }
 
 .hero-desc {
-    font-size: clamp(1.1rem, 2vw, 1.2rem);
+    font-size: clamp(1rem, 1.8vw, 1.15rem);
     color: var(--text-body);
     max-width: 600px;
-    margin-bottom: 32px;
+    margin-bottom: 48px;
     line-height: 1.6;
 }
 
 .hero-btns {
     display: flex;
     gap: 24px;
+}
+
+.hero-btns .btn {
+    padding: 16px 34px;
+    font-size: 1.05rem;
 }
 
 /* Hero Image & 3D Tech Stack */
@@ -186,6 +191,6 @@
 @media (max-width: 992px) {
     .hero-text { order: 2; }
     .hero-image-box { order: 1; max-width: 400px; margin: 0 auto 40px; }
-    .hero-desc { margin: 0 auto 40px; }
+    .hero-desc { margin: 0 auto 48px; }
     .hero-btns { justify-content: center; }
 }

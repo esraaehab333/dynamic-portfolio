@@ -31,8 +31,8 @@ p {
 }
 
 .hero-title {
-    font-size: clamp(2.5rem, 8vw, 5.5rem);
-    margin-bottom: 32px;
+    font-size: clamp(1.8rem, 3.8vw, 2.75rem);
+    margin-bottom: 28px;
 }
 
 .hero-title span {
