@@ -228,9 +228,13 @@ class PortfolioApp {
                 const rect = el.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
-                const moveX = (e.clientX - centerX) * 0.35;
-                const moveY = (e.clientY - centerY) * 0.35;
-                el.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.05)`;
+                const isButton = el.matches('.btn');
+                const strength = isButton ? 0.06 : 0.35;
+                const moveX = (e.clientX - centerX) * strength;
+                const moveY = (e.clientY - centerY) * strength;
+                el.style.transform = isButton
+                    ? `translate(${moveX}px, ${moveY}px)`
+                    : `translate(${moveX}px, ${moveY}px) scale(1.05)`;
                 document.body.classList.add('cursor-active');
             });
 

@@ -937,7 +937,7 @@ nav.scrolled {
     font-weight: 700;
     font-size: 0.95rem;
     cursor: pointer;
-    transition: var(--transition-slow);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
     position: relative;
     overflow: hidden;
     z-index: 1;
@@ -963,8 +963,8 @@ nav.scrolled {
 }
 
 .btn-primary:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(var(--primary-rgb), 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(var(--primary-rgb), 0.32);
 }
 
 .btn-primary:hover::before {
@@ -980,7 +980,7 @@ nav.scrolled {
 .btn-outline:hover {
     border-color: var(--primary);
     background: var(--glass);
-    transform: translateY(-4px);
+    transform: translateY(-1px);
 }
 
 /* Shimmer Effect for Primary Button */
