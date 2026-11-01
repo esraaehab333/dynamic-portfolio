@@ -80,6 +80,14 @@ class AdminApp {
         this.saveData();
     }
 
+    addAboutStat() {
+        aboutSection.addStat();
+    }
+
+    removeAboutStat(index) {
+        aboutSection.removeStat(index);
+    }
+
     renderLists() {
         renderLists(this.data);
     }
