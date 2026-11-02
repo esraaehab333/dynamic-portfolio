@@ -6,6 +6,18 @@ export function render(data) {
 
     const hero = data.hero || {};
     const isVisible = data.sectionsVisibility?.hero !== false;
+    const socials = (data.socials && data.socials.length > 0) ? data.socials : [
+        { name: "GitHub", icon: "ph-github-logo", url: "https://github.com" },
+        { name: "LinkedIn", icon: "ph-linkedin-logo", url: "https://linkedin.com" },
+        { name: "Email", icon: "ph-envelope-simple", url: "#contact" }
+    ];
+
+    const socialsHtml = socials.map(s => `
+        <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="hero-social-link">
+            <i class="ph ${s.icon || 'ph-link'}"></i>
+            <span>${s.name || ''}</span>
+        </a>
+    `).join('');
 
     mount.innerHTML = `
     <section id="home" class="hero" style="${isVisible ? '' : 'display: none;'}">
@@ -18,6 +30,10 @@ export function render(data) {
                 <div class="hero-btns">
                     <a href="${hero.cv_url || '#'}" class="btn btn-primary" id="download-cv-btn" target="_blank">Download CV <i class="ph ph-download-simple"></i></a>
                     <a href="#contact" class="btn btn-outline">Let's Talk <i class="ph ph-chat-circle-text"></i></a>
+                </div>
+
+                <div class="hero-socials">
+                    ${socialsHtml}
                 </div>
             </div>
 

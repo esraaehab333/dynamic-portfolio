@@ -1,48 +1,65 @@
-/* Skills */
+/* Skills Section - Simple Clean Cards */
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
 }
 
-@media (max-width: 992px) {
-    .skills-grid { grid-template-columns: repeat(2, 1fr); }
+.skill-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.25s ease;
+}
+
+.skill-card:hover {
+    border-color: var(--primary);
+    background: var(--glass-heavy, rgba(var(--primary-rgb), 0.08));
+    transform: translateY(-2px);
+}
+
+.skill-card-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.skill-card-icon {
+    font-size: 1.6rem;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.skill-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-head);
+    line-height: 1.2;
 }
 
 @media (max-width: 600px) {
-    .skills-grid { grid-template-columns: 1fr; }
-}
-
-.skill-category {
-    padding: 40px;
-}
-
-.category-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 32px;
-}
-
-.category-header i { font-size: 2.5rem; color: var(--primary); }
-
-.skill-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.skill-tags span {
-    background: var(--bg-accent);
-    border: 1px solid var(--border);
-    padding: 8px 16px;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: var(--transition-base);
-}
-
-.skill-category:hover .skill-tags span {
-    border-color: var(--primary);
-    background: rgba(var(--primary-rgb), 0.1);
+    .skills-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+    }
+    .skill-card {
+        padding: 10px 14px;
+        gap: 10px;
+        border-radius: 10px;
+    }
+    .skill-card-img {
+        width: 24px;
+        height: 24px;
+    }
+    .skill-card-icon {
+        font-size: 1.4rem;
+    }
+    .skill-card-title {
+        font-size: 0.88rem;
+    }
 }
