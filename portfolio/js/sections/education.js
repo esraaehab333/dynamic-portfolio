@@ -5,7 +5,7 @@ export function render(data) {
     if (!mount) return;
 
     const items = data.education || [];
-    const isVisible = items.length > 0;
+    const isVisible = (data.sectionsVisibility?.education !== false) && items.length > 0;
 
     const itemsHtml = items.map(e => `
         <div class="timeline-item reveal">

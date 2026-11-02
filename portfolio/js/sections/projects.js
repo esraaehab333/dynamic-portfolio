@@ -10,7 +10,7 @@ export function render(data) {
     if (!mount) return;
 
     const items = data.projects || [];
-    const isVisible = items.length > 0;
+    const isVisible = (data.sectionsVisibility?.projects !== false) && items.length > 0;
     const itemsHtml = items.map((project, index) => `
         <article class="project-card reveal" data-project-id="${esc(project.id ?? index)}" role="link" tabindex="0" aria-label="View details for ${esc(project.title || 'project')}" ${index >= INITIAL_PROJECTS ? 'hidden' : ''}>
             <div class="project-thumb">

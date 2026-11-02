@@ -30,5 +30,24 @@ export const DEFAULT_DATA = {
             image: ""
         }
     ],
-    skills: [], testimonials: [], contacts: []
+    skills: [
+        { name: "Kotlin", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg" },
+        { name: "Android Studio", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg" },
+        { name: "Jetpack Compose", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jetpackcompose/jetpackcompose-original.svg" },
+        { name: "Java", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
+        { name: "Git", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
+        { name: "Firebase", image: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg" }
+    ], testimonials: [], contacts: [],
+    sectionsVisibility: {
+        hero: true,
+        about: true,
+        projects: true,
+        experience: true,
+        skills: true,
+        services: true,
+        education: true,
+        certifications: true,
+        contact: true
+    },
+    sectionsOrder: ['hero', 'about', 'projects', 'experience', 'skills', 'services', 'education', 'certifications', 'contact']
 };

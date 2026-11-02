@@ -5,7 +5,7 @@ export function render(data) {
     if (!mount) return;
 
     const items = data.certifications || [];
-    const isVisible = items.length > 0;
+    const isVisible = (data.sectionsVisibility?.certifications !== false) && items.length > 0;
 
     const itemsHtml = items.map(c => `
         <a href="${c.url || '#'}" class="cert-card reveal" target="_blank">

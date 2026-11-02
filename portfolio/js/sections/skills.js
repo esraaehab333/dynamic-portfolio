@@ -5,37 +5,28 @@ export function render(data) {
     if (!mount) return;
 
     const skills = data.skills || [];
-    const isVisible = skills.length > 0;
+    const isVisible = (data.sectionsVisibility?.skills !== false) && skills.length > 0;
 
-    let groupsHtml = '';
-    if (isVisible) {
-        const groups = {};
-        skills.forEach(s => {
-            const cat = s.category || 'Other';
-            if (!groups[cat]) groups[cat] = { name: cat, icon: s.icon || 'ph-code', items: [] };
-            groups[cat].items.push(s.name);
-        });
+    const cardsHtml = skills.map(s => {
+        const visualHtml = s.image
+            ? `<img src="${s.image}" alt="${s.name || 'Skill'}" class="skill-card-img" loading="lazy">`
+            : `<i class="ph ${s.icon || 'ph-code'} skill-card-icon"></i>`;
 
-        groupsHtml = Object.values(groups).map(g => `
-            <div class="skill-category reveal">
-                <div class="category-header">
-                    <i class="ph ${g.icon}"></i>
-                    <h3>${g.name}</h3>
-                </div>
-                <div class="skill-tags">
-                    ${g.items.map(name => `<span>${name}</span>`).join('')}
-                </div>
-            </div>
-        `).join('');
-    }
+        return `
+        <div class="skill-card reveal">
+            ${visualHtml}
+            <span class="skill-card-title">${s.name || ''}</span>
+        </div>
+        `;
+    }).join('');
 
     mount.innerHTML = `
     <section id="skills" class="section-padding" style="${isVisible ? '' : 'display: none;'}">
         <div class="container">
-            <div class="section-label" style="margin-bottom: 40px;">Technical Expertise</div>
+            <div class="section-label" style="margin-bottom: 30px;">Technical Expertise</div>
 
             <div class="skills-grid" id="dynamic-skills-container">
-                ${groupsHtml}
+                ${cardsHtml}
             </div>
         </div>
     </section>
