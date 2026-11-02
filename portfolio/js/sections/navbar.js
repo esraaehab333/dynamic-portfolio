@@ -1,11 +1,6 @@
 export const id = 'navbar';
 
-export function render(data) {
-    const mount = document.getElementById('navbar-mount');
-    if (!mount) return;
-
-    const logoText = data.site?.logo || "ESRAA EHAB";
-    const logoChar = logoText.charAt(0);
+export function getNavItems(data) {
     const vis = data.sectionsVisibility || {};
 
     const defaultOrder = ['hero', 'about', 'projects', 'experience', 'skills', 'services', 'education', 'certifications', 'contact'];
@@ -23,16 +18,25 @@ export function render(data) {
         contact: { id: 'contact', label: 'Contact', show: vis.contact !== false }
     };
 
-    const navItems = sectionOrder
+    return sectionOrder
         .map(key => sectionMeta[key])
         .filter(item => item && item.show);
+}
+
+export function render(data) {
+    const mount = document.getElementById('navbar-mount');
+    if (!mount) return;
+
+    const logoText = data.site?.logo || "ESRAA EHAB";
+    const logoChar = logoText.charAt(0);
+    const navItems = getNavItems(data);
 
     const linksHtml = navItems
         .filter(item => item.show)
         .map((item, idx) => `<a href="#${item.id}"${idx === 0 ? ' class="active"' : ''}>${item.label}</a>`)
         .join('');
 
-    const showContactCta = vis.contact !== false;
+    const showContactCta = data.sectionsVisibility?.contact !== false;
 
     mount.innerHTML = `
     <nav id="navbar">

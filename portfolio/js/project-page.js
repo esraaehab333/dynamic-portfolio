@@ -338,15 +338,14 @@ import { initThemeToggle } from './core/theme.js';
         const pills = st ? '<div class="pp-pills"><span class="pp-pill ' + st[1] + '">' + st[0] + '</span></div>' : '';
 
         const linkDefs = [
+            ['github', 'GitHub repo', 'github'],
             ['playstore', 'Google Play', 'store'],
             ['appstore', 'App Store', 'apple'],
             ['apk', 'Download APK', 'download'],
-            ['demo', 'Live demo', 'demo'],
-            ['github', 'Source code', 'github'],
-            ['linkedin', 'LinkedIn post', 'linkedin']
+            ['demo', 'Live demo', 'demo']
         ];
         const actions = linkDefs.map(d => ({ url: safeUrl(p[d[0]]), label: d[1], icon: d[2] })).filter(a => a.url)
-            .map((a, i) => '<a href="' + esc(a.url) + '" class="btn ' + (i === 0 ? 'btn-primary' : 'btn-outline') + '" target="_blank" rel="noopener noreferrer">' + icon(a.icon) + ' ' + a.label + '</a>').join('');
+            .map(a => '<a href="' + esc(a.url) + '" class="btn btn-outline" target="_blank" rel="noopener noreferrer">' + icon(a.icon) + ' ' + a.label + '</a>').join('');
 
         const word = esc(titleText.split(/\s+/)[0].toUpperCase().slice(0, 12));
         const hero =

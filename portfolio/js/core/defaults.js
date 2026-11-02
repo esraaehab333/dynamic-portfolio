@@ -1,14 +1,18 @@
 export const DEFAULT_DATA = {
-    site: { logo: "ESRAA EHAB", accent: "#0055FF", theme: "light" },
+    site: { logo: "ESRAA EHAB", tagline: "", accent: "#0055FF", theme: "light" },
     hero: {
-        name: "HELLO, I'M ESRAA EHAB LOTFY",
-        title: "Junior <span>Android Developer</span>",
-        description: "Mobile Application Developer specializing in high-performance, user-centric apps. Currently pursuing a 9-month Professional Diploma in Native Android Development at ITI.",
+        name: "Hi, I'm Esraa",
+        eyebrowSize: "0.65",
+        title: "I build fast, clean <span class=\"grad\">Android &amp; Kotlin Multiplatform</span> apps",
+        titleSize: "compact",
+        description: "Native Android, Kotlin Multiplatform and Clean Architecture, building scalable apps that feel fast.",
+        descriptionSize: "compact",
+        proof: "2+ yrs · 8 apps · Kotlin · Compose · KMP",
         image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80",
         cv_url: "#"
     },
     about: { bio: "I am a dedicated Mobile App Developer with a passion for creating clean, efficient, and user-friendly applications." },
-    contact: { title: "Let's Create Something Amazing Together", subtitle: "Currently open for new projects and opportunities." },
+    contact: { title: "Let's Create Something Amazing Together", subtitle: "Currently open for new projects and opportunities.", availability: "Open to new opportunities", response: "I usually reply within 24 hours · Cairo, GMT+2" },
     socials: [], partners: [], projects: [],
     services: [
         {

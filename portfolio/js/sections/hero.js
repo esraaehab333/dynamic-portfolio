@@ -1,4 +1,25 @@
+import { contactHref, contactKind, escapeHtml } from '../core/contact-links.js';
+
 export const id = 'hero';
+
+const DEFAULT_GRADIENT_TEXT = 'Android & Kotlin Multiplatform';
+const DEFAULT_TITLE_SUFFIX = 'apps';
+
+function titleParts(value) {
+    const raw = String(value || '').trim();
+    const spanMatch = /<span\b[^>]*>([\s\S]*?)<\/span>/i.exec(raw);
+    const textOnly = value => new DOMParser().parseFromString(value, 'text/html').body.textContent.trim();
+
+    if (!raw) return { leading: 'I build fast, clean', highlighted: DEFAULT_GRADIENT_TEXT, trailing: DEFAULT_TITLE_SUFFIX };
+    if (!spanMatch) return { leading: textOnly(raw), highlighted: DEFAULT_GRADIENT_TEXT, trailing: DEFAULT_TITLE_SUFFIX };
+
+    const spanEnd = spanMatch.index + spanMatch[0].length;
+    return {
+        leading: textOnly(raw.slice(0, spanMatch.index)),
+        highlighted: textOnly(spanMatch[1]) || DEFAULT_GRADIENT_TEXT,
+        trailing: textOnly(raw.slice(spanEnd))
+    };
+}
 
 export function render(data) {
     const mount = document.getElementById('hero-mount');
@@ -6,35 +27,49 @@ export function render(data) {
 
     const hero = data.hero || {};
     const isVisible = data.sectionsVisibility?.hero !== false;
-    const socials = (data.socials && data.socials.length > 0) ? data.socials : [
-        { name: "GitHub", icon: "ph-github-logo", url: "https://github.com" },
-        { name: "LinkedIn", icon: "ph-linkedin-logo", url: "https://linkedin.com" },
-        { name: "Email", icon: "ph-envelope-simple", url: "#contact" }
-    ];
-
-    const socialsHtml = socials.map(s => `
-        <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="hero-social-link">
-            <i class="ph ${s.icon || 'ph-link'}"></i>
-            <span>${s.name || ''}</span>
-        </a>
-    `).join('');
+    const eyebrow = hero.name ?? "Hi, I'm Esraa";
+    const textPresets = {
+        compact: {
+            eyebrow: '0.65rem',
+            title: 'clamp(1.7rem, 3.4vw, 2.8rem)',
+            description: 'clamp(.9rem, 1.3vw, 1rem)'
+        },
+        balanced: {
+            eyebrow: '0.7rem',
+            title: 'clamp(1.9rem, 3.8vw, 3rem)',
+            description: 'clamp(.95rem, 1.5vw, 1.05rem)'
+        },
+        large: {
+            eyebrow: '0.75rem',
+            title: 'clamp(2.2rem, 4.6vw, 3.6rem)',
+            description: 'clamp(1rem, 1.8vw, 1.15rem)'
+        }
+    };
+    const sharedPreset = textPresets[hero.textSize] || textPresets.compact;
+    const eyebrowSizes = { '0.55': '0.55rem', '0.6': '0.6rem', '0.65': '0.65rem', '0.7': '0.7rem' };
+    const eyebrowSize = eyebrowSizes[String(hero.eyebrowSize)] || sharedPreset.eyebrow;
+    const titleSize = textPresets[hero.titleSize]?.title || sharedPreset.title;
+    const descriptionSize = textPresets[hero.descriptionSize]?.description || sharedPreset.description;
+    const defaultDescription = 'Native Android, Kotlin Multiplatform and Clean Architecture, building scalable apps that feel fast.';
+    const description = hero.description ?? defaultDescription;
+    const headline = titleParts(hero.title);
+    const proof = hero.proof == null ? '2+ yrs · 8 apps · Kotlin · Compose · KMP' : String(hero.proof).trim();
 
     mount.innerHTML = `
     <section id="home" class="hero" style="${isVisible ? '' : 'display: none;'}">
         <div class="container hero-grid">
             <div class="hero-text">
-                <div class="eyebrow" data-key="hero.name">${hero.name || "HELLO, I'M ESRAA EHAB LOTFY"}</div>
-                <h1 class="hero-title" id="hero-title-main">${hero.title || "Junior <span>Android Developer</span>"}</h1>
-                <p class="hero-desc" data-key="hero.description">${hero.description || "Mobile Application Developer specializing in high-performance, user-centric apps."}</p>
+                <div class="eyebrow" data-key="hero.name">${escapeHtml(eyebrow)}</div>
+                <h1 class="hero-title" id="hero-title-main" data-key="hero.title"><span class="hero-title-leading"></span> <span class="grad"></span> <span class="hero-title-trailing"></span></h1>
+                <p class="hero-desc" data-key="hero.description">${escapeHtml(description)}</p>
 
                 <div class="hero-btns">
                     <a href="${hero.cv_url || '#'}" class="btn btn-primary" id="download-cv-btn" target="_blank">Download CV <i class="ph ph-download-simple"></i></a>
-                    <a href="#contact" class="btn btn-outline">Let's Talk <i class="ph ph-chat-circle-text"></i></a>
+                    <a href="#projects" class="btn btn-outline">View Projects <i class="ph ph-arrow-down"></i></a>
                 </div>
 
-                <div class="hero-socials">
-                    ${socialsHtml}
-                </div>
+                ${proof ? `<p class="hero-proof" data-key="hero.proof">${escapeHtml(proof)}</p>` : ''}
+                <div class="hero-socials" id="hero-socials"></div>
             </div>
 
             <div class="hero-image-box">
@@ -54,4 +89,25 @@ export function render(data) {
         </div>
     </section>
     `;
+    mount.querySelector('.eyebrow').style.fontSize = eyebrowSize;
+    mount.querySelector('.hero-title').style.fontSize = titleSize;
+    mount.querySelector('.hero-desc').style.fontSize = descriptionSize;
+    mount.querySelector('.hero-title-leading').textContent = headline.leading;
+    mount.querySelector('.hero-title .grad').textContent = headline.highlighted;
+    mount.querySelector('.hero-title-trailing').textContent = headline.trailing;
+}
+
+export function renderHeroSocials(data) {
+    const mount = document.getElementById('hero-socials');
+    if (!mount) return;
+    const icons = { github: 'ph-github-logo', linkedin: 'ph-linkedin-logo', email: 'ph-envelope-simple' };
+    const selected = (data.contacts || []).filter(contact => ['github', 'linkedin', 'email'].includes(contactKind(contact)));
+    mount.innerHTML = selected.map(contact => {
+        const href = contactHref(contact);
+        if (!href) return '';
+        const label = escapeHtml(contact.label || contactKind(contact));
+        const external = /^https?:/i.test(href);
+        return `<a href="${escapeHtml(href)}" aria-label="${label}" title="${label}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ''}><i class="ph ${icons[contactKind(contact)]}" aria-hidden="true"></i></a>`;
+    }).join('');
+    mount.hidden = !mount.children.length;
 }

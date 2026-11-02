@@ -1,9 +1,15 @@
+import { imageField } from '../shared/image-field.js';
+
 export function populateForm(data) {
     document.getElementById('hero-name').value = data.hero?.name || '';
     document.getElementById('hero-title').value = data.hero?.title || '';
     document.getElementById('hero-description').value = data.hero?.description || '';
     document.getElementById('hero-image').value = data.hero?.image || '';
     document.getElementById('hero-cv').value = data.hero?.cv_url || '';
+}
+
+export function imageFieldMarkup(data) {
+    return imageField('hero-image', 'Profile image', data.hero?.image || '');
 }
 
 export function save(data) {
