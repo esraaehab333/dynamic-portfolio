@@ -24,46 +24,38 @@ const sectionModules = {
     }
 };
 
-let activeProjectEditor = null;
+let activeInlineEditor = null;
 
-function openProjectEditor(app, item, idx) {
-    document.querySelectorAll('.project-inline-editor').forEach(editor => {
+function openInlineEditor(app, mode, item, idx) {
+    document.querySelectorAll('.inline-editor').forEach(editor => {
         editor.hidden = true;
         editor.replaceChildren();
     });
-    const editor = idx === null
-        ? document.getElementById('project-new-editor')
-        : document.getElementById(`project-inline-${idx}`);
+    const editor = document.getElementById(idx === null ? `${mode}-new-editor` : `${mode}-inline-${idx}`);
     if (!editor) return;
-    const form = sectionModules.projects.getModalForm(item);
-    editor.innerHTML = `<div class="project-inline-heading"><h3>${idx === null ? 'Add project' : 'Edit project'}</h3><p>Expand the project details below, then save when you are done.</p></div>${form}<div class="project-inline-actions"><button type="button" class="btn-save" onclick="adminApp.saveModal()">Save Project</button><button type="button" class="project-inline-cancel" onclick="adminApp.closeModal()">Cancel</button></div>`;
+    const form = sectionModules[mode]?.getModalForm(item) || '';
+    const label = mode.charAt(0).toUpperCase() + mode.slice(1);
+    editor.innerHTML = `<div class="inline-editor-heading"><h3>${idx === null ? `Add ${label}` : `Edit ${label}`}</h3><p>Update the details below, then save when you are done.</p></div>${form}<div class="inline-editor-actions"><button type="button" class="btn-save" onclick="adminApp.saveModal()">Save ${label}</button><button type="button" class="inline-editor-cancel" onclick="adminApp.closeModal()">Cancel</button></div>`;
     editor.hidden = false;
-    activeProjectEditor = editor;
+    activeInlineEditor = editor;
     editor.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 export function openModal(app, mode, idx = null) {
-    if (mode !== 'projects' && activeProjectEditor) closeModal();
+    closeModal();
     app.currentMode = mode;
     app.editIndex = idx;
     const item = idx !== null ? app.data[mode][idx] : {};
     const mod = sectionModules[mode];
-    if (mode === 'projects') {
-        openProjectEditor(app, item, idx);
-        return;
-    }
-    const html = mod ? mod.getModalForm(item) : '';
-    document.getElementById('modal-body').innerHTML = html;
-    document.getElementById('generic-modal').classList.add('active');
+    if (mod) openInlineEditor(app, mode, item, idx);
 }
 
 export function closeModal() {
-    if (activeProjectEditor) {
-        activeProjectEditor.hidden = true;
-        activeProjectEditor.replaceChildren();
-        activeProjectEditor = null;
+    if (activeInlineEditor) {
+        activeInlineEditor.hidden = true;
+        activeInlineEditor.replaceChildren();
+        activeInlineEditor = null;
     }
-    document.getElementById('generic-modal').classList.remove('active');
 }
 
 export function saveModal(app, renderLists) {

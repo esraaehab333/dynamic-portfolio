@@ -60,6 +60,8 @@ class AdminApp {
     populateForms() {
         siteSection.populateForm(this.data);
         heroSection.populateForm(this.data);
+        const heroImageField = document.getElementById('hero-image')?.closest('.form-group');
+        if (heroImageField) heroImageField.outerHTML = heroSection.imageFieldMarkup(this.data);
         aboutSection.populateForm(this.data);
         contactsSection.populateForm(this.data);
         this.populateSectionVisibility();

@@ -1,3 +1,5 @@
+import { imageField } from '../shared/image-field.js';
+
 const escapeValue = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const input = (id, label, value, type = 'text', hint = '') => `<div class="form-group"><label for="${id}">${label}</label><input id="${id}" class="form-control" type="${type}" value="${escapeValue(value)}">${hint ? `<small class="form-hint">${hint}</small>` : ''}</div>`;
 const area = (id, label, value, hint = '', extra = '') => `<div class="form-group"><label for="${id}">${label}</label><textarea id="${id}" class="form-control" rows="${id === 'm-structure' ? 8 : 4}" ${extra}>${escapeValue(value)}</textarea>${hint ? `<small class="form-hint">${hint}</small>` : ''}</div>`;
@@ -5,7 +7,7 @@ const area = (id, label, value, hint = '', extra = '') => `<div class="form-grou
 export function getProjectFields(item = {}) {
     const screenCards = (item.showcase || []).map(screen => screenCard(screen)).join('');
     return `<fieldset><legend>Project page details</legend>
-      ${input('m-logo', 'Logo image URL', item.logo)}
+      ${imageField('m-logo', 'Logo image', item.logo)}
       ${input('m-slogan', 'Slogan', item.slogan)}
       ${input('m-color', 'Accent color (hex)', item.color, 'text', 'Optional #RRGGBB value; leave blank to use the site accent')}
       ${input('m-platform', 'Platform', item.platform)}
@@ -23,7 +25,7 @@ export function getProjectFields(item = {}) {
       ${area('m-features', 'Key features', item.features, 'One feature per line')}
       ${area('m-archIntro', 'Architecture introduction', item.archIntro)}
       ${area('m-archLayers', 'Architecture layers', item.archLayers, 'One per line: layer | Description')}
-      ${input('m-archImage', 'Architecture diagram URL', item.archImage)}
+      ${imageField('m-archImage', 'Architecture diagram', item.archImage)}
       ${area('m-structure', 'Project structure', item.structure, 'Keep spaces to preserve the folder tree', 'spellcheck="false" style="font-family: monospace;"')}
       ${area('m-challenges', 'Challenges & solutions', item.challenges, 'One per line: Challenge | How I solved it')}
       ${area('m-learned', 'What I learned', item.learned, 'One lesson per line')}

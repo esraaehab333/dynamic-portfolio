@@ -12,9 +12,9 @@ export function renderLists(data) {
                         <button class="btn-icon" onclick="adminApp.deleteItem('${col}', ${idx})" style="background:none; border:none; cursor:pointer; color:#ef4444;"><i class="ph ph-trash" style="font-size:1.5rem;"></i></button>
                     </div>
                 </div>
-                ${col === 'projects' ? `<div class="project-inline-editor" id="project-inline-${idx}" hidden></div>` : ''}
+                <div class="inline-editor" id="${col}-inline-${idx}" hidden></div>
             </div>
-        `).join('');
+        `).join('') + `<div class="inline-editor" id="${col}-new-editor" hidden></div>`;
     });
 }
 

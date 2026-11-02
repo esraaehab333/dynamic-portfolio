@@ -1,4 +1,5 @@
 import { getProjectFields, buildProjectFields } from './project-fields.js';
+import { imageField } from '../shared/image-field.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 
 export function getModalForm(item = {}) {
@@ -7,7 +8,7 @@ export function getModalForm(item = {}) {
         <div class="form-group"><label>Subtitle / Description</label><input id="m-subtitle" class="form-control" value="${esc(item.subtitle)}"></div>
         <div class="form-group"><label>Project Details</label><textarea id="m-description" class="form-control" rows="5" placeholder="Detailed project overview for the project page">${esc(item.desc || item.description)}</textarea></div>
         <div class="form-group"><label>Tag (e.g. Kotlin | Compose)</label><input id="m-tag" class="form-control" value="${esc(item.tag)}"></div>
-        <div class="form-group"><label>Image URL</label><input id="m-image" class="form-control" value="${esc(item.image)}"></div>
+        ${imageField('m-image', 'Project image', item.image)}
         <div class="form-group"><label>Live Demo URL</label><input id="m-demo" class="form-control" value="${esc(item.demo)}"></div>
         <div class="form-group"><label>GitHub URL</label><input id="m-github" class="form-control" value="${esc(item.github)}"></div>
         <div class="form-group"><label>LinkedIn URL</label><input id="m-linkedin" class="form-control" value="${esc(item.linkedin)}"></div>
