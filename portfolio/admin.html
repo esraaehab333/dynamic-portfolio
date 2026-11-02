@@ -244,6 +244,118 @@
             color: var(--admin-text-muted);
         }
 
+        /* Section Reordering UI */
+        .reorder-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .reorder-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            background: white;
+            border: 1px solid var(--admin-border);
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, background-color 0.2s ease, border-color 0.2s ease;
+            user-select: none;
+            cursor: grab;
+        }
+
+        .reorder-card:active {
+            cursor: grabbing;
+        }
+
+        .reorder-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+            box-shadow: 0 12px 24px rgba(0, 85, 255, 0.15);
+            background: #f0f7ff;
+            border-color: var(--admin-primary);
+        }
+
+        .reorder-card.drag-over {
+            border-color: var(--admin-primary);
+            box-shadow: 0 0 0 3px rgba(0, 85, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .reorder-left {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .reorder-drag-handle {
+            color: #94a3b8;
+            font-size: 1.4rem;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+        }
+
+        .reorder-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--admin-text);
+        }
+
+        .reorder-badge {
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .reorder-badge.visible {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .reorder-badge.hidden {
+            background: #ffe4e6;
+            color: #be123c;
+        }
+
+        .reorder-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-move {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--admin-border);
+            background: #f8fafc;
+            color: var(--admin-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-move:hover:not(:disabled) {
+            background: var(--admin-primary);
+            color: white;
+            border-color: var(--admin-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 85, 255, 0.2);
+        }
+
+        .btn-move:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
         /* Login Screen */
         .login-screen {
             position: fixed; inset: 0; background: #0f172a; z-index: 5000;
@@ -292,6 +404,7 @@
                 <div class="admin-nav-item" data-target="education"><i class="ph ph-graduation-cap"></i> Education</div>
                 <div class="admin-nav-item" data-target="certifications"><i class="ph ph-certificate"></i> Certifications</div>
                 <div class="admin-nav-item" data-target="contacts"><i class="ph ph-envelope"></i> Contacts</div>
+                <div class="admin-nav-item" data-target="sections-order"><i class="ph ph-arrows-down-up"></i> Section Order</div>
             </nav>
             <button onclick="adminApp.logout()" style="margin-top: auto; border: 1px solid rgba(255,255,255,0.1);" class="admin-nav-item"><i class="ph ph-sign-out"></i> Logout</button>
         </aside>
@@ -326,6 +439,16 @@
                     </p>
                 </div>
                 <button class="btn-save" onclick="adminApp.saveSite()">Save Site Config</button>
+            </section>
+
+            <section id="sections-order-section" class="admin-section">
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin: 0 0 0.5rem; font-size: 1.5rem; font-weight: 800;">Reorder Portfolio Sections</h3>
+                    <p style="margin: 0; color: var(--admin-text-muted);">
+                        Drag and drop sections or use the Up/Down arrow buttons to swap and rearrange sections on your live website.
+                    </p>
+                </div>
+                <div id="section-reorder-list" class="reorder-list"></div>
             </section>
 
             <section id="hero-section" class="admin-section">

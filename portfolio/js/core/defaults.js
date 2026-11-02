@@ -41,5 +41,6 @@ export const DEFAULT_DATA = {
         education: true,
         certifications: true,
         contact: true
-    }
+    },
+    sectionsOrder: ['hero', 'about', 'projects', 'experience', 'skills', 'services', 'education', 'certifications', 'contact']
 };

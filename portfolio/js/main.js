@@ -19,6 +19,7 @@ async function bootstrap() {
         if (section.render) section.render(data);
         if (section.init) section.init({ data });
     });
+    applySectionOrder(data);
     initProjectPage(data);
 
     // Initial setup for reveal
@@ -37,6 +38,19 @@ async function bootstrap() {
     setupNavbarActiveState();
     setupScrollEffect();
     initVisualEffects();
+}
+
+function applySectionOrder(data) {
+    const defaultOrder = ['hero', 'about', 'projects', 'experience', 'skills', 'services', 'education', 'certifications', 'contact'];
+    const order = (data.sectionsOrder && data.sectionsOrder.length) ? data.sectionsOrder : defaultOrder;
+    const mainContainer = document.querySelector('main');
+    if (!mainContainer) return;
+    order.forEach(id => {
+        const mount = document.getElementById(`${id}-mount`);
+        if (mount) {
+            mainContainer.appendChild(mount);
+        }
+    });
 }
 
 bootstrap();

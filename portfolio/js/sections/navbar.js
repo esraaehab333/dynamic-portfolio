@@ -8,16 +8,24 @@ export function render(data) {
     const logoChar = logoText.charAt(0);
     const vis = data.sectionsVisibility || {};
 
-    const navItems = [
-        { id: 'home', label: 'Home', show: vis.hero !== false },
-        { id: 'about', label: 'About', show: vis.about !== false },
-        { id: 'projects', label: 'Projects', show: vis.projects !== false && (data.projects || []).length > 0 },
-        { id: 'experience', label: 'Experience', show: vis.experience !== false && (data.experience || []).length > 0 },
-        { id: 'skills', label: 'Skills', show: vis.skills !== false && (data.skills || []).length > 0 },
-        { id: 'services', label: 'Services', show: vis.services !== false && (data.services || []).length > 0 },
-        { id: 'education', label: 'Education', show: vis.education !== false && (data.education || []).length > 0 },
-        { id: 'contact', label: 'Contact', show: vis.contact !== false }
-    ];
+    const defaultOrder = ['hero', 'about', 'projects', 'experience', 'skills', 'services', 'education', 'certifications', 'contact'];
+    const sectionOrder = (data.sectionsOrder && data.sectionsOrder.length) ? data.sectionsOrder : defaultOrder;
+
+    const sectionMeta = {
+        hero: { id: 'home', label: 'Home', show: vis.hero !== false },
+        about: { id: 'about', label: 'About', show: vis.about !== false },
+        projects: { id: 'projects', label: 'Projects', show: vis.projects !== false && (data.projects || []).length > 0 },
+        experience: { id: 'experience', label: 'Experience', show: vis.experience !== false && (data.experience || []).length > 0 },
+        skills: { id: 'skills', label: 'Skills', show: vis.skills !== false && (data.skills || []).length > 0 },
+        services: { id: 'services', label: 'Services', show: vis.services !== false && (data.services || []).length > 0 },
+        education: { id: 'education', label: 'Education', show: vis.education !== false && (data.education || []).length > 0 },
+        certifications: { id: 'certifications', label: 'Certifications', show: vis.certifications !== false && (data.certifications || []).length > 0 },
+        contact: { id: 'contact', label: 'Contact', show: vis.contact !== false }
+    };
+
+    const navItems = sectionOrder
+        .map(key => sectionMeta[key])
+        .filter(item => item && item.show);
 
     const linksHtml = navItems
         .filter(item => item.show)
