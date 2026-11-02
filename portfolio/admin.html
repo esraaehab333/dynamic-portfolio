@@ -154,6 +154,15 @@
         .image-upload-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
         .image-upload-input:focus-visible + .image-upload-status { outline: 2px solid var(--admin-primary); }
         .image-upload-status { color: var(--admin-text-muted); font-size: .85rem; }
+        .image-upload-preview { display: inline-flex; align-items: center; gap: .5rem; }
+        .image-upload-preview[hidden] { display: none; }
+        .image-upload-preview img { width: 52px; height: 52px; object-fit: cover; border: 1px solid var(--admin-border); border-radius: 8px; }
+        .image-upload-size { color: var(--admin-text-muted); font-size: .85rem; font-weight: 700; }
+        .header-actions { display: flex; align-items: center; gap: 1.25rem; }
+        .data-size-indicator { color: var(--admin-text-muted); font-size: .85rem; font-weight: 700; text-align: right; }
+        .data-size-indicator.is-warning { color: #c2410c; }
+        .data-size-indicator.is-danger { color: #dc2626; }
+        .data-size-message { display: block; margin-top: .25rem; font-weight: 600; }
         @media (max-width: 700px) { .inline-editor fieldset { grid-template-columns: minmax(0, 1fr); padding: 1rem; } }
         .list-item {
             display: flex;
@@ -407,7 +416,7 @@
         <main class="admin-main">
             <div class="header-top">
                 <h2 id="section-title-display">Site Config</h2>
-                <a href="index.html" target="_blank" style="text-decoration: none; color: var(--admin-primary); font-weight: 700;">View Live Site <i class="ph ph-arrow-square-out"></i></a>
+                <div class="header-actions"><div id="data-size-indicator" class="data-size-indicator" aria-live="polite">Data size: —</div><a href="index.html" target="_blank" style="text-decoration: none; color: var(--admin-primary); font-weight: 700;">View Live Site <i class="ph ph-arrow-square-out"></i></a></div>
             </div>
 
             <section id="site-section" class="admin-section active">

@@ -32,6 +32,7 @@ class AdminApp {
         setupNav();
         this.populateForms();
         renderLists(this.data);
+        this.updateDataSize();
         this.updateFavicon();
     }
 
@@ -49,12 +50,29 @@ class AdminApp {
     }
 
     async saveData() {
+        this.updateDataSize();
         await fetch(API_URL, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(this.data)
         });
         showToast();
+    }
+
+    updateDataSize() {
+        const indicator = document.getElementById('data-size-indicator');
+        if (!indicator || !this.data) return;
+        const size = JSON.stringify(this.data).length;
+        const megabytes = size / (1024 * 1024);
+        indicator.classList.toggle('is-warning', size >= 2 * 1024 * 1024 && size < 5 * 1024 * 1024);
+        indicator.classList.toggle('is-danger', size >= 5 * 1024 * 1024);
+        indicator.replaceChildren(document.createTextNode(`Data size: ${megabytes.toFixed(1)} MB`));
+        if (size >= 5 * 1024 * 1024) {
+            const message = document.createElement('span');
+            message.className = 'data-size-message';
+            message.textContent = 'Too many embedded images. Use links or R2.';
+            indicator.append(message);
+        }
     }
 
     populateForms() {
