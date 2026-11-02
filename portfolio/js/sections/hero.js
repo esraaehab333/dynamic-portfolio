@@ -5,9 +5,10 @@ export function render(data) {
     if (!mount) return;
 
     const hero = data.hero || {};
+    const isVisible = data.sectionsVisibility?.hero !== false;
 
     mount.innerHTML = `
-    <section id="home" class="hero">
+    <section id="home" class="hero" style="${isVisible ? '' : 'display: none;'}">
         <div class="container hero-grid">
             <div class="hero-text">
                 <div class="eyebrow" data-key="hero.name">${hero.name || "HELLO, I'M ESRAA EHAB LOTFY"}</div>

@@ -30,8 +30,10 @@ export function render(data) {
         </a>
     `).join('');
 
+    const isVisible = data.sectionsVisibility?.contact !== false;
+
     mount.innerHTML = `
-    <section id="contact" class="section-padding">
+    <section id="contact" class="section-padding" style="${isVisible ? '' : 'display: none;'}">
         <div class="container">
             <div class="section-label" style="margin-bottom: 24px;">Get In Touch</div>
 

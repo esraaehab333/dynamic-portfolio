@@ -176,6 +176,74 @@
 
         .add-new-btn:hover { border-color: var(--admin-primary); color: var(--admin-primary); background: #f0f7ff; }
 
+        /* Section Visibility Toggle Card */
+        .section-visibility-toggle {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            padding: 1.25rem 1.5rem;
+            background: #f0f7ff;
+            border: 1px solid #cce3ff;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 26px;
+        }
+
+        .toggle-switch .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .toggle-switch input:checked + .slider {
+            background-color: var(--admin-primary);
+        }
+
+        .toggle-switch input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .toggle-text strong {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--admin-text);
+            margin-bottom: 2px;
+        }
+
+        .toggle-text span {
+            font-size: 0.85rem;
+            color: var(--admin-text-muted);
+        }
+
         /* Login Screen */
         .login-screen {
             position: fixed; inset: 0; background: #0f172a; z-index: 5000;
@@ -261,6 +329,16 @@
             </section>
 
             <section id="hero-section" class="admin-section">
+                <div class="section-visibility-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-vis-hero" onchange="adminApp.toggleSectionVisibility('hero', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="toggle-text">
+                        <strong>Show / Hide Hero Section on Site</strong>
+                        <span id="toggle-status-hero">Enable or disable the Hero section on your live portfolio.</span>
+                    </div>
+                </div>
                 <div class="form-group"><label>Eyebrow Text (e.g. HELLO, I'M ALEX VEGA)</label><input type="text" id="hero-name" class="form-control"></div>
                 <div class="form-group"><label>Main Headline (HTML allowed, use &lt;span&gt; for highlight)</label><input type="text" id="hero-title" class="form-control"></div>
                 <div class="form-group"><label>Hero Subtext</label><textarea id="hero-description" class="form-control" rows="4"></textarea></div>
@@ -270,6 +348,16 @@
             </section>
 
             <section id="about-section" class="admin-section">
+                <div class="section-visibility-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-vis-about" onchange="adminApp.toggleSectionVisibility('about', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="toggle-text">
+                        <strong>Show / Hide About Section on Site</strong>
+                        <span id="toggle-status-about">Enable or disable the About Me section on your live portfolio.</span>
+                    </div>
+                </div>
                 <div class="form-group"><label>Section Label</label><input type="text" id="about-label" class="form-control" placeholder="About Me"></div>
                 <div class="form-group"><label>About Me Headline</label><input type="text" id="about-title" class="form-control"></div>
                 <div class="form-group"><label>About Me / Bio Text</label><textarea id="about-bio" class="form-control" rows="8"></textarea></div>
@@ -282,37 +370,107 @@
 
             <!-- Reusable Collection Sections -->
             <section id="projects-section" class="admin-section">
+                <div class="section-visibility-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-vis-projects" onchange="adminApp.toggleSectionVisibility('projects', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="toggle-text">
+                        <strong>Show / Hide Projects Section on Site</strong>
+                        <span id="toggle-status-projects">Enable or disable the Featured Projects section on your live portfolio.</span>
+                    </div>
+                </div>
                 <div id="projects-list" class="item-list"></div>
                 <div id="project-new-editor" class="project-inline-editor" hidden></div>
                 <button class="add-new-btn" onclick="adminApp.openModal('projects')">+ Add New Project</button>
             </section>
 
             <section id="experience-section" class="admin-section">
+                <div class="section-visibility-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-vis-experience" onchange="adminApp.toggleSectionVisibility('experience', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="toggle-text">
+                        <strong>Show / Hide Experience Section on Site</strong>
+                        <span id="toggle-status-experience">Enable or disable the Professional Experience section on your live portfolio.</span>
+                    </div>
+                </div>
                 <div id="experience-list" class="item-list"></div>
                 <button class="add-new-btn" onclick="adminApp.openModal('experience')">+ Add Experience</button>
             </section>
 
             <section id="skills-section" class="admin-section">
+                <div class="section-visibility-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-vis-skills" onchange="adminApp.toggleSectionVisibility('skills', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="toggle-text">
+                        <strong>Show / Hide Tech Stack Section on Site</strong>
+                        <span id="toggle-status-skills">Enable or disable the Technical Expertise section on your live portfolio.</span>
+                    </div>
+                </div>
                 <div id="skills-list" class="item-list"></div>
                 <button class="add-new-btn" onclick="adminApp.openModal('skills')">+ Add New Skill</button>
             </section>
 
             <section id="services-section" class="admin-section">
+                <div class="section-visibility-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-vis-services" onchange="adminApp.toggleSectionVisibility('services', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="toggle-text">
+                        <strong>Show / Hide Services Section on Site</strong>
+                        <span id="toggle-status-services">Enable or disable the Services section on your live portfolio.</span>
+                    </div>
+                </div>
                 <div id="services-list" class="item-list"></div>
                 <button class="add-new-btn" onclick="adminApp.openModal('services')">+ Add New Service</button>
             </section>
 
             <section id="education-section" class="admin-section">
+                <div class="section-visibility-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-vis-education" onchange="adminApp.toggleSectionVisibility('education', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="toggle-text">
+                        <strong>Show / Hide Education Section on Site</strong>
+                        <span id="toggle-status-education">Enable or disable the Education section on your live portfolio.</span>
+                    </div>
+                </div>
                 <div id="education-list" class="item-list"></div>
                 <button class="add-new-btn" onclick="adminApp.openModal('education')">+ Add Education</button>
             </section>
 
             <section id="certifications-section" class="admin-section">
+                <div class="section-visibility-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-vis-certifications" onchange="adminApp.toggleSectionVisibility('certifications', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="toggle-text">
+                        <strong>Show / Hide Certifications Section on Site</strong>
+                        <span id="toggle-status-certifications">Enable or disable the Certifications section on your live portfolio.</span>
+                    </div>
+                </div>
                 <div id="certifications-list" class="item-list"></div>
                 <button class="add-new-btn" onclick="adminApp.openModal('certifications')">+ Add Certification</button>
             </section>
 
             <section id="contacts-section" class="admin-section">
+                <div class="section-visibility-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-vis-contact" onchange="adminApp.toggleSectionVisibility('contact', this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                    <div class="toggle-text">
+                        <strong>Show / Hide Contact Section on Site</strong>
+                        <span id="toggle-status-contact">Enable or disable the Get In Touch section on your live portfolio.</span>
+                    </div>
+                </div>
                 <div class="form-group"><label>Contact Section Title</label><input type="text" id="contact-title" class="form-control"></div>
                 <div class="form-group"><label>Contact Section Subtitle</label><textarea id="contact-subtitle" class="form-control" rows="3"></textarea></div>
                 <div id="contacts-list" class="item-list"></div>

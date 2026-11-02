@@ -62,6 +62,41 @@ class AdminApp {
         heroSection.populateForm(this.data);
         aboutSection.populateForm(this.data);
         contactsSection.populateForm(this.data);
+        this.populateSectionVisibility();
+    }
+
+    populateSectionVisibility() {
+        const vis = this.data.sectionsVisibility || {};
+        const sections = ['hero', 'about', 'projects', 'experience', 'skills', 'services', 'education', 'certifications', 'contact'];
+        sections.forEach(key => {
+            const toggle = document.getElementById(`toggle-vis-${key}`);
+            const statusEl = document.getElementById(`toggle-status-${key}`);
+            const isVis = vis[key] !== false;
+            if (toggle) {
+                toggle.checked = isVis;
+            }
+            if (statusEl) {
+                statusEl.textContent = isVis
+                    ? 'Section is currently visible on your website. (Click toggle to hide)'
+                    : 'Section is currently hidden from your website. (Click toggle to show)';
+                statusEl.style.color = isVis ? 'var(--admin-primary)' : '#e11d48';
+            }
+        });
+    }
+
+    toggleSectionVisibility(key, isVisible) {
+        if (!this.data.sectionsVisibility) {
+            this.data.sectionsVisibility = {};
+        }
+        this.data.sectionsVisibility[key] = isVisible;
+        const statusEl = document.getElementById(`toggle-status-${key}`);
+        if (statusEl) {
+            statusEl.textContent = isVisible
+                ? 'Section is currently visible on your website. (Click toggle to hide)'
+                : 'Section is currently hidden from your website. (Click toggle to show)';
+            statusEl.style.color = isVisible ? 'var(--admin-primary)' : '#e11d48';
+        }
+        this.saveData();
     }
 
     saveSite() {

@@ -5,7 +5,7 @@ export function render(data) {
     if (!mount) return;
 
     const items = data.services || [];
-    const isVisible = items.length > 0;
+    const isVisible = (data.sectionsVisibility?.services !== false) && items.length > 0;
 
     const itemsHtml = items.map(s => {
         const sideVisualHtml = s.image

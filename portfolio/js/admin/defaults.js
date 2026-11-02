@@ -30,5 +30,16 @@ export const DEFAULT_DATA = {
             image: ""
         }
     ],
-    skills: [], testimonials: [], contacts: []
+    skills: [], testimonials: [], contacts: [],
+    sectionsVisibility: {
+        hero: true,
+        about: true,
+        projects: true,
+        experience: true,
+        skills: true,
+        services: true,
+        education: true,
+        certifications: true,
+        contact: true
+    }
 };

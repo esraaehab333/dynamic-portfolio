@@ -32,8 +32,10 @@ export function render(data) {
         };
     });
 
+    const isVisible = data.sectionsVisibility?.about !== false;
+
     mount.innerHTML = `
-    <section id="about" class="section-padding about-section">
+    <section id="about" class="section-padding about-section" style="${isVisible ? '' : 'display: none;'}">
         <div class="container about-container">
             <div class="about-copy">
                 <div class="section-label">${about.label || 'About Me'}</div>

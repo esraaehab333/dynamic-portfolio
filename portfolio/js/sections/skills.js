@@ -5,7 +5,7 @@ export function render(data) {
     if (!mount) return;
 
     const skills = data.skills || [];
-    const isVisible = skills.length > 0;
+    const isVisible = (data.sectionsVisibility?.skills !== false) && skills.length > 0;
 
     let groupsHtml = '';
     if (isVisible) {

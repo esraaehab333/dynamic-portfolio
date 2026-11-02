@@ -6,6 +6,25 @@ export function render(data) {
 
     const logoText = data.site?.logo || "ESRAA EHAB";
     const logoChar = logoText.charAt(0);
+    const vis = data.sectionsVisibility || {};
+
+    const navItems = [
+        { id: 'home', label: 'Home', show: vis.hero !== false },
+        { id: 'about', label: 'About', show: vis.about !== false },
+        { id: 'projects', label: 'Projects', show: vis.projects !== false && (data.projects || []).length > 0 },
+        { id: 'experience', label: 'Experience', show: vis.experience !== false && (data.experience || []).length > 0 },
+        { id: 'skills', label: 'Skills', show: vis.skills !== false && (data.skills || []).length > 0 },
+        { id: 'services', label: 'Services', show: vis.services !== false && (data.services || []).length > 0 },
+        { id: 'education', label: 'Education', show: vis.education !== false && (data.education || []).length > 0 },
+        { id: 'contact', label: 'Contact', show: vis.contact !== false }
+    ];
+
+    const linksHtml = navItems
+        .filter(item => item.show)
+        .map((item, idx) => `<a href="#${item.id}"${idx === 0 ? ' class="active"' : ''}>${item.label}</a>`)
+        .join('');
+
+    const showContactCta = vis.contact !== false;
 
     mount.innerHTML = `
     <nav id="navbar">
@@ -16,21 +35,14 @@ export function render(data) {
             </a>
 
             <div class="nav-links" id="nav-menu">
-                <a href="#home" class="active">Home</a>
-                <a href="#about">About</a>
-                <a href="#projects">Projects</a>
-                <a href="#experience">Experience</a>
-                <a href="#skills">Skills</a>
-                <a href="#services">Services</a>
-                <a href="#education">Education</a>
-                <a href="#contact">Contact</a>
+                ${linksHtml}
             </div>
 
             <div style="display: flex; gap: 12px; align-items: center;">
                 <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
                     <i class="ph ph-moon"></i>
                 </button>
-                <a href="#contact" class="btn btn-primary nav-cta">Let's Talk <i class="ph ph-arrow-up-right"></i></a>
+                ${showContactCta ? `<a href="#contact" class="btn btn-primary nav-cta">Let's Talk <i class="ph ph-arrow-up-right"></i></a>` : ''}
                 <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
                     <i class="ph ph-list"></i>
                 </button>
