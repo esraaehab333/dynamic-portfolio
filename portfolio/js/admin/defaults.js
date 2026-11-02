@@ -9,5 +9,26 @@ export const DEFAULT_DATA = {
     },
     about: { bio: "" },
     contact: { title: "", subtitle: "" },
-    socials: [], partners: [], projects: [], services: [], skills: [], process: [], testimonials: [], contacts: []
+    socials: [], partners: [], projects: [],
+    services: [
+        {
+            title: "Native Android Development",
+            subtitle: "Building high-performance, native Android apps using Kotlin, Jetpack Compose, and modern architecture.",
+            icon: "ph-android-logo",
+            image: ""
+        },
+        {
+            title: "Mobile UI/UX Design",
+            subtitle: "Crafting intuitive, responsive, and visually appealing mobile interfaces tailored for seamless user experiences.",
+            icon: "ph-layout",
+            image: ""
+        },
+        {
+            title: "API & Backend Integration",
+            subtitle: "Integrating RESTful APIs, Cloudflare Workers, real-time data services, and offline storage efficiently.",
+            icon: "ph-lightning",
+            image: ""
+        }
+    ],
+    skills: [], testimonials: [], contacts: []
 };

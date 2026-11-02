@@ -26,7 +26,9 @@ export function render(data) {
     mount.innerHTML = `
     <section id="services" class="section-padding bg-alt" style="${isVisible ? '' : 'display: none;'}">
         <div class="container">
-            <div class="section-label" style="margin-bottom: 20px;">My Services</div>
+            <div class="services-header">
+                <div class="section-label">My Services</div>
+            </div>
 
             <div class="services-grid" id="services-container">
                 ${itemsHtml}
