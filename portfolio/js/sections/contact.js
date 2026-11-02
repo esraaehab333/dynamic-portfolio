@@ -42,7 +42,7 @@ export function render(data) {
                             <label>Your Message</label>
                             <textarea name="message" placeholder="Tell me about your project..." class="form-input" rows="5" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send Message</button>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send Message <i class="ph ph-paper-plane-tilt"></i></button>
                         <p class="contact-form-error" role="alert" hidden>Couldn't send. Please try again or email me directly.</p>
                     </form>
                 </div>
@@ -168,7 +168,7 @@ function setupContactForm() {
         if (errorMessage) errorMessage.hidden = true;
         btn.disabled = true;
         btn.setAttribute('aria-busy', 'true');
-        btn.textContent = 'Sending…';
+        btn.innerHTML = 'Sending… <i class="ph ph-paper-plane-tilt"></i>';
         showState('sending');
 
         const formData = new FormData(form);
@@ -205,7 +205,7 @@ function setupContactForm() {
         } finally {
             btn.disabled = false;
             btn.removeAttribute('aria-busy');
-            btn.textContent = 'Send Message';
+            btn.innerHTML = 'Send Message <i class="ph ph-paper-plane-tilt"></i>';
         }
     };
 

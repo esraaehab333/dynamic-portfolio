@@ -59,10 +59,10 @@ class AdminApp {
         showToast();
     }
 
-    updateDataSize() {
+    updateDataSize(data = this.data) {
         const indicator = document.getElementById('data-size-indicator');
-        if (!indicator || !this.data) return;
-        const size = JSON.stringify(this.data).length;
+        if (!indicator || !data) return;
+        const size = JSON.stringify(data).length;
         const megabytes = size / (1024 * 1024);
         indicator.classList.toggle('is-warning', size >= 2 * 1024 * 1024 && size < 5 * 1024 * 1024);
         indicator.classList.toggle('is-danger', size >= 5 * 1024 * 1024);

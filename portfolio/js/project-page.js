@@ -179,11 +179,12 @@ import { initThemeToggle } from './core/theme.js';
             return '<a class="pp-facade" href="' + esc(v.url) + '" target="_blank" rel="noopener noreferrer" aria-label="Open the demo video">' + inner + '</a>';
         }
         const shot = safeImg(p.image);
-        if (shot) return gen + '<img class="pp-shot" src="' + esc(shot) + '" alt="' + esc(p.title) + ' screenshot" loading="lazy">';
+        if (shot) return gen + '<button type="button" class="pp-fig pp-screen-image" data-cap="' + esc(p.title || 'Project screenshot') + '" aria-label="Enlarge project screenshot"><img class="pp-shot" src="' + esc(shot) + '" alt="' + esc(p.title) + ' screenshot" loading="lazy"></button>';
         return gen;
     }
 
     function stageHTML(p, letter, floats) {
+        if (!videoInfo(p.video) && !safeImg(p.image)) return '';
         const land = p.videoRatio === 'landscape';
         return '<div class="pp-stage">' +
             '<span class="pp-ring pp-ring-1"></span><span class="pp-ring pp-ring-2"></span><span class="pp-ring pp-ring-3"></span>' +
@@ -275,7 +276,7 @@ import { initThemeToggle } from './core/theme.js';
         return '<div class="pp-arch">' +
             (intro ? '<p class="pp-arch-intro">' + esc(intro) + '</p>' : '') +
             (layers.length ? '<ul class="pp-layers">' + layers.map(l => '<li class="pp-layer"><h3>' + esc(l[0]) + '</h3>' + (l[1] ? '<p>' + esc(l[1]) + '</p>' : '') + '</li>').join('') + '</ul>' : '') +
-            (diagram ? '<figure class="pp-diagram"><img src="' + esc(diagram) + '" alt="Architecture diagram"></figure>' : '') +
+            (diagram ? '<figure class="pp-diagram"><button type="button" class="pp-fig pp-diagram-fig" data-cap="Architecture diagram" aria-label="Enlarge architecture diagram"><img src="' + esc(diagram) + '" alt="Architecture diagram"></button></figure>' : '') +
             (tree.trim() ? '<div class="pp-code"><div class="pp-code-bar">' + icon('folder') + ' project structure</div><pre><code>' + esc(tree) + '</code></pre></div>' : '') +
             '</div>';
     }
@@ -319,7 +320,7 @@ import { initThemeToggle } from './core/theme.js';
         p = p || {};
         opts = opts || {};
 
-        const titleText = String(p.title || 'Untitled project').trim();
+        const titleText = String(p.title || '').trim();
         const letter = esc((titleText.charAt(0) || '?').toUpperCase());
         const tags = toItems(p.tag);
         const languages = toItems(p.languages);
@@ -330,8 +331,11 @@ import { initThemeToggle } from './core/theme.js';
         /* hero: logo, name, slogan */
         const logoUrl = safeImg(p.logo);
         const logo = logoUrl
-            ? '<span class="pp-logo has-img"><img src="' + esc(logoUrl) + '" alt="" data-letter="' + letter + '"></span>'
-            : '<span class="pp-logo" aria-hidden="true">' + letter + '</span>';
+            ? '<span class="pp-logo has-img"><button type="button" class="pp-fig pp-logo-fig" data-cap="' + esc(titleText + ' logo') + '" aria-label="Enlarge project logo"><img src="' + esc(logoUrl) + '" alt="' + esc(titleText) + ' logo" data-letter="' + letter + '"></button></span>'
+            : '';
+
+        const eyebrow = String(p.platform || tags[0] || '').trim();
+        const projectId = logo || eyebrow ? '<div class="pp-id">' + logo + (eyebrow ? '<div class="pp-eyebrow">' + esc(eyebrow) + '</div>' : '') + '</div>' : '';
 
         const statusMap = { completed: ['Completed', 'is-done'], 'in-progress': ['In progress', 'is-wip'], published: ['Published', 'is-live'] };
         const st = statusMap[p.status];
@@ -351,13 +355,13 @@ import { initThemeToggle } from './core/theme.js';
         const hero =
             '<header class="pp-hero">' +
             '<div class="pp-bg" aria-hidden="true"><span class="pp-orb pp-orb-a"></span><span class="pp-orb pp-orb-b"></span><span class="pp-dots"></span><span class="pp-mark">' + word + '</span></div>' +
-            '<div class="container pp-hero-grid">' +
+            '<div class="container pp-hero-grid' + (videoInfo(p.video) || safeImg(p.image) ? '' : ' is-text-only') + '\">' +
             '<div class="pp-copy">' +
             '<a class="pp-back" href="' + esc(opts.backHref || '#projects') + '">' + icon('back') + ' Back to projects</a>' +
-            '<div class="pp-id">' + logo + '<div class="pp-eyebrow">' + esc(p.platform || tags[0] || 'Project') + '</div></div>' +
-            '<h1 class="pp-title" id="pp-title" tabindex="-1">' + esc(titleText) + '</h1>' +
-            (p.slogan ? '<p class="pp-slogan">' + esc(p.slogan) + '</p>' : '') +
-            (p.subtitle ? '<p class="pp-lead">' + esc(p.subtitle) + '</p>' : '') +
+            projectId +
+            (titleText ? '<h1 class="pp-title" id="pp-title" tabindex="-1">' + esc(titleText) + '</h1>' : '') +
+            (String(p.slogan || '').trim() ? '<p class="pp-slogan">' + esc(String(p.slogan).trim()) + '</p>' : '') +
+            (String(p.subtitle || '').trim() ? '<p class="pp-lead">' + esc(String(p.subtitle).trim()) + '</p>' : '') +
             pills +
             (actions ? '<div class="pp-actions">' + actions + '</div>' : '') +
             '</div>' +
@@ -367,12 +371,12 @@ import { initThemeToggle } from './core/theme.js';
         /* facts strip */
         const tl = timeline(p);
         const facts = [
-            ['Role', p.role, 'user'],
-            ['Platform', p.platform, 'phone'],
+            ['Role', String(p.role || '').trim(), 'user'],
+            ['Platform', String(p.platform || '').trim(), 'phone'],
             ['Started', tl && tl.start, 'calendar'],
             ['Finished', tl && tl.end, 'flag'],
             ['Duration', tl && tl.dur, 'clock']
-        ].filter(f => f[1]);
+        ].filter(f => String(f[1] || '').trim());
         const factsHTML = facts.length
             ? '<div class="pp-facts">' + facts.map(f => '<div class="pp-fact"><div class="pp-fact-k">' + icon(f[2]) + esc(f[0]) + '</div><div class="pp-fact-v">' + esc(f[1]) + '</div></div>').join('') + '</div>'
             : '';
@@ -409,7 +413,7 @@ import { initThemeToggle } from './core/theme.js';
             : '';
         const pager = pagerHTML(opts);
 
-        return '<article class="pp"' + style + ' aria-labelledby="pp-title">' + hero +
+        return '<article class="pp"' + style + (titleText ? ' aria-labelledby="pp-title"' : ' aria-label="Project details"') + '>' + hero +
             '<div class="container pp-content">' + factsHTML + jumpHTML + body + wide + '</div>' +
             (pager ? '<section class="pp-bottom-projects" aria-label="Previous and next projects"><div class="container">' +
             '<div class="pp-label">More projects</div>' + pager + '</div></section>' : '') + '</article>';
@@ -505,14 +509,15 @@ import { initThemeToggle } from './core/theme.js';
     api.bind = function (root, hooks) {
         hooks = hooks || {};
         if (root._ppCleanup) { root._ppCleanup(); root._ppCleanup = null; }
+        root.querySelectorAll('.reveal').forEach(el => el.classList.add('active'));
 
         root.querySelectorAll('.pp-logo img').forEach(img => img.addEventListener('error', () => {
-            const box = img.parentElement;
+            const box = img.closest('.pp-logo');
             box.classList.remove('has-img');
-            box.textContent = img.dataset.letter || '';
+            box.replaceChildren(document.createTextNode(img.dataset.letter || ''));
         }));
 
-        root.querySelectorAll('img.pp-shot').forEach(img => img.addEventListener('error', () => img.remove()));
+        root.querySelectorAll('img.pp-shot').forEach(img => img.addEventListener('error', () => img.closest('.pp-fig')?.remove()));
 
         root.querySelectorAll('img.pp-thumb').forEach(img => {
             const fallback = () => {
@@ -533,6 +538,7 @@ import { initThemeToggle } from './core/theme.js';
         // a broken screenshot disappears instead of leaving an empty frame
         root.querySelectorAll('.pp-fig img').forEach(img => img.addEventListener('error', () => {
             const fig = img.closest('.pp-fig');
+            if (!fig) return;
             const rail = fig.parentElement;
             fig.remove();
             if (rail && !rail.querySelector('.pp-fig')) rail.remove();
@@ -614,6 +620,26 @@ export function initProjectPage(data) {
     const originalTitle = document.title;
     let previousScroll = 0;
     let lastRoutedUrl = '';
+    let pendingNavigation = '';
+    window.history.scrollRestoration = 'manual';
+
+    const setActiveNav = id => {
+        document.querySelectorAll('#nav-menu a').forEach(link => {
+            const active = link.getAttribute('href') === '#' + id;
+            link.classList.toggle('active', active);
+            if (active) link.setAttribute('aria-current', id === 'projects' && document.body.classList.contains('pp-project-open') ? 'page' : 'location');
+            else link.removeAttribute('aria-current');
+        });
+    };
+    const closeMobileMenu = () => {
+        const menu = document.getElementById('nav-menu');
+        menu?.classList.remove('active');
+        const icon = document.querySelector('#menu-toggle i');
+        if (icon) {
+            icon.classList.add('ph-list');
+            icon.classList.remove('ph-x');
+        }
+    };
     const route = () => {
         if (window.location.href === lastRoutedUrl) return;
         lastRoutedUrl = window.location.href;
@@ -621,6 +647,7 @@ export function initProjectPage(data) {
         if (match) {
             if (!document.body.classList.contains('pp-project-open')) previousScroll = window.scrollY;
             document.body.classList.add('pp-project-open');
+            setActiveNav('projects');
             let id = ''; try { id = decodeURIComponent(match[1]); } catch { id = match[1]; }
             const projects = data.projects || [];
             const index = projects.findIndex((project, i) => String(project.id ?? i) === id);
@@ -629,6 +656,7 @@ export function initProjectPage(data) {
             if (!project) {
                 mount.innerHTML = window.ProjectPage.notFound({ backHref: '#projects' });
                 document.title = 'Project not found | Esraa Ehab';
+                window.scrollTo(0, 0);
                 window.ProjectPage.focusTitle(mount);
                 mount.querySelector('a[href="#projects"]')?.addEventListener('click', leaveForProjects);
                 return;
@@ -647,42 +675,59 @@ export function initProjectPage(data) {
             window.ProjectPage.focusTitle(mount);
             mount.querySelector('.pp-back')?.addEventListener('click', leaveForProjects);
             initThemeToggle();
+            pendingNavigation = '';
         } else {
             const wasOpen = document.body.classList.contains('pp-project-open');
             if (mount._ppCleanup) { mount._ppCleanup(); mount._ppCleanup = null; }
             document.body.classList.remove('pp-project-open');
             mount.replaceChildren();
             document.title = originalTitle;
-            if (wasOpen) requestAnimationFrame(() => {
-                const target = window.location.hash.slice(1);
-                const section = target && document.getElementById(target);
-                const root = document.documentElement;
-                const oldBehavior = root.style.scrollBehavior;
-                root.style.scrollBehavior = 'auto';
-                if (section && target === 'projects' && previousScroll) window.scrollTo(0, previousScroll);
-                else if (section) section.scrollIntoView({ behavior: 'auto', block: 'start' });
-                else window.scrollTo(0, previousScroll);
-                requestAnimationFrame(() => { root.style.scrollBehavior = oldBehavior; });
-            });
+            const targetId = window.location.hash.slice(1);
+            if (wasOpen) {
+                if (pendingNavigation === 'navbar') {
+                    setActiveNav(targetId || 'home');
+                    requestAnimationFrame(() => requestAnimationFrame(() => {
+                        const section = targetId && document.getElementById(targetId);
+                        if (section) section.scrollIntoView({ behavior: 'smooth' });
+                    }));
+                } else if (pendingNavigation === 'history' || pendingNavigation === 'projects') {
+                    setActiveNav(targetId || 'home');
+                    requestAnimationFrame(() => window.scrollTo(0, previousScroll));
+                } else {
+                    setActiveNav(targetId || 'home');
+                    requestAnimationFrame(() => {
+                        const section = targetId && document.getElementById(targetId);
+                        if (section && targetId === 'projects' && previousScroll) window.scrollTo(0, previousScroll);
+                        else if (section) section.scrollIntoView({ behavior: 'auto', block: 'start' });
+                        else window.scrollTo(0, previousScroll);
+                    });
+                }
+            }
+            pendingNavigation = '';
         }
     };
-    const navigateHash = hash => {
+    const navigateHash = (hash, source = 'projects') => {
+        pendingNavigation = source;
         window.history.pushState(null, '', hash);
         route();
         window.dispatchEvent(new Event('hashchange'));
     };
     function leaveForProjects(event) {
         event.preventDefault();
-        navigateHash('#projects');
+        navigateHash('#projects', 'projects');
     }
     document.getElementById('navbar-mount')?.addEventListener('click', event => {
         if (!document.body.classList.contains('pp-project-open')) return;
         const link = event.target.closest('a[href^="#"]');
         if (!link) return;
         event.preventDefault();
-        navigateHash(link.getAttribute('href'));
+        closeMobileMenu();
+        navigateHash(link.getAttribute('href'), 'navbar');
     });
     window.addEventListener('hashchange', route);
-    window.addEventListener('popstate', route);
+    window.addEventListener('popstate', () => {
+        pendingNavigation = 'history';
+        route();
+    });
     route();
 }

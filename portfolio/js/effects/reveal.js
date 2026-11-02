@@ -44,6 +44,15 @@ export function setupNavbarActiveState() {
     if (!links.length || !sections.length) return;
 
     const updateActiveLink = () => {
+        if (document.body.classList.contains('pp-project-open')) {
+            links.forEach(link => {
+                const isProject = link.getAttribute('href') === '#projects';
+                link.classList.toggle('active', isProject);
+                if (isProject) link.setAttribute('aria-current', 'page');
+                else link.removeAttribute('aria-current');
+            });
+            return;
+        }
         const marker = window.innerHeight * 0.35;
         let currentSection = sections[0];
 

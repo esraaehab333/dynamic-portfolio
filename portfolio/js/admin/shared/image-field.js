@@ -45,6 +45,18 @@ function blobToDataUrl(blob) {
     });
 }
 
+export async function compressImageFile(file, { maxSide = 1400, preserveGif = true } = {}) {
+    const isGif = file.type === 'image/gif';
+    if (isGif && preserveGif && file.size > MAX_GIF_SIZE) {
+        throw new Error('GIF must be 300 KB or smaller.');
+    }
+    const blob = isGif && preserveGif ? file : await compressImage(file, maxSide);
+    if (blob.size > MAX_COMPRESSED_SIZE) {
+        throw new Error('Image is too big even after compression. Use a link instead.');
+    }
+    return { dataUrl: await blobToDataUrl(blob), size: blob.size };
+}
+
 function showUploadedPreview(row, dataUrl, size) {
     let preview = row.querySelector('.image-upload-preview');
     if (!preview) {
@@ -58,12 +70,23 @@ function showUploadedPreview(row, dataUrl, size) {
     preview.hidden = false;
 }
 
-export function imageField(id, label, value = '', placeholder = 'https://...') {
+export function imageField(id, label, value = '', placeholder = 'https://...', options = {}) {
+    const size = embeddedImageSize(value);
+    const warn = options.warnLargePng && /^data:image\/png[;,]/i.test(String(value)) && size > 150 * 1024;
     return `<div class="form-group image-field">
         <label for="${id}">${label}</label>
         <input id="${id}" class="form-control" type="url" value="${escapeHtml(value)}" placeholder="${placeholder}">
+        ${options.warnLargePng ? `<small class="project-image-warning" ${warn ? '' : 'hidden'}>This image is large. Choose it again to compress it.</small>` : ''}
         <div class="image-upload-row"><label class="image-upload-button" for="${id}-upload"><i class="ph ph-upload-simple"></i> Upload from device</label><input id="${id}-upload" class="image-upload-input" type="file" accept="image/*" data-image-target="${id}" data-image-kind="${/logo|icon/i.test(label) ? 'small' : 'large'}"><span class="image-upload-status" aria-live="polite">Or paste an image URL above.</span></div>
     </div>`;
+}
+
+function embeddedImageSize(value) {
+    const match = String(value || '').match(/^data:[^,]*;base64,(.*)$/);
+    if (!match) return null;
+    const source = match[1];
+    const padding = source.endsWith('==') ? 2 : source.endsWith('=') ? 1 : 0;
+    return Math.floor(source.length * 3 / 4) - padding;
 }
 
 document.addEventListener('change', async event => {
@@ -86,19 +109,23 @@ document.addEventListener('change', async event => {
     }
     if (status) status.textContent = file.type === 'image/gif' ? 'Reading GIF…' : 'Compressing image…';
     try {
-        const imageBlob = file.type === 'image/gif'
-            ? file
-            : await compressImage(file, picker.dataset.imageKind === 'small' ? 800 : 1400);
-        if (file.type !== 'image/gif' && imageBlob.size > MAX_COMPRESSED_SIZE) {
-            if (status) status.textContent = 'Image is too big even after compression. Use a link instead.';
-            picker.value = '';
-            return;
-        }
-        const dataUrl = await blobToDataUrl(imageBlob);
+        const { dataUrl, size } = await compressImageFile(file, { maxSide: picker.dataset.imageKind === 'small' ? 800 : 1400 });
         target.value = dataUrl;
-        showUploadedPreview(row, dataUrl, imageBlob.size);
+        showUploadedPreview(row, dataUrl, size);
         if (status) status.textContent = `${file.name} is ready to save.`;
+        target.closest('.image-field')?.querySelector('.project-image-warning')?.setAttribute('hidden', '');
+        window.ProjectFields?.imageChanged?.();
     } catch (error) {
         if (status) status.textContent = error.message || 'Could not read this image. Try another file.';
     }
+});
+
+document.addEventListener('input', event => {
+    if (!event.target.matches('.image-field input[type="url"]')) return;
+    const warning = event.target.closest('.image-field')?.querySelector('.project-image-warning');
+    if (!warning) return;
+    const size = embeddedImageSize(event.target.value);
+    const warn = /^data:image\/png[;,]/i.test(event.target.value) && size > 150 * 1024;
+    warning.hidden = !warn;
+    window.ProjectFields?.imageChanged?.();
 });

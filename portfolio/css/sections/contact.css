@@ -24,17 +24,6 @@
 .contact-form-error { margin: 12px 0 0; color: #dc2626; font-size: .9rem; }
 .contact-form-error[hidden] { display: none !important; }
 
-#main-contact-form .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    border-radius: 999px;
-    transition: transform .2s ease, box-shadow .2s ease;
-}
-#main-contact-form .btn-primary::before,
-#main-contact-form .btn-primary::after { display: none; }
-#main-contact-form .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(var(--primary-rgb), .28);
-}
 #main-contact-form .btn-primary:disabled { cursor: wait; opacity: .8; transform: none; }
 
 @media (min-width: 1100px) {
