@@ -71,7 +71,7 @@ export function setupNavbarActiveState() {
 }
 
 export function addStagger() {
-    document.querySelectorAll('.projects-grid, .skills-grid, .process-grid, .certs-grid, .nav-links').forEach(container => {
+    document.querySelectorAll('.projects-grid, .skills-grid, .services-grid, .certs-grid, .nav-links').forEach(container => {
         container.querySelectorAll('.reveal').forEach((el, index) => {
             el.style.setProperty('--order', index);
         });

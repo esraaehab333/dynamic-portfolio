@@ -54,7 +54,7 @@
     z-index: -1;
 }
 
-.project-card, .skill-category, .process-item, .cert-card, .timeline-content {
+.project-card, .skill-category, .service-card, .cert-card, .timeline-content {
     background: var(--glass);
     backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--border);
@@ -64,7 +64,7 @@
     overflow: hidden;
 }
 
-.project-card:hover, .skill-category:hover, .cert-card:hover, .timeline-content:hover {
+.project-card:hover, .skill-category:hover, .service-card:hover, .cert-card:hover, .timeline-content:hover {
     background: var(--glass-heavy);
     border-color: var(--primary);
     transform: translateY(-8px) scale(1.01);

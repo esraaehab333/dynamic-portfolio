@@ -1,5 +1,5 @@
 export function renderLists(data) {
-    const collections = ['projects', 'experience', 'process', 'skills', 'education', 'certifications', 'contacts', 'socials'];
+    const collections = ['projects', 'services', 'experience', 'skills', 'education', 'certifications', 'contacts', 'socials'];
     collections.forEach(col => {
         const container = document.getElementById(col + '-list');
         if (!container) return;

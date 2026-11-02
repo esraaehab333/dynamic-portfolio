@@ -1,16 +1,16 @@
 import * as projectsSection from '../sections/projects.js';
+import * as servicesSection from '../sections/services.js';
 import * as experienceSection from '../sections/experience.js';
 import * as skillsSection from '../sections/skills.js';
-import * as processSection from '../sections/process.js';
 import * as educationSection from '../sections/education.js';
 import * as certificationsSection from '../sections/certifications.js';
 import * as contactsSection from '../sections/contacts.js';
 
 const sectionModules = {
     projects: projectsSection,
+    services: servicesSection,
     experience: experienceSection,
     skills: skillsSection,
-    process: processSection,
     education: educationSection,
     certifications: certificationsSection,
     contacts: contactsSection,
