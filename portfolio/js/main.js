@@ -5,6 +5,9 @@ import { runPremiumLoader } from './effects/loader.js';
 import { initVisualEffects } from './effects/cursor.js';
 import { setupNavbarScroll, setupNavbarActiveState, setupScrollEffect } from './effects/reveal.js';
 import { initProjectPage } from './project-page.js';
+import { renderHeroSocials } from './sections/hero.js';
+import { renderContacts } from './sections/contact.js';
+import { renderFooter } from './sections/footer.js';
 
 async function bootstrap() {
     // 1. Data load
@@ -20,6 +23,9 @@ async function bootstrap() {
         if (section.init) section.init({ data });
     });
     applySectionOrder(data);
+    renderContacts(data);
+    renderHeroSocials(data);
+    renderFooter(data);
     initProjectPage(data);
 
     // Initial setup for reveal
