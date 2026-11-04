@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "dynamic-portfolio",
+  "main": "src/index.js",
   "compatibility_date": "2026-07-18",
   "observability": {
     "enabled": true
@@ -8,6 +9,12 @@
   "assets": {
     "directory": "portfolio"
   },
+  "kv_namespaces": [
+    {
+      "binding": "PORTFOLIO_KV",
+      "id": "portfolio_kv_id"
+    }
+  ],
   "compatibility_flags": [
     "nodejs_compat"
   ]
