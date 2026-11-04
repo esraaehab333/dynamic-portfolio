@@ -11,8 +11,8 @@
   },
   "kv_namespaces": [
     {
-      "binding": "PORTFOLIO_KV",
-      "id": "portfolio_kv_id"
+      "binding": "portfolio-kv",
+      "id": "0f53497d709c43f9b0b09c8d590eff50"
     }
   ],
   "compatibility_flags": [
