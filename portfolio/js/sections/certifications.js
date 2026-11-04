@@ -1,3 +1,5 @@
+import { esc, safeUrl } from '../core/utils.js';
+
 export const id = 'certifications';
 
 export function render(data) {
@@ -7,15 +9,18 @@ export function render(data) {
     const items = data.certifications || [];
     const isVisible = (data.sectionsVisibility?.certifications !== false) && items.length > 0;
 
-    const itemsHtml = items.map(c => `
-        <a href="${c.url || '#'}" class="cert-card reveal" target="_blank">
+    const itemsHtml = items.map(c => {
+        const url = safeUrl(c.url) || '#';
+        return `
+        <a href="${url}" class="cert-card reveal" ${url !== '#' ? 'target="_blank" rel="noopener noreferrer"' : ''}>
             <div class="cert-icon"><i class="ph ph-certificate"></i></div>
             <div class="cert-info">
-                <h4>${c.title}</h4>
-                <p>${c.subtitle} • ${c.date}</p>
+                <h4>${esc(c.title)}</h4>
+                <p>${esc(c.subtitle)} • ${esc(c.date)}</p>
             </div>
         </a>
-    `).join('');
+    `;
+    }).join('');
 
     mount.innerHTML = `
     <section id="certifications" class="section-padding bg-alt" style="${isVisible ? '' : 'display: none;'}">

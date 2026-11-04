@@ -3,7 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>portfolio | Esraa Ehab</title>
+    <title>Esraa Ehab | Android &amp; Kotlin Multiplatform Developer</title>
+    <meta name="description" content="Esraa Ehab, Android developer in Cairo. Native Android and Kotlin Multiplatform apps with Jetpack Compose and Clean Architecture.">
+    <link rel="canonical" href="https://dynamic-portfolio.pages.dev/">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Esraa Ehab | Android &amp; Kotlin Multiplatform Developer">
+    <meta property="og:description" content="Esraa Ehab, Android developer in Cairo. Native Android and Kotlin Multiplatform apps with Jetpack Compose and Clean Architecture.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dynamic-portfolio.pages.dev/">
+    <meta property="og:image" content="assets/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Esraa Ehab | Android &amp; Kotlin Multiplatform Developer">
+    <meta name="twitter:description" content="Esraa Ehab, Android developer in Cairo. Native Android and Kotlin Multiplatform apps with Jetpack Compose and Clean Architecture.">
+    <meta name="twitter:image" content="assets/og-image.png">
+
+    <meta name="theme-color" content="#0f172a">
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='2' y='2' width='60' height='60' rx='16' fill='%233D5AFE'/><path d='M42 18H22V46H42V40H28V34H39V30H28V24H42V18Z' fill='white'/></svg>">
@@ -15,8 +32,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    
+    <script src="https://unpkg.com/@phosphor-icons/web@2.1.1" crossorigin></script>
+
     <!-- CSS Modules (in exact relative cascade order) -->
     <link rel="stylesheet" href="css/base/variables.css">
     <link rel="stylesheet" href="css/base/reset.css">
@@ -45,18 +62,15 @@
     <link rel="stylesheet" href="css/project-page.css">
     <link rel="stylesheet" href="contact-footer.css">
 
-    <script>
-        (function() {
-            const savedTheme = localStorage.getItem('theme_preference') || 'dark';
-            if (savedTheme === 'dark') {
-                document.documentElement.classList.add('dark-mode');
-            } else {
-                document.documentElement.classList.remove('dark-mode');
-            }
-        })();
-    </script>
+    <script src="js/theme-init.js"></script>
 </head>
 <body class="is-loading">
+    <noscript>
+        <div style="padding: 2rem; text-align: center; color: white; background: #0f172a; font-family: sans-serif;">
+            <h2>JavaScript is required</h2>
+            <p>Please enable JavaScript in your browser to view this portfolio.</p>
+        </div>
+    </noscript>
 
     <!-- Background Decoration -->
     <div class="bg-blob blob-1"></div>

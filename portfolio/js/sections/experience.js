@@ -1,3 +1,5 @@
+import { esc, safeImgUrl } from '../core/utils.js';
+
 export const id = 'experience';
 
 export function render(data) {
@@ -7,20 +9,23 @@ export function render(data) {
     const items = data.experience || [];
     const isVisible = (data.sectionsVisibility?.experience !== false) && items.length > 0;
 
-    const itemsHtml = items.map(e => `
+    const itemsHtml = items.map(e => {
+        const img = safeImgUrl(e.image);
+        return `
         <div class="timeline-item reveal">
             <div class="timeline-dot"></div>
-            <span class="timeline-date">${e.date}</span>
-            <div class="timeline-content${e.image ? ' has-image' : ''}">
+            <span class="timeline-date">${esc(e.date)}</span>
+            <div class="timeline-content${img ? ' has-image' : ''}">
                 <div class="timeline-copy">
-                    <h3>${e.title}</h3>
-                    <h4>${e.subtitle}</h4>
-                    <p>${e.desc}</p>
+                    <h3>${esc(e.title)}</h3>
+                    <h4>${esc(e.subtitle)}</h4>
+                    <p>${esc(e.desc)}</p>
                 </div>
-                ${e.image ? `<div class="timeline-image"><img src="${e.image}" alt="${e.title}" loading="lazy"></div>` : ''}
+                ${img ? `<div class="timeline-image"><img src="${img}" alt="${esc(e.title)}" loading="lazy"></div>` : ''}
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 
     mount.innerHTML = `
     <section id="experience" class="section-padding bg-alt" style="${isVisible ? '' : 'display: none;'}">

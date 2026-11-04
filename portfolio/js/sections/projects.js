@@ -1,4 +1,4 @@
-import { esc } from '../core/utils.js';
+import { esc, safeImgUrl } from '../core/utils.js';
 
 const INITIAL_PROJECTS = 6;
 const PROJECTS_PER_BATCH = 3;
@@ -11,17 +11,22 @@ export function render(data) {
 
     const items = data.projects || [];
     const isVisible = (data.sectionsVisibility?.projects !== false) && items.length > 0;
-    const itemsHtml = items.map((project, index) => `
-        <article class="project-card reveal" data-project-id="${esc(project.id ?? index)}" role="link" tabindex="0" aria-label="View details for ${esc(project.title || 'project')}" ${index >= INITIAL_PROJECTS ? 'hidden' : ''}>
+    const itemsHtml = items.map((project, index) => {
+        const title = esc(project.title || 'Untitled Project');
+        const img = safeImgUrl(project.image) || 'https://via.placeholder.com/800x600';
+        const sub = project.subtitle ? esc(project.subtitle) : '';
+        const tag = project.tag ? esc(project.tag) : '';
+        return `
+        <article class="project-card reveal" data-project-id="${esc(project.id ?? index)}" role="link" tabindex="0" aria-label="View details for ${title}" ${index >= INITIAL_PROJECTS ? 'hidden' : ''}>
             <div class="project-thumb">
-                <img src="${project.image || 'https://via.placeholder.com/800x600'}" class="project-img" alt="${project.title || 'Project'} preview" loading="lazy">
+                <img src="${img}" class="project-img" alt="${title} preview" loading="lazy">
             </div>
             <div class="project-meta">
                 <div class="project-header">
                     <div class="project-heading">
-                        <h3 class="project-name">${project.title || 'Untitled Project'}</h3>
-                        ${project.subtitle ? `<p class="project-subtitle">${project.subtitle}</p>` : ''}
-                        ${project.tag ? `<p class="project-tech">${project.tag}</p>` : ''}
+                        <h3 class="project-name">${title}</h3>
+                        ${sub ? `<p class="project-subtitle">${sub}</p>` : ''}
+                        ${tag ? `<p class="project-tech">${tag}</p>` : ''}
                     </div>
                 </div>
                 <div class="project-card-footer">
@@ -29,7 +34,8 @@ export function render(data) {
                 </div>
             </div>
         </article>
-    `).join('');
+    `;
+    }).join('');
 
     mount.innerHTML = `
     <section id="projects" class="section-padding" style="${isVisible ? '' : 'display: none;'}">

@@ -1,11 +1,50 @@
 export function esc(str) {
-    if (!str) return '';
+    if (str == null) return '';
     return String(str)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+}
+
+export function safeUrl(u) {
+    const s = String(u || '').trim();
+    if (/^(?:https:\/\/|mailto:|tel:)/i.test(s)) {
+        return esc(s);
+    }
+    return '';
+}
+
+export function safeImgUrl(u) {
+    const s = String(u || '').trim();
+    if (!s) return '';
+    if (/^javascript:/i.test(s) || /^data:text\/html/i.test(s) || /^\/\//.test(s)) {
+        return '';
+    }
+    if (/^https:\/\//i.test(s)) return esc(s);
+    if (/^data:image\/(?:png|jpe?g|webp|gif|avif)[;,]/i.test(s)) return esc(s);
+    if (/^(?:\.\/|assets\/|\/)[a-zA-Z0-9_\-./%@+]*$/.test(s) && !s.includes('..')) return esc(s);
+    return '';
+}
+
+export function safeIcon(c) {
+    const s = String(c || '').trim();
+    const pattern = /^ph(-fill|-bold|-duotone)?(\s+ph-[a-z0-9-]+)+$|^ph-[a-z0-9-]+$/;
+    if (pattern.test(s)) return esc(s);
+    return '';
+}
+
+export function multiline(text) {
+    if (!text) return '';
+    const raw = String(text);
+    const paragraphs = raw.split(/\r?\n\s*\r?\n/);
+    return paragraphs
+        .map(p => {
+            const escapedLines = p.split(/\r?\n/).map(line => esc(line.trim()));
+            return `<p>${escapedLines.join('<br>')}</p>`;
+        })
+        .join('');
 }
 
 export function trapFocus(modal) {

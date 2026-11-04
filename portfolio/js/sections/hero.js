@@ -1,4 +1,5 @@
 import { contactHref, contactKind, escapeHtml } from '../core/contact-links.js';
+import { safeImgUrl, safeUrl, esc } from '../core/utils.js';
 
 export const id = 'hero';
 
@@ -53,7 +54,9 @@ export function render(data) {
     const defaultDescription = 'Native Android, Kotlin Multiplatform and Clean Architecture, building scalable apps that feel fast.';
     const description = hero.description ?? defaultDescription;
     const headline = titleParts(hero.title);
-    const proof = hero.proof == null ? '2+ yrs · 8 apps · Kotlin · Compose · KMP' : String(hero.proof).trim();
+
+    const fallbackImg = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80';
+    const profileImg = safeImgUrl(hero.image) || fallbackImg;
 
     mount.innerHTML = `
     <section id="home" class="hero" style="${isVisible ? '' : 'display: none;'}">
@@ -64,11 +67,11 @@ export function render(data) {
                 <p class="hero-desc" data-key="hero.description">${escapeHtml(description)}</p>
 
                 <div class="hero-btns">
-                    <a href="${hero.cv_url || '#'}" class="btn btn-primary" id="download-cv-btn" target="_blank">Download CV <i class="ph ph-download-simple"></i></a>
+                    <a href="#" class="btn btn-primary" id="download-cv-btn">Download CV <i class="ph ph-download-simple"></i></a>
                     <a href="#projects" class="btn btn-outline">View Projects <i class="ph ph-arrow-down"></i></a>
                 </div>
 
-                ${proof ? `<p class="hero-proof" data-key="hero.proof">${escapeHtml(proof)}</p>` : ''}
+                <p class="hero-proof" data-key="hero.proof"></p>
                 <div class="hero-socials" id="hero-socials"></div>
             </div>
 
@@ -79,7 +82,7 @@ export function render(data) {
                 <div class="tech-icon-float" style="bottom: 15%; left: -20px;"><i class="ph ph-code"></i></div>
                 <div class="tech-icon-float" style="bottom: 5%; right: 20%;"><i class="ph ph-device-mobile"></i></div>
 
-                <img src="${hero.image || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80'}" alt="Profile" id="hero-image">
+                <img src="${profileImg}" alt="Profile" id="hero-image">
 
                 <div class="availability-badge">
                     <div class="dot"></div>
@@ -95,6 +98,37 @@ export function render(data) {
     mount.querySelector('.hero-title-leading').textContent = headline.leading;
     mount.querySelector('.hero-title .grad').textContent = headline.highlighted;
     mount.querySelector('.hero-title-trailing').textContent = headline.trailing;
+
+    const proofEl = mount.querySelector('.hero-proof');
+    const proofText = String(hero.proof ?? '').trim();
+    if (proofEl) {
+        proofEl.textContent = proofText;
+        proofEl.hidden = !proofText;
+        proofEl.style.display = proofText ? '' : 'none';
+    }
+
+    const cvBtn = mount.querySelector('#download-cv-btn');
+    if (cvBtn) {
+        const rawCvUrl = String(hero.cv_url || '').trim();
+        if (!rawCvUrl || rawCvUrl === '#') {
+            cvBtn.style.display = 'none';
+        } else {
+            cvBtn.style.display = '';
+            const isExternal = /^https?:\/\//i.test(rawCvUrl);
+            const verifiedUrl = isExternal ? (safeUrl(rawCvUrl) || '#') : esc(rawCvUrl);
+            cvBtn.setAttribute('href', verifiedUrl);
+            if (isExternal) {
+                cvBtn.setAttribute('target', '_blank');
+                cvBtn.setAttribute('rel', 'noopener noreferrer');
+                cvBtn.removeAttribute('download');
+            } else {
+                cvBtn.removeAttribute('target');
+                cvBtn.removeAttribute('rel');
+                const fileName = verifiedUrl.split('/').pop() || 'CV.pdf';
+                cvBtn.setAttribute('download', fileName);
+            }
+        }
+    }
 }
 
 export function renderHeroSocials(data) {
@@ -103,11 +137,12 @@ export function renderHeroSocials(data) {
     const icons = { github: 'ph-github-logo', linkedin: 'ph-linkedin-logo', email: 'ph-envelope-simple' };
     const selected = (data.contacts || []).filter(contact => ['github', 'linkedin', 'email'].includes(contactKind(contact)));
     mount.innerHTML = selected.map(contact => {
-        const href = contactHref(contact);
+        const href = contactHref(contact, data);
         if (!href) return '';
         const label = escapeHtml(contact.label || contactKind(contact));
         const external = /^https?:/i.test(href);
-        return `<a href="${escapeHtml(href)}" aria-label="${label}" title="${label}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ''}><i class="ph ${icons[contactKind(contact)]}" aria-hidden="true"></i></a>`;
+        const safeH = external ? (safeUrl(href) || '#') : escapeHtml(href);
+        return `<a href="${safeH}" aria-label="${label}" title="${label}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ''}><i class="ph ${icons[contactKind(contact)]}" aria-hidden="true"></i></a>`;
     }).join('');
     mount.hidden = !mount.children.length;
 }

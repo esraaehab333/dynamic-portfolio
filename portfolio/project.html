@@ -9,12 +9,23 @@
     <p>Opening project details…</p>
     <script type="module">
         import { loadData } from './js/core/api.js';
-        const data = await loadData();
         const raw = new URLSearchParams(location.search).get('id') || '';
-        const index = Number(raw);
-        const project = Number.isInteger(index) && index >= 0 ? data.projects?.[index] : data.projects?.find(item => String(item.id) === raw);
-        const id = project ? String(project.id ?? index) : raw;
-        location.replace(`index.html#/project/${encodeURIComponent(id)}`);
+        try {
+            const data = await loadData();
+            const projects = data?.projects || [];
+            // Resolve first by exact id match, then by array index if raw is numeric
+            let project = projects.find(item => String(item.id) === raw);
+            if (!project && /^\d+$/.test(raw)) {
+                const idx = Number(raw);
+                if (idx >= 0 && idx < projects.length) {
+                    project = projects[idx];
+                }
+            }
+            const id = project ? String(project.id ?? raw) : raw;
+            location.replace(`index.html#/project/${encodeURIComponent(id)}`);
+        } catch (e) {
+            location.replace(`index.html#/project/${encodeURIComponent(raw)}`);
+        }
     </script>
 </body>
 </html>
