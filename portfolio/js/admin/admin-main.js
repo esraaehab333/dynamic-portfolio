@@ -132,6 +132,7 @@ class AdminApp {
         }
 
         try {
+            this.data.schemaVersion = 2;
             const headers = {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
