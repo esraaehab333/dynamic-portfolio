@@ -1,5 +1,5 @@
 import { API_URL } from '../config.js';
-import { trapFocus, initModalParticles, initConfetti } from '../core/utils.js';
+import { trapFocus, initModalParticles, initConfetti, safeUrl, safeIcon, esc } from '../core/utils.js';
 import { contactHref, contactValue, contactKind, escapeHtml } from '../core/contact-links.js';
 
 export const id = 'contact';
@@ -64,17 +64,18 @@ export function renderContacts(data) {
         const isLink = /^https?:\/\//i.test(href);
         const isPhone = /phone/i.test(contact.label || '') || /^\+?[\d\s()-]{7,}$/.test(value.trim());
         const external = isLink && !isPhone;
-        const icon = escapeHtml(contact.icon || (kind === 'email' ? 'ph-envelope-simple' : kind === 'phone' || isPhone ? 'ph-phone' : 'ph-link'));
+        const iconRaw = contact.icon || (kind === 'email' ? 'ph-envelope-simple' : kind === 'phone' || isPhone ? 'ph-phone' : 'ph-link');
+        const icon = safeIcon(iconRaw) || 'ph-link';
         const label = escapeHtml(contact.label || 'Contact');
-        const safeValue = escapeHtml(value);
-        const rowHref = isPhone ? '#' : href;
-        const rowValue = isPhone ? 'Show number' : safeValue;
+        const safeVal = escapeHtml(value);
+        const rowHref = isPhone ? '#' : (external ? (safeUrl(href) || '#') : escapeHtml(href));
+        const rowValue = isPhone ? 'Show number' : safeVal;
         const action = isPhone
-            ? `<button type="button" class="contact-reveal" aria-label="Show ${label}" data-reveal="${safeValue}">Show</button>`
+            ? `<button type="button" class="contact-reveal" aria-label="Show ${label}" data-reveal="${safeVal}">Show</button>`
             : isLink
                 ? '<span class="contact-go" aria-hidden="true"><i class="ph ph-arrow-up-right"></i></span>'
-                : `<button class="contact-copy" type="button" data-copy="${safeValue}" aria-label="Copy ${label}"><i class="ph ph-copy" aria-hidden="true"></i></button>`;
-        return `<div class="contact-row reveal"${isPhone ? ' data-phone-row="true"' : ''}><a class="contact-row-link" href="${escapeHtml(rowHref)}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ''}><span class="contact-row-icon"><i class="ph ${icon}" aria-hidden="true"></i></span><span class="contact-row-copy"><span class="contact-row-label">${label}</span><span class="contact-row-value">${rowValue}</span></span></a>${action}</div>`;
+                : `<button class="contact-copy" type="button" data-copy="${safeVal}" aria-label="Copy ${label}"><i class="ph ph-copy" aria-hidden="true"></i></button>`;
+        return `<div class="contact-row reveal"${isPhone ? ' data-phone-row="true"' : ''}><a class="contact-row-link" href="${rowHref}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ''}><span class="contact-row-icon"><i class="ph ${icon}" aria-hidden="true"></i></span><span class="contact-row-copy"><span class="contact-row-label">${label}</span><span class="contact-row-value">${rowValue}</span></span></a>${action}</div>`;
     }).join('');
     container.querySelectorAll('.contact-reveal').forEach(button => button.addEventListener('click', () => revealPhone(button)));
     container.querySelectorAll('.contact-row[data-phone-row="true"] .contact-row-link').forEach(link => link.addEventListener('click', event => {

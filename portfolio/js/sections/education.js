@@ -1,3 +1,5 @@
+import { esc } from '../core/utils.js';
+
 export const id = 'education';
 
 export function render(data) {
@@ -10,11 +12,11 @@ export function render(data) {
     const itemsHtml = items.map(e => `
         <div class="timeline-item reveal">
             <div class="timeline-dot"></div>
-            <span class="timeline-date">${e.date}</span>
+            <span class="timeline-date">${esc(e.date)}</span>
             <div class="timeline-content">
-                <h3>${e.title}</h3>
-                <h4>${e.subtitle}</h4>
-                <p>${e.desc}</p>
+                <h3>${esc(e.title)}</h3>
+                <h4>${esc(e.subtitle)}</h4>
+                <p>${esc(e.desc)}</p>
             </div>
         </div>
     `).join('');

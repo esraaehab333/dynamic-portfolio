@@ -1,4 +1,5 @@
 import { contactHref, contactKind, escapeHtml } from '../core/contact-links.js';
+import { safeImgUrl, safeUrl, esc } from '../core/utils.js';
 
 export const id = 'hero';
 
@@ -54,6 +55,9 @@ export function render(data) {
     const description = hero.description ?? defaultDescription;
     const headline = titleParts(hero.title);
 
+    const fallbackImg = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80';
+    const profileImg = safeImgUrl(hero.image) || fallbackImg;
+
     mount.innerHTML = `
     <section id="home" class="hero" style="${isVisible ? '' : 'display: none;'}">
         <div class="container hero-grid">
@@ -78,7 +82,7 @@ export function render(data) {
                 <div class="tech-icon-float" style="bottom: 15%; left: -20px;"><i class="ph ph-code"></i></div>
                 <div class="tech-icon-float" style="bottom: 5%; right: 20%;"><i class="ph ph-device-mobile"></i></div>
 
-                <img src="${hero.image || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80'}" alt="Profile" id="hero-image">
+                <img src="${profileImg}" alt="Profile" id="hero-image">
 
                 <div class="availability-badge">
                     <div class="dot"></div>
@@ -105,20 +109,22 @@ export function render(data) {
 
     const cvBtn = mount.querySelector('#download-cv-btn');
     if (cvBtn) {
-        const cvUrl = String(hero.cv_url || '').trim();
-        if (!cvUrl || cvUrl === '#') {
+        const rawCvUrl = String(hero.cv_url || '').trim();
+        if (!rawCvUrl || rawCvUrl === '#') {
             cvBtn.style.display = 'none';
         } else {
             cvBtn.style.display = '';
-            cvBtn.setAttribute('href', cvUrl);
-            if (/^https?:\/\//i.test(cvUrl)) {
+            const isExternal = /^https?:\/\//i.test(rawCvUrl);
+            const verifiedUrl = isExternal ? (safeUrl(rawCvUrl) || '#') : esc(rawCvUrl);
+            cvBtn.setAttribute('href', verifiedUrl);
+            if (isExternal) {
                 cvBtn.setAttribute('target', '_blank');
                 cvBtn.setAttribute('rel', 'noopener noreferrer');
                 cvBtn.removeAttribute('download');
             } else {
                 cvBtn.removeAttribute('target');
                 cvBtn.removeAttribute('rel');
-                const fileName = cvUrl.split('/').pop() || 'CV.pdf';
+                const fileName = verifiedUrl.split('/').pop() || 'CV.pdf';
                 cvBtn.setAttribute('download', fileName);
             }
         }
@@ -135,7 +141,8 @@ export function renderHeroSocials(data) {
         if (!href) return '';
         const label = escapeHtml(contact.label || contactKind(contact));
         const external = /^https?:/i.test(href);
-        return `<a href="${escapeHtml(href)}" aria-label="${label}" title="${label}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ''}><i class="ph ${icons[contactKind(contact)]}" aria-hidden="true"></i></a>`;
+        const safeH = external ? (safeUrl(href) || '#') : escapeHtml(href);
+        return `<a href="${safeH}" aria-label="${label}" title="${label}" ${external ? 'target="_blank" rel="noopener noreferrer"' : ''}><i class="ph ${icons[contactKind(contact)]}" aria-hidden="true"></i></a>`;
     }).join('');
     mount.hidden = !mount.children.length;
 }

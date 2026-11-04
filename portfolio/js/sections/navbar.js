@@ -1,3 +1,5 @@
+import { esc } from '../core/utils.js';
+
 export const id = 'navbar';
 
 export function getNavItems(data) {
@@ -33,7 +35,7 @@ export function render(data) {
 
     const linksHtml = navItems
         .filter(item => item.show)
-        .map((item, idx) => `<a href="#${item.id}"${idx === 0 ? ' class="active"' : ''}>${item.label}</a>`)
+        .map((item, idx) => `<a href="#${esc(item.id)}"${idx === 0 ? ' class="active"' : ''}>${esc(item.label)}</a>`)
         .join('');
 
     const showContactCta = data.sectionsVisibility?.contact !== false;
@@ -42,8 +44,8 @@ export function render(data) {
     <nav id="navbar">
         <div class="container nav-content">
             <a href="#home" class="logo">
-                <div class="logo-icon" id="logo-icon-char">${logoChar}</div>
-                <div id="logo-text">${logoText}</div>
+                <div class="logo-icon" id="logo-icon-char">${esc(logoChar)}</div>
+                <div id="logo-text">${esc(logoText)}</div>
             </a>
 
             <div class="nav-links" id="nav-menu">

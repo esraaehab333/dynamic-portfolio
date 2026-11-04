@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XSS Security Test Suite</title>
+    <style>
+        body { font-family: system-ui, sans-serif; padding: 2rem; background: #0f172a; color: #fff; }
+        .pass { background: #065f46; color: #34d399; padding: 1rem; border-radius: 8px; font-weight: bold; font-size: 1.2rem; }
+        .fail { background: #991b1b; color: #fca5a5; padding: 1rem; border-radius: 8px; font-weight: bold; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <h1>XSS Sanitization Test</h1>
+    <div id="test-output">Running tests…</div>
+
+    <!-- Mount points for rendering sections -->
+    <div id="navbar-mount"></div>
+    <div id="hero-mount"></div>
+    <div id="about-mount"></div>
+    <div id="projects-mount"></div>
+    <div id="experience-mount"></div>
+    <div id="skills-mount"></div>
+    <div id="services-mount"></div>
+    <div id="education-mount"></div>
+    <div id="certifications-mount"></div>
+    <div id="contact-mount"></div>
+    <div id="footer-mount"></div>
+
+    <script type="module">
+        import * as navbar from '../portfolio/js/sections/navbar.js';
+        import * as hero from '../portfolio/js/sections/hero.js';
+        import * as about from '../portfolio/js/sections/about.js';
+        import * as projects from '../portfolio/js/sections/projects.js';
+        import * as experience from '../portfolio/js/sections/experience.js';
+        import * as skills from '../portfolio/js/sections/skills.js';
+        import * as services from '../portfolio/js/sections/services.js';
+        import * as education from '../portfolio/js/sections/education.js';
+        import * as certifications from '../portfolio/js/sections/certifications.js';
+        import * as contact from '../portfolio/js/sections/contact.js';
+        import * as footer from '../portfolio/js/sections/footer.js';
+
+        window.__xss = undefined;
+
+        const maliciousPayloadText = '"><img src=x onerror=window.__xss=1>';
+        const maliciousPayloadUrl = 'javascript:window.__xss=1';
+
+        const testData = {
+            site: {
+                logo: maliciousPayloadText,
+                tagline: maliciousPayloadText
+            },
+            hero: {
+                name: maliciousPayloadText,
+                title: maliciousPayloadText,
+                description: maliciousPayloadText,
+                proof: maliciousPayloadText,
+                image: maliciousPayloadUrl,
+                cv_url: maliciousPayloadUrl
+            },
+            about: {
+                label: maliciousPayloadText,
+                title: maliciousPayloadText,
+                bio: maliciousPayloadText + '\n\n' + maliciousPayloadText,
+                showStats: true,
+                stats: [
+                    { title: maliciousPayloadText, subtitle: maliciousPayloadText, icon: maliciousPayloadUrl }
+                ]
+            },
+            certifications: [
+                { url: maliciousPayloadUrl, title: maliciousPayloadText, subtitle: maliciousPayloadText, date: maliciousPayloadText }
+            ],
+            education: [
+                { date: maliciousPayloadText, title: maliciousPayloadText, subtitle: maliciousPayloadText, desc: maliciousPayloadText }
+            ],
+            experience: [
+                { date: maliciousPayloadText, title: maliciousPayloadText, subtitle: maliciousPayloadText, desc: maliciousPayloadText, image: maliciousPayloadUrl }
+            ],
+            projects: [
+                { id: '1', title: maliciousPayloadText, subtitle: maliciousPayloadText, tag: maliciousPayloadText, image: maliciousPayloadUrl }
+            ],
+            services: [
+                { title: maliciousPayloadText, subtitle: maliciousPayloadText, image: maliciousPayloadUrl, icon: maliciousPayloadUrl }
+            ],
+            skills: [
+                { name: maliciousPayloadText, image: maliciousPayloadUrl, icon: maliciousPayloadUrl, category: 'Languages' }
+            ],
+            contacts: [
+                { label: maliciousPayloadText, value: 'test@example.com', url: maliciousPayloadUrl, icon: maliciousPayloadUrl }
+            ],
+            sectionsVisibility: {
+                hero: true, about: true, projects: true, experience: true, skills: true, services: true, education: true, certifications: true, contact: true
+            }
+        };
+
+        const renderers = [navbar, hero, about, projects, experience, skills, services, education, certifications, contact, footer];
+
+        renderers.forEach(mod => {
+            if (mod.render) mod.render(testData);
+        });
+
+        setTimeout(() => {
+            const output = document.getElementById('test-output');
+            const onerrorElements = document.querySelectorAll('[onerror]');
+            const xssTriggered = window.__xss !== undefined || onerrorElements.length > 0;
+
+            if (!xssTriggered) {
+                output.className = 'pass';
+                output.innerHTML = '✔ PASS: No XSS vectors executed. window.__xss is undefined and 0 [onerror] attributes exist in DOM.';
+            } else {
+                output.className = 'fail';
+                output.innerHTML = `✘ FAIL: XSS vulnerability detected! window.__xss = ${window.__xss}, found ${onerrorElements.length} [onerror] element(s).`;
+            }
+        }, 200);
+    </script>
+</body>
+</html>

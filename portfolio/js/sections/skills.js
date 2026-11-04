@@ -1,4 +1,4 @@
-import { esc } from '../core/utils.js';
+import { esc, safeImgUrl, safeIcon } from '../core/utils.js';
 
 export const id = 'skills';
 
@@ -13,35 +13,16 @@ const CATEGORY_ICONS = {
     Other: 'ph-sparkle'
 };
 
-function safeSkillImageUrl(value) {
-    const source = String(value || '').trim();
-    if (/^https:\/\//i.test(source)) {
-        try {
-            const url = new URL(source);
-            return url.protocol === 'https:' ? url.href : '';
-        } catch {
-            return '';
-        }
-    }
-    if (/^(?:\.\/|assets\/)[\w\-./%@+]*$/i.test(source)) {
-        try {
-            const decodedPath = decodeURIComponent(source);
-            if (!decodedPath.includes('\\') && !decodedPath.split('/').includes('..')) return source;
-        } catch { return ''; }
-    }
-    if (/^data:image\/(?:png|jpe?g|gif|webp|avif|svg\+xml)[;,]/i.test(source)) return source;
-    return '';
-}
-
 function categoryFor(skill) {
     return CATEGORY_ORDER.includes(skill.category) ? skill.category : 'Other';
 }
 
 function logoMarkup(skill, category) {
-    const image = safeSkillImageUrl(skill.image);
-    const icon = CATEGORY_ICONS[category] || CATEGORY_ICONS.Other;
+    const image = safeImgUrl(skill.image);
+    const customIcon = safeIcon(skill.icon);
+    const icon = customIcon || CATEGORY_ICONS[category] || CATEGORY_ICONS.Other;
     if (image) {
-        return `<span class="skill-logo"><img src="${esc(image)}" alt="" loading="lazy"><i class="ph ${icon} skill-icon-fallback" aria-hidden="true" hidden></i></span>`;
+        return `<span class="skill-logo"><img src="${image}" alt="" loading="lazy"><i class="ph ${icon} skill-icon-fallback" aria-hidden="true" hidden></i></span>`;
     }
     return `<span class="skill-logo"><i class="ph ${icon} skill-icon" aria-hidden="true"></i></span>`;
 }

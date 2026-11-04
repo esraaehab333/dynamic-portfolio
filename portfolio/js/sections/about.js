@@ -1,3 +1,5 @@
+import { esc, multiline, safeIcon } from '../core/utils.js';
+
 export const id = 'about';
 
 export function render(data) {
@@ -28,27 +30,30 @@ export function render(data) {
         return {
             title: stat.title ?? sourceValue ?? stat.value ?? '',
             subtitle: stat.subtitle ?? stat.label ?? '',
-            icon: stat.icon || ''
+            icon: safeIcon(stat.icon || '')
         };
     });
 
     const isVisible = data.sectionsVisibility?.about !== false;
+    const label = esc(about.label || 'About Me');
+    const title = esc(about.title || 'I build mobile apps with people and purpose in mind.');
+    const bioHtml = multiline(about.bio || 'I am a mobile application developer focused on creating clean, thoughtful Android experiences. Through my professional diploma at ITI, I am growing my skills in native development and turning ideas into useful products.');
 
     mount.innerHTML = `
     <section id="about" class="section-padding about-section" style="${isVisible ? '' : 'display: none;'}">
         <div class="container about-container">
             <div class="about-copy">
-                <div class="section-label">${about.label || 'About Me'}</div>
-                <h2 data-key="about.title">${about.title || 'I build mobile apps with people and purpose in mind.'}</h2>
-                <p data-key="about.bio">
-                    ${about.bio || 'I am a mobile application developer focused on creating clean, thoughtful Android experiences. Through my professional diploma at ITI, I am growing my skills in native development and turning ideas into useful products.'}
-                </p>
+                <div class="section-label">${label}</div>
+                <h2 data-key="about.title">${title}</h2>
+                <div data-key="about.bio">
+                    ${bioHtml}
+                </div>
                 ${about.showStats === false ? '' : `<div class="about-stats" aria-label="A little about my work">
                     ${stats.map((stat, index) => {
                         return `
                         <div class="about-stat about-stat-${index + 1}">
                             ${stat.icon ? `<span class="about-stat-icon"><i class="ph ${stat.icon}" aria-hidden="true"></i></span>` : ''}
-                            <span class="about-stat-copy"><strong>${stat.title}</strong><span>${stat.subtitle}</span></span>
+                            <span class="about-stat-copy"><strong>${esc(stat.title)}</strong><span>${esc(stat.subtitle)}</span></span>
                         </div>
                     `;
                     }).join('')}
