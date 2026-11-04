@@ -1,8 +1,11 @@
+import { API_URL } from '../../config.js';
+import { getAdminToken, logout } from '../auth.js';
+
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
-const MAX_COMPRESSED_SIZE = 400 * 1024;
 const MAX_GIF_SIZE = 300 * 1024;
 
 function formatImageSize(bytes) {
+    if (!bytes) return '';
     return `${Math.max(1, Math.round(bytes / 1024))} KB`;
 }
 
@@ -36,28 +39,54 @@ async function compressImage(file, maxSide) {
     return blob;
 }
 
-function blobToDataUrl(blob) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(new Error('Could not read this image.'));
-        reader.readAsDataURL(blob);
-    });
-}
-
-export async function compressImageFile(file, { maxSide = 1400, preserveGif = true } = {}) {
+export async function uploadImageFile(file, { maxSide = 1400, preserveGif = true } = {}) {
     const isGif = file.type === 'image/gif';
     if (isGif && preserveGif && file.size > MAX_GIF_SIZE) {
         throw new Error('GIF must be 300 KB or smaller.');
     }
     const blob = isGif && preserveGif ? file : await compressImage(file, maxSide);
-    if (blob.size > MAX_COMPRESSED_SIZE) {
-        throw new Error('Image is too big even after compression. Use a link instead.');
+
+    const token = getAdminToken();
+    if (!token) {
+        logout('Session expired');
+        throw new Error('Please log in to upload images.');
     }
-    return { dataUrl: await blobToDataUrl(blob), size: blob.size };
+
+    const formData = new FormData();
+    const fileName = (file.name || 'image').replace(/\.[^.]+$/, '') + (isGif && preserveGif ? '.gif' : '.webp');
+    formData.append('file', blob, fileName);
+
+    const res = await fetch(`${API_URL}/upload`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: formData
+    });
+
+    if (res.status === 401) {
+        logout('Session expired');
+        throw new Error('Session expired');
+    }
+
+    if (!res.ok) {
+        let errMessage = 'Image upload failed';
+        try {
+            const errJson = await res.json();
+            if (errJson.error) errMessage = errJson.error;
+        } catch {}
+        throw new Error(errMessage);
+    }
+
+    const data = await res.json();
+    return { url: data.url, size: data.size || blob.size, dataUrl: data.url };
 }
 
-function showUploadedPreview(row, dataUrl, size) {
+export async function compressImageFile(file, options = {}) {
+    return uploadImageFile(file, options);
+}
+
+function showUploadedPreview(row, url, size) {
     let preview = row.querySelector('.image-upload-preview');
     if (!preview) {
         preview = document.createElement('div');
@@ -65,28 +94,17 @@ function showUploadedPreview(row, dataUrl, size) {
         preview.innerHTML = '<img alt="Uploaded image preview"><span class="image-upload-size"></span>';
         row.append(preview);
     }
-    preview.querySelector('img').src = dataUrl;
+    preview.querySelector('img').src = url;
     preview.querySelector('.image-upload-size').textContent = formatImageSize(size);
     preview.hidden = false;
 }
 
 export function imageField(id, label, value = '', placeholder = 'https://...', options = {}) {
-    const size = embeddedImageSize(value);
-    const warn = options.warnLargePng && /^data:image\/png[;,]/i.test(String(value)) && size > 150 * 1024;
     return `<div class="form-group image-field">
         <label for="${id}">${label}</label>
         <input id="${id}" class="form-control" type="url" value="${escapeHtml(value)}" placeholder="${placeholder}">
-        ${options.warnLargePng ? `<small class="project-image-warning" ${warn ? '' : 'hidden'}>This image is large. Choose it again to compress it.</small>` : ''}
         <div class="image-upload-row"><label class="image-upload-button" for="${id}-upload"><i class="ph ph-upload-simple"></i> Upload from device</label><input id="${id}-upload" class="image-upload-input" type="file" accept="image/*" data-image-target="${id}" data-image-kind="${/logo|icon/i.test(label) ? 'small' : 'large'}"><span class="image-upload-status" aria-live="polite">Or paste an image URL above.</span></div>
     </div>`;
-}
-
-function embeddedImageSize(value) {
-    const match = String(value || '').match(/^data:[^,]*;base64,(.*)$/);
-    if (!match) return null;
-    const source = match[1];
-    const padding = source.endsWith('==') ? 2 : source.endsWith('=') ? 1 : 0;
-    return Math.floor(source.length * 3 / 4) - padding;
 }
 
 document.addEventListener('change', async event => {
@@ -107,25 +125,14 @@ document.addEventListener('change', async event => {
         picker.value = '';
         return;
     }
-    if (status) status.textContent = file.type === 'image/gif' ? 'Reading GIF…' : 'Compressing image…';
+    if (status) status.textContent = 'Uploading image…';
     try {
-        const { dataUrl, size } = await compressImageFile(file, { maxSide: picker.dataset.imageKind === 'small' ? 800 : 1400 });
-        target.value = dataUrl;
-        showUploadedPreview(row, dataUrl, size);
-        if (status) status.textContent = `${file.name} is ready to save.`;
-        target.closest('.image-field')?.querySelector('.project-image-warning')?.setAttribute('hidden', '');
+        const { url, size } = await uploadImageFile(file, { maxSide: picker.dataset.imageKind === 'small' ? 800 : 1400 });
+        target.value = url;
+        showUploadedPreview(row, url, size);
+        if (status) status.textContent = `${file.name} uploaded successfully.`;
         window.ProjectFields?.imageChanged?.();
     } catch (error) {
-        if (status) status.textContent = error.message || 'Could not read this image. Try another file.';
+        if (status) status.textContent = error.message || 'Could not upload this image. Try again.';
     }
-});
-
-document.addEventListener('input', event => {
-    if (!event.target.matches('.image-field input[type="url"]')) return;
-    const warning = event.target.closest('.image-field')?.querySelector('.project-image-warning');
-    if (!warning) return;
-    const size = embeddedImageSize(event.target.value);
-    const warn = /^data:image\/png[;,]/i.test(event.target.value) && size > 150 * 1024;
-    warning.hidden = !warn;
-    window.ProjectFields?.imageChanged?.();
 });

@@ -4,11 +4,12 @@ export const DEFAULT_DATA = {
         name: "HELLO, I'M ESRAA EHAB LOTFY",
         title: "Junior <span>Android Developer</span>",
         description: "Mobile Application Developer specializing in high-performance, user-centric apps.",
+        proof: "",
         image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80",
         cv_url: "#"
     },
     about: { bio: "" },
-    contact: { title: "", subtitle: "" },
+    contact: { title: "", subtitle: "", availability: "Open to new opportunities", response: "I usually reply within 24 hours · Cairo, GMT+2", emailSubject: "Hello Esraa, I'd like to talk about an opportunity", emailBody: "Hi Esraa,\n\nI came across your portfolio and would love to connect regarding an opportunity." },
     socials: [], partners: [], projects: [],
     services: [
         {

@@ -7,12 +7,12 @@ export const DEFAULT_DATA = {
         titleSize: "compact",
         description: "Native Android, Kotlin Multiplatform and Clean Architecture, building scalable apps that feel fast.",
         descriptionSize: "compact",
-        proof: "2+ yrs · 8 apps · Kotlin · Compose · KMP",
+        proof: "",
         image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80",
         cv_url: "#"
     },
     about: { bio: "I am a dedicated Mobile App Developer with a passion for creating clean, efficient, and user-friendly applications." },
-    contact: { title: "Let's Create Something Amazing Together", subtitle: "Currently open for new projects and opportunities.", availability: "Open to new opportunities", response: "I usually reply within 24 hours · Cairo, GMT+2" },
+    contact: { title: "Let's Create Something Amazing Together", subtitle: "Currently open for new projects and opportunities.", availability: "Open to new opportunities", response: "I usually reply within 24 hours · Cairo, GMT+2", emailSubject: "Hello Esraa, I'd like to talk about an opportunity", emailBody: "Hi Esraa,\n\nI came across your portfolio and would love to connect regarding an opportunity." },
     socials: [], partners: [], projects: [],
     services: [
         {

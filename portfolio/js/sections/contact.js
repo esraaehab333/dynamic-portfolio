@@ -58,7 +58,7 @@ export function renderContacts(data) {
     if (!container) return;
     container.innerHTML = (data.contacts || []).map(contact => {
         const value = contactValue(contact);
-        const href = contactHref(contact);
+        const href = contactHref(contact, data);
         if (!value || !href) return '';
         const kind = contactKind(contact);
         const isLink = /^https?:\/\//i.test(href);

@@ -53,7 +53,6 @@ export function render(data) {
     const defaultDescription = 'Native Android, Kotlin Multiplatform and Clean Architecture, building scalable apps that feel fast.';
     const description = hero.description ?? defaultDescription;
     const headline = titleParts(hero.title);
-    const proof = hero.proof == null ? '2+ yrs · 8 apps · Kotlin · Compose · KMP' : String(hero.proof).trim();
 
     mount.innerHTML = `
     <section id="home" class="hero" style="${isVisible ? '' : 'display: none;'}">
@@ -64,11 +63,11 @@ export function render(data) {
                 <p class="hero-desc" data-key="hero.description">${escapeHtml(description)}</p>
 
                 <div class="hero-btns">
-                    <a href="${hero.cv_url || '#'}" class="btn btn-primary" id="download-cv-btn" target="_blank">Download CV <i class="ph ph-download-simple"></i></a>
+                    <a href="#" class="btn btn-primary" id="download-cv-btn">Download CV <i class="ph ph-download-simple"></i></a>
                     <a href="#projects" class="btn btn-outline">View Projects <i class="ph ph-arrow-down"></i></a>
                 </div>
 
-                ${proof ? `<p class="hero-proof" data-key="hero.proof">${escapeHtml(proof)}</p>` : ''}
+                <p class="hero-proof" data-key="hero.proof"></p>
                 <div class="hero-socials" id="hero-socials"></div>
             </div>
 
@@ -95,6 +94,35 @@ export function render(data) {
     mount.querySelector('.hero-title-leading').textContent = headline.leading;
     mount.querySelector('.hero-title .grad').textContent = headline.highlighted;
     mount.querySelector('.hero-title-trailing').textContent = headline.trailing;
+
+    const proofEl = mount.querySelector('.hero-proof');
+    const proofText = String(hero.proof ?? '').trim();
+    if (proofEl) {
+        proofEl.textContent = proofText;
+        proofEl.hidden = !proofText;
+        proofEl.style.display = proofText ? '' : 'none';
+    }
+
+    const cvBtn = mount.querySelector('#download-cv-btn');
+    if (cvBtn) {
+        const cvUrl = String(hero.cv_url || '').trim();
+        if (!cvUrl || cvUrl === '#') {
+            cvBtn.style.display = 'none';
+        } else {
+            cvBtn.style.display = '';
+            cvBtn.setAttribute('href', cvUrl);
+            if (/^https?:\/\//i.test(cvUrl)) {
+                cvBtn.setAttribute('target', '_blank');
+                cvBtn.setAttribute('rel', 'noopener noreferrer');
+                cvBtn.removeAttribute('download');
+            } else {
+                cvBtn.removeAttribute('target');
+                cvBtn.removeAttribute('rel');
+                const fileName = cvUrl.split('/').pop() || 'CV.pdf';
+                cvBtn.setAttribute('download', fileName);
+            }
+        }
+    }
 }
 
 export function renderHeroSocials(data) {
@@ -103,7 +131,7 @@ export function renderHeroSocials(data) {
     const icons = { github: 'ph-github-logo', linkedin: 'ph-linkedin-logo', email: 'ph-envelope-simple' };
     const selected = (data.contacts || []).filter(contact => ['github', 'linkedin', 'email'].includes(contactKind(contact)));
     mount.innerHTML = selected.map(contact => {
-        const href = contactHref(contact);
+        const href = contactHref(contact, data);
         if (!href) return '';
         const label = escapeHtml(contact.label || contactKind(contact));
         const external = /^https?:/i.test(href);

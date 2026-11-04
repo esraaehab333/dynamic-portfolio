@@ -15,7 +15,7 @@ export function renderFooter(data) {
         .join('');
     const icon = { github: 'ph-github-logo', linkedin: 'ph-linkedin-logo', email: 'ph-envelope-simple', phone: 'ph-phone' };
     const contacts = (data.contacts || []).map(contact => {
-        const href = contactHref(contact);
+        const href = contactHref(contact, data);
         if (!href) return '';
         const kind = contactKind(contact);
         const external = /^https?:/i.test(href);

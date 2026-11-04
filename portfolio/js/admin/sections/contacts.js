@@ -1,12 +1,29 @@
 export function populateForm(data) {
-    document.getElementById('contact-title').value = data.contact?.title || '';
-    document.getElementById('contact-subtitle').value = data.contact?.subtitle || '';
+    const contact = data.contact || {};
+    document.getElementById('contact-title').value = contact.title || '';
+    document.getElementById('contact-subtitle').value = contact.subtitle || '';
+    const availabilityInput = document.getElementById('contact-availability');
+    if (availabilityInput) availabilityInput.value = contact.availability || '';
+    const responseInput = document.getElementById('contact-response');
+    if (responseInput) responseInput.value = contact.response || '';
+    const subjectInput = document.getElementById('contact-email-subject');
+    if (subjectInput) subjectInput.value = contact.emailSubject || '';
+    const bodyInput = document.getElementById('contact-email-body');
+    if (bodyInput) bodyInput.value = contact.emailBody || '';
 }
 
 export function save(data) {
     if (!data.contact) data.contact = {};
     data.contact.title = document.getElementById('contact-title').value;
     data.contact.subtitle = document.getElementById('contact-subtitle').value;
+    const availabilityInput = document.getElementById('contact-availability');
+    if (availabilityInput) data.contact.availability = availabilityInput.value;
+    const responseInput = document.getElementById('contact-response');
+    if (responseInput) data.contact.response = responseInput.value;
+    const subjectInput = document.getElementById('contact-email-subject');
+    if (subjectInput) data.contact.emailSubject = subjectInput.value;
+    const bodyInput = document.getElementById('contact-email-body');
+    if (bodyInput) data.contact.emailBody = bodyInput.value;
 }
 
 export function getModalForm(item = {}) {

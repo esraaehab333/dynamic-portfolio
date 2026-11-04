@@ -6,6 +6,8 @@ import * as educationSection from '../sections/education.js';
 import * as certificationsSection from '../sections/certifications.js';
 import * as contactsSection from '../sections/contacts.js';
 
+const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+
 const sectionModules = {
     projects: projectsSection,
     services: servicesSection,
@@ -15,11 +17,11 @@ const sectionModules = {
     certifications: certificationsSection,
     contacts: contactsSection,
     socials: {
-        getModalForm: (item = {}) => `<div class="form-group"><label>Name (e.g. GitHub)</label><input id="m-name" class="form-control" value="${item.name||''}"></div><div class="form-group"><label>Icon (ph-*)</label><input id="m-icon" class="form-control" value="${item.icon||''}"></div><div class="form-group"><label>Link</label><input id="m-url" class="form-control" value="${item.url||''}"></div>`,
+        getModalForm: (item = {}) => `<div class="form-group"><label>Name (e.g. GitHub)</label><input id="m-name" class="form-control" value="${escapeHtml(item.name||'')}"></div><div class="form-group"><label>Icon (ph-*)</label><input id="m-icon" class="form-control" value="${escapeHtml(item.icon||'')}"></div><div class="form-group"><label>Link</label><input id="m-url" class="form-control" value="${escapeHtml(item.url||'')}"></div>`,
         buildItem: (base = {}) => ({ ...base, name: document.getElementById('m-name').value, icon: document.getElementById('m-icon').value, url: document.getElementById('m-url').value })
     },
     partners: {
-        getModalForm: (item = {}) => `<div class="form-group"><label>Logo URL</label><input id="m-logo" class="form-control" value="${item.logo||''}"></div>`,
+        getModalForm: (item = {}) => `<div class="form-group"><label>Logo URL</label><input id="m-logo" class="form-control" value="${escapeHtml(item.logo||'')}"></div>`,
         buildItem: (base = {}) => ({ ...base, logo: document.getElementById('m-logo').value })
     }
 };
@@ -34,8 +36,8 @@ function openInlineEditor(app, mode, item, idx) {
     const editor = document.getElementById(idx === null ? `${mode}-new-editor` : `${mode}-inline-${idx}`);
     if (!editor) return;
     const form = sectionModules[mode]?.getModalForm(item) || '';
-    const label = mode.charAt(0).toUpperCase() + mode.slice(1);
-    editor.innerHTML = `<div class="inline-editor-heading"><h3>${idx === null ? `Add ${label}` : `Edit ${label}`}</h3><p>Update the details below, then save when you are done.</p></div>${form}<div class="inline-editor-actions"><button type="button" class="btn-save" onclick="adminApp.saveModal()">Save ${label}</button><button type="button" class="inline-editor-cancel" onclick="adminApp.closeModal()">Cancel</button></div>`;
+    const label = escapeHtml(mode.charAt(0).toUpperCase() + mode.slice(1));
+    editor.innerHTML = `<div class="inline-editor-heading"><h3>${idx === null ? `Add ${label}` : `Edit ${label}`}</h3><p>Update the details below, then save when you are done.</p></div>${form}<div class="inline-editor-actions"><button type="button" class="btn-save" onclick="adminApp.saveModal(this)">Save ${label}</button><button type="button" class="inline-editor-cancel" onclick="adminApp.closeModal()">Cancel</button></div>`;
     editor.hidden = false;
     activeInlineEditor = editor;
     editor.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -58,7 +60,7 @@ export function closeModal() {
     }
 }
 
-export function saveModal(app, renderLists) {
+export function saveModal(app, renderLists, triggerBtn = null) {
     const mode = app.currentMode;
     const existingItem = app.editIndex !== null && app.data[mode][app.editIndex] ? app.data[mode][app.editIndex] : null;
     const base = { id: existingItem ? (existingItem.id ?? (mode === 'projects' ? app.editIndex : Date.now())) : Date.now() };
@@ -73,5 +75,5 @@ export function saveModal(app, renderLists) {
     }
     closeModal();
     renderLists(app.data);
-    app.saveData();
+    app.saveData(triggerBtn);
 }

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow">
     <title>Portfolio Admin Dashboard</title>
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='2' y='2' width='60' height='60' rx='16' fill='%230055FF'/><path d='M42 18H22V46H42V40H28V34H39V30H28V24H42V18Z' fill='white'/></svg>">
@@ -443,16 +444,19 @@
     <div class="login-screen" id="login-screen">
         <form class="login-card" id="login-form">
             <h1 style="margin-top: 0; letter-spacing: -1px;">Admin Access</h1>
-            <p style="color: #64748b; margin-bottom: 2.5rem;">Please enter your credentials.</p>
-            <div class="form-group"><input type="email" id="login-email" class="form-control" placeholder="Email" required></div>
-            <div class="form-group"><input type="password" id="login-password" class="form-control" placeholder="Password" required></div>
-            <button type="submit" class="btn-save" style="width: 100%;">Sign In</button>
+            <p style="color: #64748b; margin-bottom: 2.5rem;">Enter your admin token to manage portfolio content.</p>
+            <div class="form-group">
+                <label for="admin-token">Admin Token</label>
+                <input type="password" id="admin-token" class="form-control" placeholder="Admin token" required autocomplete="current-password">
+            </div>
+            <p id="login-error" style="color: #ef4444; margin: 1rem 0 0; font-size: 0.9rem; text-align: center;" hidden></p>
+            <button type="submit" id="login-submit-btn" class="btn-save" style="width: 100%; margin-top: 1.5rem;">Sign In</button>
         </form>
     </div>
 
     <div id="dashboard" style="display: none; width: 100%;">
         <aside class="admin-sidebar">
-            <h1>VEGA ADMIN</h1>
+            <h1>ESRAA ADMIN</h1>
             <nav>
                 <div class="admin-nav-item active" data-target="site"><i class="ph ph-gear"></i> Site Config</div>
                 <div class="admin-nav-item" data-target="hero"><i class="ph ph-user"></i> Hero Section</div>
@@ -476,7 +480,7 @@
             </div>
 
             <section id="site-section" class="admin-section active">
-                <div class="form-group"><label>Logo Text (e.g. ALEX VEGA)</label><input type="text" id="site-logo" class="form-control"></div>
+                <div class="form-group"><label>Logo Text (e.g. Esraa Ehab)</label><input type="text" id="site-logo" class="form-control"></div>
                 <div class="form-group"><label>Site Theme</label>
                     <select id="site-theme" class="form-control">
                         <option value="light">Light Mode (Clean & Professional)</option>
@@ -499,6 +503,28 @@
                     </p>
                 </div>
                 <button class="btn-save" onclick="adminApp.saveSite()">Save Site Config</button>
+
+                <div class="form-group" style="margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--admin-border);">
+                    <h3 style="margin: 0 0 0.5rem; font-size: 1.1rem; font-weight: 700;">Image Optimization</h3>
+                    <p style="font-size: 0.85rem; color: var(--admin-text-muted); margin-bottom: 1rem;">
+                        Move embedded base64 images to server R2 storage to keep data size tiny.
+                    </p>
+                    <button type="button" class="btn-secondary" id="btn-migrate-images" onclick="adminApp.migrateImages()" style="padding: 0.75rem 1.25rem; border: 1px solid var(--admin-border); border-radius: 10px; background: white; color: var(--admin-primary); font-weight: 600; cursor: pointer;">
+                        <i class="ph ph-cloud-arrow-up"></i> Move embedded images to the server
+                    </button>
+                    <div id="migration-report" style="margin-top: 0.75rem; font-size: 0.85rem;" hidden></div>
+                </div>
+
+                <div class="form-group" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--admin-border);">
+                    <h3 style="margin: 0 0 0.5rem; font-size: 1.1rem; font-weight: 700;">Server Backups</h3>
+                    <p style="font-size: 0.85rem; color: var(--admin-text-muted); margin-bottom: 1rem;">
+                        Restore previous versions of your portfolio data.
+                    </p>
+                    <button type="button" class="btn-secondary" onclick="adminApp.loadBackups()" style="padding: 0.5rem 1rem; border: 1px solid var(--admin-border); border-radius: 8px; background: white; font-weight: 600; cursor: pointer; margin-bottom: 1rem;">
+                        <i class="ph ph-arrow-clockwise"></i> Refresh Backups
+                    </button>
+                    <div id="backups-list" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                </div>
             </section>
 
             <section id="sections-order-section" class="admin-section">
@@ -522,11 +548,19 @@
                         <span id="toggle-status-hero">Enable or disable the Hero section on your live portfolio.</span>
                     </div>
                 </div>
-                <div class="form-group"><label>Eyebrow Text (e.g. HELLO, I'M ALEX VEGA)</label><input type="text" id="hero-name" class="form-control"></div>
+                <div class="form-group"><label>Eyebrow Text (e.g. HELLO, I'M ESRAA EHAB)</label><input type="text" id="hero-name" class="form-control"></div>
                 <div class="form-group"><label>Main Headline (HTML allowed, use &lt;span&gt; for highlight)</label><input type="text" id="hero-title" class="form-control"></div>
                 <div class="form-group"><label>Hero Subtext</label><textarea id="hero-description" class="form-control" rows="4"></textarea></div>
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <label style="margin-bottom: 0;">Proof line (small line under the buttons)</label>
+                        <span id="hero-proof-counter" style="font-size: 0.85rem; color: var(--admin-text-muted);">0 / 70</span>
+                    </div>
+                    <input type="text" id="hero-proof" class="form-control" placeholder="ITI Intake 46 · 7 apps built · Kotlin · Compose · KMP">
+                    <span style="font-size: 0.8rem; color: var(--admin-text-muted); display: block; margin-top: 0.35rem;">Short facts separated by · Keep it under 70 characters.</span>
+                </div>
                 <div class="form-group"><label>Profile Image URL</label><input type="text" id="hero-image" class="form-control"></div>
-                <div class="form-group"><label>CV Download URL (Google Drive/Dropbox Link)</label><input type="text" id="hero-cv" class="form-control"></div>
+                <div class="form-group"><label>CV file or link (assets/Esraa-Ehab-CV.pdf or https://…)</label><input type="text" id="hero-cv" class="form-control"></div>
                 <button class="btn-save" onclick="adminApp.saveHero()">Save Hero Changes</button>
             </section>
 
@@ -655,8 +689,33 @@
                 </div>
                 <div class="form-group"><label>Contact Section Title</label><input type="text" id="contact-title" class="form-control"></div>
                 <div class="form-group"><label>Contact Section Subtitle</label><textarea id="contact-subtitle" class="form-control" rows="3"></textarea></div>
+                <div class="form-group"><label>Availability Badge Text</label><input type="text" id="contact-availability" class="form-control" placeholder="Open to new opportunities"></div>
+                <div class="form-group"><label>Response Time Text</label><input type="text" id="contact-response" class="form-control" placeholder="I usually reply within 24 hours · Cairo, GMT+2"></div>
+
+                <div class="email-message-card" style="margin: 2rem 0; padding: 1.5rem; border: 1px solid var(--admin-border); border-radius: 16px; background: #f8fafc;">
+                    <h3 style="margin: 0 0 1rem; font-size: 1.1rem; font-weight: 700;">Email message (opens when someone clicks your email)</h3>
+                    <div class="form-group">
+                        <label>Subject line</label>
+                        <input type="text" id="contact-email-subject" class="form-control" maxlength="120" placeholder="Hello Esraa, I'd like to talk about an opportunity">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                            <label style="margin-bottom: 0;">Default message body</label>
+                            <span id="contact-email-body-counter" style="font-size: 0.85rem; color: var(--admin-text-muted);">0 / 600</span>
+                        </div>
+                        <textarea id="contact-email-body" class="form-control" rows="8" maxlength="600"></textarea>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <button type="button" class="btn-secondary" style="padding: 0.65rem 1.25rem; border: 1px solid var(--admin-border); border-radius: 10px; background: white; color: var(--admin-text); font-weight: 600; cursor: pointer;" onclick="adminApp.resetEmailTemplate()">Reset to default</button>
+                        <button type="button" class="btn-secondary" style="padding: 0.65rem 1.25rem; border: 1px solid var(--admin-border); border-radius: 10px; background: white; color: var(--admin-primary); font-weight: 600; cursor: pointer;" onclick="adminApp.testEmailLink()"><i class="ph ph-paper-plane-tilt"></i> Test: opens the mail app</button>
+                    </div>
+                </div>
+
                 <div id="contacts-list" class="item-list"></div>
                 <button class="add-new-btn" onclick="adminApp.openModal('contacts')">+ Add Contact Method</button>
+                <div style="margin-top: 2rem;">
+                    <button class="btn-save" onclick="adminApp.saveContacts()">Save Contact Section</button>
+                </div>
             </section>
         </main>
     </div>
