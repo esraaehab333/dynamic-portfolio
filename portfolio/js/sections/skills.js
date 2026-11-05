@@ -3,18 +3,36 @@ import { esc, safeImgUrl, safeIcon } from '../core/utils.js';
 export const id = 'skills';
 
 const DEFAULT_TITLE = 'The tools I build with';
-const CATEGORY_ORDER = ['Languages', 'Architecture', 'UI', 'Data & Network', 'Testing & Tools', 'Other'];
+const CATEGORY_ORDER = [
+    'Languages',
+    'Mobile Development',
+    'Architecture & Design',
+    'Libraries & Frameworks',
+    'Backend & APIs',
+    'Development Tools'
+];
+
 const CATEGORY_ICONS = {
-    Languages: 'ph-code',
-    Architecture: 'ph-stack',
-    UI: 'ph-paint-brush',
-    'Data & Network': 'ph-database',
-    'Testing & Tools': 'ph-wrench',
-    Other: 'ph-sparkle'
+    'Languages': 'ph-code',
+    'Mobile Development': 'ph-device-mobile',
+    'Architecture & Design': 'ph-stack',
+    'Libraries & Frameworks': 'ph-package',
+    'Backend & APIs': 'ph-database',
+    'Development Tools': 'ph-wrench'
+};
+
+const CATEGORY_MAP = {
+    'Architecture': 'Architecture & Design',
+    'UI': 'Mobile Development',
+    'Data & Network': 'Backend & APIs',
+    'Testing & Tools': 'Development Tools'
 };
 
 function categoryFor(skill) {
-    return CATEGORY_ORDER.includes(skill.category) ? skill.category : 'Other';
+    const cat = skill?.category;
+    if (CATEGORY_ORDER.includes(cat)) return cat;
+    if (CATEGORY_MAP[cat]) return CATEGORY_MAP[cat];
+    return 'Development Tools';
 }
 
 function logoMarkup(skill, category) {
