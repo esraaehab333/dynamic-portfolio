@@ -255,11 +255,11 @@ export function buildProjectFields() {
         if (Array.isArray(prior.captions)) group.captions = sameList(captions, prior.captions) ? prior.captions : captions;
         return group;
     });
-    const hasNewGroupContent = groups.some((group, index) => group.title !== (index === 0 ? 'Screens' : `Group ${index + 1}`) || group.images.length || group.subtitle || listValues(group.tech).length || lineValues(group.points).length);
+    const hasNewGroupContent = groups.some((group, index) => group.title !== (index === 0 ? 'Screens' : `Group ${index + 1}`) || group.images?.length || group.subtitle || listValues(group.tech).length || lineValues(group.points).length);
     if (Array.isArray(original.showcase) || hasNewGroupContent) result.showcase = groups.filter((group, index) => {
-        const isEmptyDefault = index === 0 && group.title === 'Screens' && !group.images.length && !group.subtitle && !listValues(group.tech).length && !lineValues(group.points).length;
+        const isEmptyDefault = index === 0 && group.title === 'Screens' && !group.images?.length && !group.subtitle && !listValues(group.tech).length && !lineValues(group.points).length;
         if (index < (original.showcase || []).length) return true;
-        return !isEmptyDefault && (group.title || group.images.length || group.subtitle || listValues(group.tech).length || lineValues(group.points).length || Object.keys(group).some(key => !['title', 'images', 'subtitle', 'tech', 'points'].includes(key)));
+        return !isEmptyDefault && (group.title || group.images?.length || group.subtitle || listValues(group.tech).length || lineValues(group.points).length || Object.keys(group).some(key => !['title', 'images', 'subtitle', 'tech', 'points'].includes(key)));
     });
 
     const tagField = document.querySelector('[data-chip-field="tags"]');
