@@ -180,14 +180,22 @@ function teamRow(row = [], index = 0) {
 }
 
 function getChips(field) { return [...field.querySelectorAll('.project-chip')].map(chip => chip.dataset.value); }
+function commitChipText(input) {
+    const parts = String(input.value || '').split(/[,|\n]+/).map(item => item.trim()).filter(Boolean);
+    if (!parts.length) { input.value = ''; return false; }
+    const list = input.closest('.project-chip-field').querySelector('.project-chip-list');
+    const existing = new Set([...list.querySelectorAll('.project-chip')].map(chip => chip.dataset.value));
+    parts.forEach(part => { if (!existing.has(part)) { existing.add(part); input.insertAdjacentHTML('beforebegin', chipMarkup(part)); } });
+    input.value = '';
+    updateTabDots();
+    return true;
+}
 function chipEvent(event) {
     const input = event.target;
     const value = input.value.trim().replace(/,$/, '');
     if ((event.key === 'Enter' || event.key === ',') && value) {
         event.preventDefault();
-        input.closest('.project-chip-field').querySelector('.project-chip-list').insertAdjacentHTML('beforeend', chipMarkup(value));
-        input.value = '';
-        updateTabDots();
+        commitChipText(input);
     } else if (event.key === 'Backspace' && !input.value) {
         input.closest('.project-chip-list').querySelector('.project-chip:last-of-type')?.remove();
     }
@@ -293,6 +301,7 @@ window.ProjectFields = {
     startEditor() { lastOpenTab = 'basics'; },
     imageChanged() { dataSizeSync(); },
     getActiveTab: () => lastOpenTab,
+    commitPending() { document.querySelectorAll('.project-chip-input').forEach(input => { if (input.value.trim()) commitChipText(input); }); },
     switchTab(button) {
         const editor = button.closest('[data-project-editor]');
         lastOpenTab = button.dataset.tab;
@@ -308,7 +317,7 @@ window.ProjectFields = {
         });
         updateTabDots();
     },
-    addChip(input) { const value = input.value.trim().replace(/,$/, ''); if (value) { input.closest('.project-chip-field').querySelector('.project-chip-list').insertAdjacentHTML('beforeend', chipMarkup(value)); input.value = ''; updateTabDots(); } },
+    addChip(input) { commitChipText(input); },
     removeChip(button) { button.closest('.project-chip')?.remove(); updateTabDots(); },
     handleChipKey(event) { chipEvent(event); },
     syncColor(input) {
@@ -389,6 +398,12 @@ window.ProjectFields = {
 
 document.addEventListener('keydown', event => {
     if (event.target.matches('.project-chip-input')) chipEvent(event);
+});
+document.addEventListener('paste', event => {
+    if (event.target.matches('.project-chip-input')) setTimeout(() => { if (/[,|\n]/.test(event.target.value)) commitChipText(event.target); }, 0);
+});
+document.addEventListener('focusout', event => {
+    if (event.target.matches?.('.project-chip-input') && event.target.value.trim()) commitChipText(event.target);
 });
 document.addEventListener('input', event => {
     if (event.target.closest('[data-project-editor]')) dataSizeSync();

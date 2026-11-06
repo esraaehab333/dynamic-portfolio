@@ -437,6 +437,37 @@
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
 
+
+        /* ---------- responsive admin (tablet + phone) ---------- */
+        .admin-main { min-width: 0; }
+        .inline-editor, .admin-section { min-width: 0; }
+        .form-control, input, select, textarea { max-width: 100%; }
+        @media (max-width: 900px) {
+            body { display: block; }
+            #dashboard { flex-direction: column; }
+            .admin-sidebar { position: sticky; top: 0; z-index: 60; width: 100%; height: auto; padding: .65rem 1rem; flex-direction: row; align-items: center; gap: .75rem; }
+            .admin-sidebar h1 { display: none; }
+            .admin-sidebar nav { display: flex; flex: 1; min-width: 0; gap: .35rem; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+            .admin-sidebar nav::-webkit-scrollbar { display: none; }
+            .admin-sidebar .admin-nav-item { flex: none; white-space: nowrap; margin: 0; padding: .6rem .9rem; border-radius: 10px; }
+            .admin-sidebar > button.admin-nav-item { margin: 0 !important; border: 1px solid rgba(255,255,255,.15); }
+            .admin-main { margin-left: 0; width: 100%; max-width: 100%; box-sizing: border-box; padding: 1.25rem 1rem 6rem; }
+            .header-top { flex-direction: column; align-items: flex-start; gap: .75rem; margin-bottom: 1.25rem; }
+            .header-top h2 { font-size: 1.5rem; }
+            .header-actions { flex-wrap: wrap; gap: .5rem; }
+            .admin-section { padding: 1.25rem; border-radius: 16px; }
+            .form-group { margin-bottom: 1.25rem; }
+            .btn-save { width: 100%; }
+            .list-item { flex-wrap: wrap; gap: .5rem; }
+        }
+        @media (max-width: 520px) {
+            .admin-sidebar > button.admin-nav-item { font-size: 0; padding: .6rem .75rem; }
+            .admin-sidebar > button.admin-nav-item i { font-size: 1.1rem; }
+            .inline-editor { padding: 1rem; border-radius: 16px; }
+            .inline-editor { scroll-margin-top: 72px; }
+            .inline-editor:has([data-project-editor]) .inline-editor-actions { flex-wrap: nowrap; gap: .5rem; }
+            .inline-editor:has([data-project-editor]) .inline-editor-actions > * { flex: 1 1 0; width: auto; margin-left: 0; min-width: 0; }
+        }
     </style>
 </head>
 <body>
