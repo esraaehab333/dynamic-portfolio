@@ -230,6 +230,35 @@
             border-radius: 16px;
             margin-bottom: 1rem;
             border: 1px solid var(--admin-border);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .list-item-reorderable {
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .list-item-reorderable .reorder-drag-handle {
+            cursor: grab;
+        }
+
+        .list-item-reorderable:active .reorder-drag-handle {
+            cursor: grabbing;
+        }
+
+        .list-item-reorderable.dragging .list-item,
+        .list-item-reorderable.long-pressing .list-item {
+            opacity: 0.55;
+            transform: scale(0.98);
+            box-shadow: 0 12px 24px rgba(0, 85, 255, 0.15);
+            background: #f0f7ff;
+            border-color: var(--admin-primary);
+        }
+
+        .list-item-reorderable.drag-over .list-item {
+            border-color: var(--admin-primary);
+            box-shadow: 0 0 0 3px rgba(0, 85, 255, 0.2);
+            transform: translateY(-2px);
         }
 
         .add-new-btn {

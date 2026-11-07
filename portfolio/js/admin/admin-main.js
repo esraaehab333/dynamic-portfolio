@@ -452,6 +452,18 @@ class AdminApp {
         deleteItem(this, col, idx);
     }
 
+    moveItem(col, fromIdx, toIdx) {
+        if (!this.data || !Array.isArray(this.data[col])) return;
+        const items = this.data[col];
+        if (fromIdx < 0 || fromIdx >= items.length || toIdx < 0 || toIdx >= items.length) return;
+
+        const [moved] = items.splice(fromIdx, 1);
+        items.splice(toIdx, 0, moved);
+
+        this.renderLists();
+        this.saveData();
+    }
+
     openModal(mode, idx = null) {
         openModal(this, mode, idx);
     }
