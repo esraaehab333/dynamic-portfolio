@@ -2,12 +2,12 @@
 
 A personal portfolio for an Android / Kotlin Multiplatform developer. The site is plain HTML, CSS and JavaScript (ES modules, no framework, no build step). **All content lives in one JSON document stored on Cloudflare**, and an admin dashboard edits it, so nothing is hard-coded in the pages.
 
+<img width="1850" height="979" alt="image" src="https://github.com/user-attachments/assets/6e756607-3928-452d-854b-18594fe98404" />
+
 - Public site: static files served by a Cloudflare Worker (static assets)
 - API: a second Cloudflare Worker (`portfolio-api`) that stores the JSON in KV, handles the contact form (Resend) and image uploads
+- Live site: https://dynamic-portfolio.esraaehabb333.workers.dev
 - Admin: `/admin.html`, protected by an admin token
-
-> Replace the placeholders `<…>` below with your own values (site URL, KV id, etc.).
-
 ---
 
 ## Table of contents
@@ -406,9 +406,3 @@ Found when reviewing the repo. Fix these before relying on the README's API sect
 - Optional bilingual (EN/AR) content
 - Automated tests for the Worker routes and the XSS escaping
 
----
-
-## Author
-
-**Esraa Ehab Lotfy** · Android developer, Cairo, Egypt
-GitHub: https://github.com/esraaehab333 · LinkedIn: https://www.linkedin.com/in/esraa-ehab333/
