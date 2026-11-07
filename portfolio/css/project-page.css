@@ -729,3 +729,10 @@ a.pp-member:hover { background: rgba(var(--pp-accent-rgb), 0.08); }
     .pp-body > .pp-main,
     .pp-body > .pp-side { grid-column: 1; grid-row: auto; }
 }
+
+/* On a project page the top bar is kept slim: logo + theme switch only.
+   The section links (Home, About, Skills...) belong to the home page, and the page has its own "Back to projects" link. */
+body.pp-project-open #navbar .nav-links,
+body.pp-project-open #navbar .nav-cta,
+body.pp-project-open #navbar .menu-toggle { display: none; }
+body.pp-project-open #navbar .nav-content { justify-content: space-between; }

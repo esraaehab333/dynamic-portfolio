@@ -113,6 +113,8 @@
     background: var(--bg-accent);
 }
 
+.project-thumb--empty { aspect-ratio: 16 / 10; background: linear-gradient(135deg, var(--border, #e6e1ec), transparent); }
+
 .project-thumb::after {
     content: '';
     position: absolute;

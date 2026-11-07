@@ -65,6 +65,7 @@ export function saveModal(app, renderLists, triggerBtn = null) {
     const existingItem = app.editIndex !== null && app.data[mode][app.editIndex] ? app.data[mode][app.editIndex] : null;
     const base = { id: existingItem ? (existingItem.id ?? (mode === 'projects' ? app.editIndex : Date.now())) : Date.now() };
     const mod = sectionModules[mode];
+    if (mode === 'projects') window.ProjectFields?.commitPending?.();
     const newItem = mod ? mod.buildItem(base) : base;
 
     if (app.editIndex !== null) {

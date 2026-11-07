@@ -13,14 +13,15 @@ export function render(data) {
     const isVisible = (data.sectionsVisibility?.projects !== false) && items.length > 0;
     const itemsHtml = items.map((project, index) => {
         const title = esc(project.title || 'Untitled Project');
-        const img = safeImgUrl(project.image) || 'https://via.placeholder.com/800x600';
+        const imgUrl = safeImgUrl(project.image);
         const sub = project.subtitle ? esc(project.subtitle) : '';
         const tag = project.tag ? esc(project.tag) : '';
+        const thumbHtml = imgUrl
+            ? `<div class="project-thumb"><img src="${imgUrl}" class="project-img" alt="${title} preview" loading="lazy"></div>`
+            : `<div class="project-thumb project-thumb--empty" aria-hidden="true"></div>`;
         return `
         <article class="project-card reveal" data-project-id="${esc(project.id ?? index)}" role="link" tabindex="0" aria-label="View details for ${title}" ${index >= INITIAL_PROJECTS ? 'hidden' : ''}>
-            <div class="project-thumb">
-                <img src="${img}" class="project-img" alt="${title} preview" loading="lazy">
-            </div>
+            ${thumbHtml}
             <div class="project-meta">
                 <div class="project-header">
                     <div class="project-heading">

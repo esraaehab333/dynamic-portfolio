@@ -35,8 +35,6 @@ export function buildItem(base = {}) {
         ...base,
         title: document.getElementById('m-title').value,
         subtitle,
-        description: subtitle,
-        desc: subtitle,
         ...buildProjectFields()
     };
     const optionalFields = {

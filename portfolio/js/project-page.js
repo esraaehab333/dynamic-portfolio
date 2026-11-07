@@ -389,7 +389,9 @@ import { initThemeToggle } from './core/theme.js';
             return section(id, label, inner, cls);
         };
 
-        const paras = String(p.desc || '').split(/\n{2,}/).map(s => s.trim()).filter(Boolean);
+        const overviewText = String(p.overview || '').trim() ||
+          ((String(p.desc || p.description || '').trim() !== String(p.subtitle || '').trim()) ? String(p.desc || p.description || '').trim() : '');
+        const paras = overviewText ? overviewText.split(/\n{2,}/).map(s => s.trim()).filter(Boolean) : [];
         const feats = toLines(p.features);
 
         const overview = add('overview', 'Overview', paras.length ? '<div class="pp-prose">' + paras.map(t => '<p>' + esc(t).replace(/\n/g, '<br>') + '</p>').join('') + '</div>' : '');
@@ -543,7 +545,7 @@ import { initThemeToggle } from './core/theme.js';
             fig.remove();
             if (rail && !rail.querySelector('.pp-fig')) rail.remove();
         }));
-        root.querySelectorAll('.pp-diagram img').forEach(img => img.addEventListener('error', () => img.closest('.pp-diagram').remove()));
+        root.querySelectorAll('.pp-diagram img').forEach(img => img.addEventListener('error', () => img.closest('.pp-diagram')?.remove()));
 
         // the demo plays inside the phone, on this same page
         root.querySelectorAll('button.pp-facade').forEach(btn => btn.addEventListener('click', () => {
