@@ -331,7 +331,14 @@ window.ProjectFields = {
         const container = document.getElementById('mp-screens');
         container.insertAdjacentHTML('beforeend', screenCard({ title: `Group ${container.children.length + 1}`, images: [], tech: [], points: [] }, container.children.length));
     },
-    removeScreen(button) { button.closest('.mp-sec')?.remove(); dataSizeSync(); },
+    removeScreen(button) {
+        const card = button.closest('.mp-sec');
+        const title = card?.querySelector('[id^="mp-s-title-"]')?.value?.trim() || 'this group';
+        if (confirm(`Are you sure you want to remove "${title}"?`)) {
+            card?.remove();
+            dataSizeSync();
+        }
+    },
     allowDrop(event) { event.preventDefault(); event.currentTarget.classList.add('is-dragging'); },
     async dropImages(event, zone) {
         event.preventDefault();
@@ -381,6 +388,7 @@ window.ProjectFields = {
         dataSizeSync();
     },
     removeImage(button) {
+        if (!confirm('Are you sure you want to remove this image?')) return;
         const group = button.closest('.mp-screenshots');
         button.closest('.mp-image-item')?.remove();
         group.closest('.mp-sec').querySelector('.mp-image-count').textContent = `${group.querySelectorAll('.mp-image-item').length} / 8`;

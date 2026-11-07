@@ -157,7 +157,9 @@ function handleTouchStart(e, item) {
 }
 
 export function deleteItem(app, col, idx) {
-    if (confirm('Delete?')) {
+    const item = app.data?.[col]?.[idx];
+    const rawLabel = item?.title || item?.name || item?.label || item?.author || ('this ' + col.slice(0, -1));
+    if (confirm(`Are you sure you want to delete "${rawLabel}"?`)) {
         app.data[col].splice(idx, 1);
         renderLists(app.data);
         app.saveData();

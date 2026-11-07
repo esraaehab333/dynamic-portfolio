@@ -66,6 +66,7 @@ export function addStat() {
 }
 
 export function removeStat(index) {
+    if (!confirm('Are you sure you want to remove this stat card?')) return;
     const stats = [...document.querySelectorAll('.about-stat-editor-card')].map(readStatCard);
     stats.splice(index, 1);
     renderStatsEditor(stats);
