@@ -395,7 +395,7 @@ Found when reviewing the repo. Fix these before relying on the README's API sect
 | 5 | `assets/og-image.png` is referenced but does not exist. | Add the image (1200×630). |
 | 6 | The contact `<form>` still has `action="https://formspree.io/f/YOUR_ID_HERE"`. The JS sends to `API_URL/contact`, so it is unused. | Remove the `action` attribute. |
 | 7 | `core/api.js` `saveData()` sends a `PUT` without the `Authorization` header. The admin uses its own save in `admin-main.js`, so this function is dead code. | Delete it. |
-| 8 | `.idea/` is inside the repo folder. | Add `.idea/` to `.gitignore` and run `git rm -r --cached .idea`. |
+| 8 | `.idea/` and a Java crash log (`hs_err_pid568.log`) are committed, and there is another crash log (`hs_err_pid22848.log`) in the folder. They are editor and crash files, not part of the project. | Add `.idea/` and `hs_err_pid*.log` to `.gitignore`, then run `git rm -r --cached .idea hs_err_pid568.log` and delete the log files. |
 
 ---
 
@@ -406,3 +406,4 @@ Found when reviewing the repo. Fix these before relying on the README's API sect
 - Optional bilingual (EN/AR) content
 - Automated tests for the Worker routes and the XSS escaping
 
+---
