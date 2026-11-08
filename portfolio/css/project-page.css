@@ -736,3 +736,11 @@ body.pp-project-open #navbar .nav-links,
 body.pp-project-open #navbar .nav-cta,
 body.pp-project-open #navbar .menu-toggle { display: none; }
 body.pp-project-open #navbar .nav-content { justify-content: space-between; }
+
+.pp-md { padding: 18px 22px; display: flex; flex-direction: column; gap: 12px; font-size: .95rem; line-height: 1.75; }
+.pp-md p, .pp-md ul, .pp-md ol { margin: 0; }
+.pp-md ul, .pp-md ol { padding-left: 1.4rem; }
+.pp-md-h { margin: .5rem 0 0; font-size: 1rem; }
+.pp-md-pre { margin: 0; padding: 12px 14px; border-radius: 10px; background: rgba(255,255,255,.06); overflow: auto; }
+.pp-md-pre code { font-family: ui-monospace, monospace; font-size: .88rem; white-space: pre; }
+.pp-ic { font-family: ui-monospace, monospace; font-size: .9em; padding: .1em .4em; border-radius: 6px; background: rgba(255,255,255,.08); }

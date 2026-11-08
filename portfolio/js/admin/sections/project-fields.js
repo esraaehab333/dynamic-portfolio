@@ -1,6 +1,12 @@
 import { imageField, compressImageFile } from '../shared/image-field.js';
 
 const escapeValue = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+const formatDateValue = val => {
+    if (!val) return '';
+    const str = String(val).trim();
+    if (/^\d{4}-\d{2}$/.test(str)) return str + '-01';
+    return str;
+};
 const input = (id, label, value, type = 'text', placeholder = '', hint = '') => `<div class="form-group"><label for="${id}">${label}</label><input id="${id}" class="form-control" type="${type}" value="${escapeValue(value)}" placeholder="${escapeValue(placeholder)}">${hint ? `<small class="form-hint">${hint}</small>` : ''}</div>`;
 const area = (id, label, value, placeholder = '', rows = 4) => `<div class="form-group"><label for="${id}">${label}</label><textarea id="${id}" class="form-control" rows="${rows}" placeholder="${escapeValue(placeholder)}">${escapeValue(value)}</textarea></div>`;
 const listValues = value => Array.isArray(value) ? value.map(String) : String(value ?? '').split(/\s*[|,·]\s*/).map(item => item.trim()).filter(Boolean);
@@ -18,7 +24,7 @@ const serializeLines = (values, original) => {
 };
 
 let lastOpenTab = 'basics';
-const suggestions = ['Kotlin', 'Java', 'Dart', 'Swift', 'MVVM', 'MVI', 'MVP', 'Clean Architecture', 'Hilt', 'Koin', 'Room', 'Retrofit', 'Coroutines', 'Flow', 'Compose', 'Ktor', 'Firebase', 'Coil'];
+const suggestions = ['Kotlin', 'Java', 'Dart', 'Flutter', 'Swift', 'MVVM', 'MVI', 'MVP', 'Clean Architecture', 'Hilt', 'Koin', 'Room', 'Retrofit', 'Coroutines', 'Flow', 'Compose', 'Ktor', 'Firebase', 'Coil'];
 
 export function chipsField(id, label, value) {
     const values = listValues(value);
@@ -47,7 +53,7 @@ function updateTabDots() {
 export function projectEditorTabs(item = {}, basicsMarkup = '') {
     const gallery = Array.isArray(item.showcase) ? item.showcase : [];
     const hasBasics = [item.title, item.subtitle, item.image, item.tag, item.video, item.github, item.playstore, item.appstore, item.apk, item.demo].some(Boolean);
-    const hasStory = [item.features, item.challenges, item.learned].some(value => Array.isArray(value) ? value.length : Boolean(value));
+    const hasStory = [item.overview, item.features, item.challenges, item.learned].some(value => Array.isArray(value) ? value.length : Boolean(value));
     const hasTech = [item.languages, item.architecture, item.libraries].some(value => Array.isArray(value) ? value.length : Boolean(value));
     const moreKeys = ['platform', 'role', 'status', 'startDate', 'endDate', 'videoRatio', 'logo', 'slogan', 'color', 'archIntro', 'archLayers', 'archImage', 'structure', 'setup', 'team', 'stackGroups'];
     const hasMore = moreKeys.some(key => Array.isArray(item[key]) ? item[key].length : Boolean(item[key]));
@@ -71,6 +77,7 @@ export function getProjectFields(item = {}) {
         <button type="button" class="project-add-group" onclick="ProjectFields.addScreen()">+ Add another group (e.g. Login, Home, Checkout)</button>
     </section>
     <section class="project-tab-panel${lastOpenTab === 'story' ? ' active' : ''}" id="project-tab-story" role="tabpanel" data-panel="story" ${lastOpenTab === 'story' ? '' : 'hidden'}>
+        ${area('m-overview', 'Overview', item.overview, 'e.g. A short story about what the app does and who it is for (2-4 sentences).', 5)}
         <div class="project-story-field"><label>Key features</label><div id="mp-feature-rows">${lineValues(item.features).map((value, index) => lineRow('feature', value, index)).join('')}</div><button type="button" class="project-subtle-button" onclick="ProjectFields.addLine('feature')">+ Add feature</button></div>
         <div class="project-story-field"><label>Challenges &amp; solutions</label><div id="mp-challenge-rows">${challengeValues(item.challenges).map((row, index) => challengeRow(row, index)).join('')}</div><button type="button" class="project-subtle-button" onclick="ProjectFields.addChallenge()">+ Add challenge</button></div>
         ${area('m-learned', 'What I learned', lineValues(item.learned).join('\n'), 'e.g. How to structure offline-first data flows.')}
@@ -81,10 +88,10 @@ export function getProjectFields(item = {}) {
     </section>
     <section class="project-tab-panel${lastOpenTab === 'more' ? ' active' : ''}" id="project-tab-more" role="tabpanel" data-panel="more" ${lastOpenTab === 'more' ? '' : 'hidden'}>
         <details class="project-collapsible"><summary>Details</summary>
-            ${selectField('m-platform', 'Platform', item.platform, ['Android', 'iOS', 'Android & iOS (KMP)', 'Web', 'Desktop'])}
+            ${selectField('m-platform', 'Platform', item.platform, ['Android', 'iOS', 'Android & iOS (KMP)', 'Android & iOS (Flutter)', 'Web', 'Desktop'])}
             ${input('m-role', 'Role', item.role, 'text', 'e.g. Android developer')}
             ${selectField('m-status', 'Status', item.status, ['completed', 'in-progress', 'published'], { completed: 'Completed', 'in-progress': 'In progress', published: 'Published' })}
-            ${input('m-startDate', 'Start month', item.startDate, 'month')}${input('m-endDate', 'End month', item.endDate, 'month')}
+            ${input('m-startDate', 'Start date', formatDateValue(item.startDate), 'date')}${input('m-endDate', 'End date', formatDateValue(item.endDate), 'date')}
             ${selectField('m-videoRatio', 'Video frame', item.videoRatio, ['', 'landscape'], { '': 'Portrait', landscape: 'Landscape' })}
         </details>
         <details class="project-collapsible"><summary>Brand</summary>
@@ -243,6 +250,13 @@ export function buildProjectFields() {
         const value = field?.value ?? original[key];
         if (Object.hasOwn(original, key) || String(value ?? '').trim()) result[key] = value ?? '';
     });
+    const overviewField = document.getElementById('m-overview');
+    const overviewVal = overviewField ? overviewField.value.trim() : String(original.overview || '').trim();
+    if (overviewVal) {
+        result.overview = overviewVal;
+    } else {
+        delete result.overview;
+    }
     const groups = [...document.querySelectorAll('#mp-screens .mp-sec')].map((card, index) => {
         const prior = (original.showcase || [])[index] || {};
         const images = [...card.querySelectorAll('.mp-image-item')].map(image => image.dataset.src || '');

@@ -113,7 +113,7 @@
     background: var(--bg-accent);
 }
 
-.project-thumb--empty { aspect-ratio: 16 / 10; background: linear-gradient(135deg, var(--border, #e6e1ec), transparent); }
+.project-thumb--empty { aspect-ratio: 16/10; background: var(--bg-accent); border-radius: inherit; }
 
 .project-thumb::after {
     content: '';
