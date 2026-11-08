@@ -25,6 +25,7 @@
     <div id="certifications-mount"></div>
     <div id="contact-mount"></div>
     <div id="footer-mount"></div>
+    <div id="project-page-mount"></div>
 
     <script type="module">
         import * as navbar from '../portfolio/js/sections/navbar.js';
@@ -38,6 +39,7 @@
         import * as certifications from '../portfolio/js/sections/certifications.js';
         import * as contact from '../portfolio/js/sections/contact.js';
         import * as footer from '../portfolio/js/sections/footer.js';
+        import { initProjectPage } from '../portfolio/js/project-page.js';
 
         window.__xss = undefined;
 
@@ -76,7 +78,17 @@
                 { date: maliciousPayloadText, title: maliciousPayloadText, subtitle: maliciousPayloadText, desc: maliciousPayloadText, image: maliciousPayloadUrl }
             ],
             projects: [
-                { id: '1', title: maliciousPayloadText, subtitle: maliciousPayloadText, tag: maliciousPayloadText, image: maliciousPayloadUrl }
+                {
+                    id: '1',
+                    title: maliciousPayloadText,
+                    subtitle: maliciousPayloadText,
+                    tag: maliciousPayloadText,
+                    image: maliciousPayloadUrl,
+                    overview: '<img src=x onerror=window.__xss=1>',
+                    archIntro: '<img src=x onerror=window.__xss=1> [x](javascript:window.__xss=1)',
+                    structure: '```\n<img src=x onerror=window.__xss=1>\n```',
+                    setup: '<img src=x onerror=window.__xss=1>\n```bash\n<img src=x onerror=window.__xss=1>\n```'
+                }
             ],
             services: [
                 { title: maliciousPayloadText, subtitle: maliciousPayloadText, image: maliciousPayloadUrl, icon: maliciousPayloadUrl }
@@ -97,6 +109,13 @@
         renderers.forEach(mod => {
             if (mod.render) mod.render(testData);
         });
+
+        if (window.ProjectPage && window.ProjectPage.html) {
+            const ppMount = document.getElementById('project-page-mount');
+            if (ppMount) {
+                ppMount.innerHTML = window.ProjectPage.html(testData.projects[0]);
+            }
+        }
 
         setTimeout(() => {
             const output = document.getElementById('test-output');

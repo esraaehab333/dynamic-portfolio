@@ -1,4 +1,5 @@
 import { initThemeToggle } from './core/theme.js';
+import { mdToHtml, looksLikeMd, inlineMd } from './core/markdown.js';
 
 /* ==========================================================================
    project-page.js
@@ -270,14 +271,39 @@ import { initThemeToggle } from './core/theme.js';
             return i > 0 ? [l.slice(0, i).trim(), l.slice(i + 1).trim()] : [l, ''];
         }).filter(l => l[0]);
         const diagram = safeImg(p.archImage);
-        const tree = String(p.structure || '').replace(/\s+$/, '').replace(/^\s*\n/, '');
+        let tree = String(p.structure || '').replace(/\s+$/, '').replace(/^\s*\n/, '');
         if (!intro && !layers.length && !diagram && !tree.trim()) return '';
 
+        let introHTML = '';
+        if (intro) {
+            const body = looksLikeMd(intro)
+                ? '<div class="pp-md">' + mdToHtml(intro) + '</div>'
+                : '<div class="pp-md"><p>' + inlineMd(intro) + '</p></div>';
+            introHTML = '<div class="pp-code"><div class="pp-code-bar">' + icon('folder') + ' architecture</div>' + body + '</div>';
+        }
+
+        let treeHTML = '';
+        if (tree.trim()) {
+            let treeText = tree.trim();
+            if (!looksLikeMd(treeText) && treeText.startsWith('```')) {
+                const lines = treeText.split(/\r?\n/);
+                lines.shift();
+                if (lines.length > 0 && lines[lines.length - 1].trim().startsWith('```')) {
+                    lines.pop();
+                }
+                treeText = lines.join('\n');
+            }
+            const body = looksLikeMd(treeText)
+                ? '<div class="pp-md">' + mdToHtml(treeText) + '</div>'
+                : '<pre><code>' + esc(treeText) + '</code></pre>';
+            treeHTML = '<div class="pp-code"><div class="pp-code-bar">' + icon('folder') + ' project structure</div>' + body + '</div>';
+        }
+
         return '<div class="pp-arch">' +
-            (intro ? '<p class="pp-arch-intro">' + esc(intro) + '</p>' : '') +
+            introHTML +
             (layers.length ? '<ul class="pp-layers">' + layers.map(l => '<li class="pp-layer"><h3>' + esc(l[0]) + '</h3>' + (l[1] ? '<p>' + esc(l[1]) + '</p>' : '') + '</li>').join('') + '</ul>' : '') +
             (diagram ? '<figure class="pp-diagram"><button type="button" class="pp-fig pp-diagram-fig" data-cap="Architecture diagram" aria-label="Enlarge architecture diagram"><img src="' + esc(diagram) + '" alt="Architecture diagram"></button></figure>' : '') +
-            (tree.trim() ? '<div class="pp-code"><div class="pp-code-bar">' + icon('folder') + ' project structure</div><pre><code>' + esc(tree) + '</code></pre></div>' : '') +
+            treeHTML +
             '</div>';
     }
 
@@ -300,9 +326,12 @@ import { initThemeToggle } from './core/theme.js';
     function setupHTML(p) {
         const text = String(p.setup || '').replace(/\s+$/, '').replace(/^\s*\n/, '');
         if (!text.trim()) return '';
+        const body = looksLikeMd(text)
+            ? '<div class="pp-md">' + mdToHtml(text) + '</div>'
+            : '<pre><code>' + esc(text) + '</code></pre>';
         return '<div class="pp-code"><div class="pp-code-bar">' + icon('terminal') + ' setup' +
-            '<button type="button" class="pp-copybtn" data-copy>' + icon('copy') + '<span class="pp-copy-label">Copy</span></button></div>' +
-            '<pre><code>' + esc(text) + '</code></pre></div>';
+            '<button type="button" class="pp-copybtn" data-copy data-raw="' + esc(text) + '">' + icon('copy') + '<span class="pp-copy-label">Copy</span></button></div>' +
+            body + '</div>';
     }
 
     function pagerHTML(opts) {
@@ -389,8 +418,9 @@ import { initThemeToggle } from './core/theme.js';
             return section(id, label, inner, cls);
         };
 
-        const overviewText = String(p.overview || '').trim() ||
-          ((String(p.desc || p.description || '').trim() !== String(p.subtitle || '').trim()) ? String(p.desc || p.description || '').trim() : '');
+        const subtitle = String(p.subtitle || '').trim();
+        const desc = String(p.desc || '').trim();
+        const overviewText = String(p.overview || '').trim() || (desc && desc !== subtitle ? desc : '');
         const paras = overviewText ? overviewText.split(/\n{2,}/).map(s => s.trim()).filter(Boolean) : [];
         const feats = toLines(p.features);
 
@@ -584,19 +614,22 @@ import { initThemeToggle } from './core/theme.js';
         root.querySelectorAll('[data-copy]').forEach(btn => btn.addEventListener('click', () => {
             const code = btn.closest('.pp-code').querySelector('code');
             const label = btn.querySelector('.pp-copy-label');
-            const text = code ? code.textContent : '';
+            const text = btn.dataset.raw != null ? btn.dataset.raw : (code ? code.textContent : '');
             const flash = ok => {
                 label.textContent = ok ? 'Copied' : 'Select and copy';
                 setTimeout(() => { label.textContent = 'Copy'; }, 1800);
             };
             const fallback = () => {
                 try {
-                    const r = document.createRange();
-                    r.selectNodeContents(code);
-                    const s = window.getSelection();
-                    s.removeAllRanges();
-                    s.addRange(r);
-                    return document.execCommand('copy');
+                    const ta = document.createElement('textarea');
+                    ta.value = text;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    const ok = document.execCommand('copy');
+                    ta.remove();
+                    return ok;
                 } catch (e) { return false; }
             };
             if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => flash(true), () => flash(fallback()));

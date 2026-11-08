@@ -47,7 +47,7 @@ function updateTabDots() {
 export function projectEditorTabs(item = {}, basicsMarkup = '') {
     const gallery = Array.isArray(item.showcase) ? item.showcase : [];
     const hasBasics = [item.title, item.subtitle, item.image, item.tag, item.video, item.github, item.playstore, item.appstore, item.apk, item.demo].some(Boolean);
-    const hasStory = [item.features, item.challenges, item.learned].some(value => Array.isArray(value) ? value.length : Boolean(value));
+    const hasStory = [item.overview, item.features, item.challenges, item.learned].some(value => Array.isArray(value) ? value.length : Boolean(value));
     const hasTech = [item.languages, item.architecture, item.libraries].some(value => Array.isArray(value) ? value.length : Boolean(value));
     const moreKeys = ['platform', 'role', 'status', 'startDate', 'endDate', 'videoRatio', 'logo', 'slogan', 'color', 'archIntro', 'archLayers', 'archImage', 'structure', 'setup', 'team', 'stackGroups'];
     const hasMore = moreKeys.some(key => Array.isArray(item[key]) ? item[key].length : Boolean(item[key]));
@@ -71,6 +71,7 @@ export function getProjectFields(item = {}) {
         <button type="button" class="project-add-group" onclick="ProjectFields.addScreen()">+ Add another group (e.g. Login, Home, Checkout)</button>
     </section>
     <section class="project-tab-panel${lastOpenTab === 'story' ? ' active' : ''}" id="project-tab-story" role="tabpanel" data-panel="story" ${lastOpenTab === 'story' ? '' : 'hidden'}>
+        ${area('m-overview', 'Overview', item.overview, 'e.g. A short story about what the app does and who it is for (2-4 sentences).', 5)}
         <div class="project-story-field"><label>Key features</label><div id="mp-feature-rows">${lineValues(item.features).map((value, index) => lineRow('feature', value, index)).join('')}</div><button type="button" class="project-subtle-button" onclick="ProjectFields.addLine('feature')">+ Add feature</button></div>
         <div class="project-story-field"><label>Challenges &amp; solutions</label><div id="mp-challenge-rows">${challengeValues(item.challenges).map((row, index) => challengeRow(row, index)).join('')}</div><button type="button" class="project-subtle-button" onclick="ProjectFields.addChallenge()">+ Add challenge</button></div>
         ${area('m-learned', 'What I learned', lineValues(item.learned).join('\n'), 'e.g. How to structure offline-first data flows.')}
@@ -243,6 +244,13 @@ export function buildProjectFields() {
         const value = field?.value ?? original[key];
         if (Object.hasOwn(original, key) || String(value ?? '').trim()) result[key] = value ?? '';
     });
+    const overviewField = document.getElementById('m-overview');
+    const overviewVal = overviewField ? overviewField.value.trim() : String(original.overview || '').trim();
+    if (overviewVal) {
+        result.overview = overviewVal;
+    } else {
+        delete result.overview;
+    }
     const groups = [...document.querySelectorAll('#mp-screens .mp-sec')].map((card, index) => {
         const prior = (original.showcase || [])[index] || {};
         const images = [...card.querySelectorAll('.mp-image-item')].map(image => image.dataset.src || '');

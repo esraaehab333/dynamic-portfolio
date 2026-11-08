@@ -37,6 +37,16 @@ export function buildItem(base = {}) {
         subtitle,
         ...buildProjectFields()
     };
+    const overviewEl = document.getElementById('m-overview');
+    const overviewVal = overviewEl ? overviewEl.value.trim() : '';
+    if (overviewVal) {
+        result.overview = overviewVal;
+    } else {
+        delete result.overview;
+    }
+    delete result.description;
+    delete result.desc;
+
     const optionalFields = {
         tag: currentChipValue(tagField, existing.tag),
         image: document.getElementById('m-image').value,
