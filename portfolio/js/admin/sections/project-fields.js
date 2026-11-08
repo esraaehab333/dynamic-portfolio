@@ -1,6 +1,12 @@
 import { imageField, compressImageFile } from '../shared/image-field.js';
 
 const escapeValue = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+const formatDateValue = val => {
+    if (!val) return '';
+    const str = String(val).trim();
+    if (/^\d{4}-\d{2}$/.test(str)) return str + '-01';
+    return str;
+};
 const input = (id, label, value, type = 'text', placeholder = '', hint = '') => `<div class="form-group"><label for="${id}">${label}</label><input id="${id}" class="form-control" type="${type}" value="${escapeValue(value)}" placeholder="${escapeValue(placeholder)}">${hint ? `<small class="form-hint">${hint}</small>` : ''}</div>`;
 const area = (id, label, value, placeholder = '', rows = 4) => `<div class="form-group"><label for="${id}">${label}</label><textarea id="${id}" class="form-control" rows="${rows}" placeholder="${escapeValue(placeholder)}">${escapeValue(value)}</textarea></div>`;
 const listValues = value => Array.isArray(value) ? value.map(String) : String(value ?? '').split(/\s*[|,·]\s*/).map(item => item.trim()).filter(Boolean);
@@ -18,7 +24,7 @@ const serializeLines = (values, original) => {
 };
 
 let lastOpenTab = 'basics';
-const suggestions = ['Kotlin', 'Java', 'Dart', 'Swift', 'MVVM', 'MVI', 'MVP', 'Clean Architecture', 'Hilt', 'Koin', 'Room', 'Retrofit', 'Coroutines', 'Flow', 'Compose', 'Ktor', 'Firebase', 'Coil'];
+const suggestions = ['Kotlin', 'Java', 'Dart', 'Flutter', 'Swift', 'MVVM', 'MVI', 'MVP', 'Clean Architecture', 'Hilt', 'Koin', 'Room', 'Retrofit', 'Coroutines', 'Flow', 'Compose', 'Ktor', 'Firebase', 'Coil'];
 
 export function chipsField(id, label, value) {
     const values = listValues(value);
@@ -82,10 +88,10 @@ export function getProjectFields(item = {}) {
     </section>
     <section class="project-tab-panel${lastOpenTab === 'more' ? ' active' : ''}" id="project-tab-more" role="tabpanel" data-panel="more" ${lastOpenTab === 'more' ? '' : 'hidden'}>
         <details class="project-collapsible"><summary>Details</summary>
-            ${selectField('m-platform', 'Platform', item.platform, ['Android', 'iOS', 'Android & iOS (KMP)', 'Web', 'Desktop'])}
+            ${selectField('m-platform', 'Platform', item.platform, ['Android', 'iOS', 'Android & iOS (KMP)', 'Android & iOS (Flutter)', 'Web', 'Desktop'])}
             ${input('m-role', 'Role', item.role, 'text', 'e.g. Android developer')}
             ${selectField('m-status', 'Status', item.status, ['completed', 'in-progress', 'published'], { completed: 'Completed', 'in-progress': 'In progress', published: 'Published' })}
-            ${input('m-startDate', 'Start month', item.startDate, 'month')}${input('m-endDate', 'End month', item.endDate, 'month')}
+            ${input('m-startDate', 'Start date', formatDateValue(item.startDate), 'date')}${input('m-endDate', 'End date', formatDateValue(item.endDate), 'date')}
             ${selectField('m-videoRatio', 'Video frame', item.videoRatio, ['', 'landscape'], { '': 'Portrait', landscape: 'Landscape' })}
         </details>
         <details class="project-collapsible"><summary>Brand</summary>

@@ -82,36 +82,88 @@ import { mdToHtml, looksLikeMd, inlineMd } from './core/markdown.js';
     /* ---------- dates ---------- */
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    function parseMonth(v) {
-        const m = /^(\d{4})-(\d{2})/.exec(String(v || ''));
+    function parseDate(v) {
+        const m = /^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?/.exec(String(v || '').trim());
         if (!m) return null;
-        const mo = Number(m[2]);
-        if (mo < 1 || mo > 12) return null;
-        return { y: Number(m[1]), m: mo };
+        const y = Number(m[1]);
+        const mo = m[2] ? Number(m[2]) : null;
+        const d = m[3] ? Number(m[3]) : null;
+        if (mo !== null && (mo < 1 || mo > 12)) return null;
+        if (d !== null && (d < 1 || d > 31)) return null;
+        return { y, m: mo, d };
     }
 
-    const fmtMonth = d => MONTHS[d.m - 1] + ' ' + d.y;
-    const idx = d => d.y * 12 + d.m;
+    function fmtDate(d) {
+        if (!d) return '';
+        if (d.m && d.d) return d.d + ' ' + MONTHS[d.m - 1] + ' ' + d.y;
+        if (d.m) return MONTHS[d.m - 1] + ' ' + d.y;
+        return String(d.y);
+    }
 
     function duration(a, b) {
-        const total = idx(b) - idx(a) + 1; // both months count
-        if (total < 1) return '';
-        if (total === 1) return '1 month';
-        if (total < 12) return total + ' months';
-        const y = Math.floor(total / 12);
-        const m = total % 12;
-        return y + (y === 1 ? ' year' : ' years') + (m ? ' ' + m + (m === 1 ? ' month' : ' months') : '');
+        if (!a || !b) return '';
+        if (a.m && a.d && b.m && b.d) {
+            const dtA = new Date(a.y, a.m - 1, a.d);
+            const dtB = new Date(b.y, b.m - 1, b.d + 1);
+            if (dtB <= dtA) return '';
+
+            let y = dtB.getFullYear() - dtA.getFullYear();
+            let m = dtB.getMonth() - dtA.getMonth();
+            let d = dtB.getDate() - dtA.getDate();
+
+            if (d < 0) {
+                m--;
+                const prevMonthLastDay = new Date(dtB.getFullYear(), dtB.getMonth(), 0).getDate();
+                d += prevMonthLastDay;
+            }
+            if (m < 0) {
+                y--;
+                m += 12;
+            }
+
+            if (y === 0 && m === 0) {
+                if (d % 7 === 0 && d > 0) {
+                    const w = d / 7;
+                    return w === 1 ? '1 week' : w + ' weeks';
+                }
+                return d === 1 ? '1 day' : d + ' days';
+            }
+
+            const parts = [];
+            if (y > 0) parts.push(y + (y === 1 ? ' year' : ' years'));
+            if (m > 0) parts.push(m + (m === 1 ? ' month' : ' months'));
+            if (d > 0) parts.push(d + (d === 1 ? ' day' : ' days'));
+            return parts.join(' ');
+        }
+
+        if (a.m && b.m) {
+            const total = (b.y * 12 + b.m) - (a.y * 12 + a.m) + 1;
+            if (total < 1) return '';
+            if (total === 1) return '1 month';
+            if (total < 12) return total + ' months';
+            const y = Math.floor(total / 12);
+            const m = total % 12;
+            return y + (y === 1 ? ' year' : ' years') + (m ? ' ' + m + (m === 1 ? ' month' : ' months') : '');
+        }
+
+        if (a.y && b.y) {
+            const total = b.y - a.y + 1;
+            if (total < 1) return '';
+            return total === 1 ? '1 year' : total + ' years';
+        }
+
+        return '';
     }
 
     function timeline(p) {
-        const s = parseMonth(p.startDate);
-        const e = parseMonth(p.endDate);
+        const s = parseDate(p.startDate);
+        const e = parseDate(p.endDate);
         if (!s && !e) return null;
         const now = new Date();
-        const today = { y: now.getFullYear(), m: now.getMonth() + 1 };
+        const today = { y: now.getFullYear(), m: now.getMonth() + 1, d: now.getDate() };
         return {
-            start: s ? fmtMonth(s) : '',
-            end: e ? fmtMonth(e) : 'Ongoing',
+            start: s ? fmtDate(s) : '',
+            end: e ? fmtDate(e) : 'Ongoing',
             dur: s ? duration(s, e || today) : ''
         };
     }
