@@ -1,0 +1,10 @@
+# Plain HTML/CSS/JS site: no build step, serve the portfolio folder as the site root.
+[build]
+  publish = "portfolio"
+  command = ""
+
+# Local/preview dev server: serve the same static folder directly.
+[dev]
+  framework = "#static"
+  publish = "portfolio"
+  port = 8889
